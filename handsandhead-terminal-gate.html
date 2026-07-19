@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HANDS &amp; HEAD — Terminal Access</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#000000; --panel:#0a0a0a; --panel-2:#111111;
+    --panel-line: rgba(255,0,0,0.25);
+    --red:#ff0000; --red-bright:#ff3333; --red-dim:#800000;
+    --steel:#ffffff; --steel-dim:#888888; --white:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--void); color:var(--white); font-family:'Inter',sans-serif;
+    height:100vh; overflow:hidden; -webkit-font-smoothing:antialiased;
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  ::selection{ background:var(--red); color:var(--white); }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; }
+  .mono{ font-family:'Space Mono',monospace; }
+  .display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; text-transform:uppercase; }
+
+  /* scanline / hazard texture */
+  body::before{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
+    background-image: repeating-linear-gradient(0deg, rgba(255,0,0,0.03) 0px, rgba(255,0,0,0.03) 1px, transparent 1px, transparent 3px);
+  }
+  body::after{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
+  }
+
+  /* top status strip */
+  .status-strip{
+    position:fixed; top:0; left:0; right:0; z-index:5;
+    background:var(--panel); border-bottom:1px solid var(--panel-line);
+    display:flex; align-items:center; justify-content:center; gap:22px;
+    padding:9px 16px; font-family:'Space Mono'; font-size:9.5px; letter-spacing:0.14em; color:var(--steel-dim);
+    flex-wrap:wrap;
+  }
+  .status-strip .live{ color:var(--red-bright); display:flex; align-items:center; gap:6px; }
+  .status-strip .dot{ width:6px;height:6px;border-radius:50%; background:var(--red); box-shadow:0 0 8px var(--red); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  .gate{ position:relative; z-index:2; width:min(420px,90vw); text-align:center; }
+
+  .lock{
+    width:56px; height:56px; border:1px solid var(--red); margin:0 auto 26px;
+    display:flex; align-items:center; justify-content:center; transform:rotate(45deg);
+    box-shadow:0 0 22px rgba(255,0,0,0.18);
+  }
+  .lock span{ transform:rotate(-45deg); font-family:'Bebas Neue'; font-size:22px; color:var(--red-bright); }
+
+  .eyebrow{ font-family:'Space Mono'; font-size:10.5px; letter-spacing:0.24em; text-transform:uppercase; color:var(--red); margin-bottom:14px; }
+  h1{ font-size:clamp(30px,6vw,42px); margin-bottom:10px; }
+  .subtext{ font-family:'Space Mono'; font-size:11px; color:var(--steel-dim); letter-spacing:0.06em; margin-bottom:36px; line-height:1.7; }
+  .subtext b{ color:var(--red-bright); }
+
+  .pin-row{ display:flex; gap:10px; justify-content:center; margin-bottom:8px; }
+  .pin-box{
+    width:48px; height:58px; background:var(--panel); border:1px solid var(--panel-line);
+    text-align:center; font-family:'Space Mono'; font-size:24px; color:var(--red-bright);
+    outline:none; transition:border-color .2s ease, box-shadow .2s ease; caret-color:var(--red);
+  }
+  .pin-box:focus{ border-color:var(--red); box-shadow:0 0 14px rgba(255,0,0,0.25); }
+  .pin-box.filled{ border-color:var(--red-dim); }
+  .pin-box.error{ border-color:var(--red-bright); animation:shake .35s ease; }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); }
+  }
+
+  .pin-status{ min-height:18px; font-family:'Space Mono'; font-size:10.5px; letter-spacing:0.08em; margin:14px 0 30px; }
+  .pin-status.ok{ color:var(--red-bright); }
+  .pin-status.bad{ color:#ff6666; }
+  .pin-status.wait{ color:var(--steel-dim); }
+
+  .actions{ display:flex; flex-direction:column; gap:12px; align-items:center; }
+  .btn{
+    font-family:'Space Mono'; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    padding:14px 26px; border:1px solid var(--red-dim); background:transparent; color:var(--red-bright);
+    transition:all .25s ease; width:100%;
+  }
+  .btn:hover{ background:var(--red); color:var(--white); border-color:var(--red); }
+  .btn.solid{ background:var(--red); color:var(--white); }
+  .btn.solid:hover{ background:var(--red-bright); }
+  .btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  .btn:disabled:hover{ background:transparent; color:var(--red-bright); }
+
+  .req-access{ font-family:'Space Mono'; font-size:10px; color:var(--steel-dim); letter-spacing:0.06em; margin-top:22px; }
+  .req-access a{ color:var(--red-bright); border-bottom:1px solid var(--red-dim); }
+  .req-access a:hover{ border-color:var(--red-bright); }
+
+  .footer-id{
+    position:fixed; bottom:18px; left:0; right:0; text-align:center; z-index:5;
+    font-family:'Space Mono'; font-size:9px; letter-spacing:0.14em; color:var(--panel-2);
+    color:#3a3a3a;
+  }
+
+  @media (max-width:420px){
+    .pin-box{ width:40px; height:52px; font-size:20px; }
+    .pin-row{ gap:8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="status-strip">
+  <div class="live"><span class="dot"></span>OFFLINE CACHE MODE</div>
+  <div class="mono">SESSION NOT AUTHENTICATED</div>
+</div>
+
+<div class="gate">
+  <div class="lock"><span>H</span></div>
+  <div class="eyebrow">AUTHORIZED OPERATORS ONLY</div>
+  <h1 class="display">Terminal Access</h1>
+  <div class="subtext">B2B SUPPLY CHAIN TERMINAL — LEATHER EXPORT DIVISION<br>ENTER YOUR <b>4-DIGIT PIN</b> TO CONTINUE</div>
+
+  <div class="pin-row" id="pinRow">
+    <input class="pin-box" maxlength="1" inputmode="numeric" type="password" data-i="0">
+    <input class="pin-box" maxlength="1" inputmode="numeric" type="password" data-i="1">
+    <input class="pin-box" maxlength="1" inputmode="numeric" type="password" data-i="2">
+    <input class="pin-box" maxlength="1" inputmode="numeric" type="password" data-i="3">
+  </div>
+
+  <div class="pin-status wait mono" id="pinStatus">AWAITING INPUT...</div>
+
+  <div class="actions">
+    <button class="btn solid" id="unlockBtn" disabled onclick="tryUnlock()">Unlock Terminal</button>
+  </div>
+
+  <div class="req-access">
+    No PIN issued yet? <a href="handsandhead-teaser.html">Request Buyer Access →</a>
+  </div>
+</div>
+
+<div class="footer-id mono">HANDS &amp; HEAD OS — NODE 07A — DHK/EU RELAY</div>
+
+<script>
+  const boxes = Array.from(document.querySelectorAll('.pin-box'));
+  const status = document.getElementById('pinStatus');
+  const unlockBtn = document.getElementById('unlockBtn');
+  const CORRECT_PIN = null; // set your real PIN check server-side; this front end just demonstrates the flow
+
+  function updateState(){
+    const filled = boxes.every(b => b.value.length === 1);
+    unlockBtn.disabled = !filled;
+    if(filled){
+      status.textContent = 'PIN READY — PRESS UNLOCK';
+      status.className = 'pin-status wait mono';
+    } else {
+      status.textContent = 'AWAITING INPUT...';
+      status.className = 'pin-status wait mono';
+    }
+  }
+
+  boxes.forEach((box, i)=>{
+    box.addEventListener('input', ()=>{
+      box.value = box.value.replace(/[^0-9]/g,'');
+      box.classList.toggle('filled', box.value.length===1);
+      if(box.value.length===1 && i < boxes.length-1){
+        boxes[i+1].focus();
+      }
+      updateState();
+    });
+    box.addEventListener('keydown', (e)=>{
+      if(e.key==='Backspace' && box.value==='' && i>0){
+        boxes[i-1].focus();
+      }
+    });
+  });
+
+  function tryUnlock(){
+    const pin = boxes.map(b=>b.value).join('');
+    status.textContent = 'VERIFYING...';
+    status.className = 'pin-status wait mono';
+    unlockBtn.disabled = true;
+
+    setTimeout(()=>{
+      // Placeholder verification — wire this to your real auth endpoint.
+      // Demo behavior: any fully-entered 4-digit PIN "unlocks" for preview purposes.
+      const valid = pin.length === 4;
+      if(valid){
+        status.textContent = 'ACCESS GRANTED — LOADING TERMINAL...';
+        status.className = 'pin-status ok mono';
+        setTimeout(()=>{
+          // Replace with your real terminal URL
+          // location.href = '/terminal-home';
+        }, 900);
+      } else {
+        status.textContent = 'ACCESS DENIED — INVALID PIN';
+        status.className = 'pin-status bad mono';
+        boxes.forEach(b=>{ b.classList.add('error'); b.value=''; b.classList.remove('filled'); });
+        setTimeout(()=> boxes.forEach(b=> b.classList.remove('error')), 400);
+        boxes[0].focus();
+        unlockBtn.disabled = true;
+      }
+    }, 900);
+  }
+
+  boxes[0].focus();
+</script>
+</body>
+</html>

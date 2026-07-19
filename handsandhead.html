@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HANDS &amp; HEAD — Print On Demand · Bangladesh → World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0A0908;
+    --char:#15120F;
+    --ash:#252019;
+    --bone:#F2ECE0;
+    --smoke:#8A8378;
+    --ember:#E2562B;
+    --gold:#C9A24B;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--bone);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  @media (hover:none){ body{ cursor:auto; } }
+  ::selection{background:var(--ember);color:var(--void);}
+
+  h1,h2,h3,.display{
+    font-family:'Bebas Neue',sans-serif;
+    letter-spacing:.01em;
+    line-height:.92;
+    text-transform:uppercase;
+  }
+  .mono{font-family:'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;}
+
+  /* ---------- film grain overlay ---------- */
+  .grain{
+    position:fixed;inset:0;z-index:9000;pointer-events:none;
+    opacity:.05;mix-blend-mode:overlay;
+  }
+
+  /* ---------- custom cursor / hard light ---------- */
+  #cursor-dot, #cursor-ring{
+    position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+    border-radius:50%;transform:translate(-50%,-50%);
+  }
+  #cursor-dot{width:6px;height:6px;background:var(--ember);}
+  #cursor-ring{width:34px;height:34px;border:1px solid rgba(242,236,224,.4);transition:width .25s var(--ease),height .25s var(--ease),border-color .25s var(--ease);}
+  #cursor-ring.view{width:90px;height:90px;border-color:var(--gold);}
+
+  #spotlight{
+    position:fixed;inset:0;z-index:5;pointer-events:none;
+    background:radial-gradient(circle 380px at var(--mx,50%) var(--my,50%),
+      rgba(242,236,224,.10), rgba(242,236,224,.03) 40%, transparent 70%);
+    mix-blend-mode:soft-light;
+  }
+
+  /* ---------- nav / header ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:200;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 4vw;
+    background:linear-gradient(180deg,rgba(10,9,8,.9),transparent);
+    backdrop-filter:blur(2px);
+  }
+  .wordmark{font-family:'Bebas Neue';font-size:24px;letter-spacing:.04em;}
+  .wordmark span{color:var(--ember);}
+  .nav-right{display:flex;align-items:center;gap:20px;}
+  .cart-pill{
+    border:1px solid rgba(242,236,224,.3);border-radius:999px;
+    padding:6px 16px;font-family:'DM Mono';font-size:11px;letter-spacing:.1em;
+    transition:border-color .3s var(--ease),background .3s var(--ease);
+  }
+  .cart-pill:hover{border-color:var(--gold);background:rgba(201,162,75,.08);}
+
+  .drawer-toggle{
+    display:flex;align-items:center;gap:10px;background:none;border:none;color:var(--bone);
+    cursor:pointer;font-family:'DM Mono';font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    padding:6px 4px;
+  }
+  .burger-icon{position:relative;width:22px;height:14px;}
+  .burger-icon span{
+    position:absolute;left:0;width:100%;height:1.5px;background:var(--bone);
+    transition:transform .35s var(--ease),opacity .35s var(--ease),top .35s var(--ease);
+  }
+  .burger-icon span:nth-child(1){top:0;}
+  .burger-icon span:nth-child(2){top:6px;}
+  .burger-icon span:nth-child(3){top:12px;}
+  body.drawer-open .burger-icon span:nth-child(1){top:6px;transform:rotate(45deg);}
+  body.drawer-open .burger-icon span:nth-child(2){opacity:0;}
+  body.drawer-open .burger-icon span:nth-child(3){top:6px;transform:rotate(-45deg);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;height:100svh;display:flex;flex-direction:column;
+    justify-content:flex-end;padding:0 4vw 70px;overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;
+    background-image:url('assets/hero-collage.png');
+    background-size:cover;
+    background-position:center 30%;
+  }
+  .hero-bg::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 60% 90% at 78% 30%, rgba(226,86,43,.18), transparent 60%),
+      linear-gradient(115deg, rgba(10,9,8,.55) 0%, rgba(21,18,15,.35) 38%, rgba(37,32,25,.25) 60%, rgba(10,9,8,.65) 100%);
+  }
+  .hero-bg::after{
+    content:'';position:absolute;inset:0;
+    background:
+      linear-gradient(100deg, transparent 45%, rgba(0,0,0,.55) 66%, rgba(0,0,0,.88) 100%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.025) 0 2px, transparent 2px 6px);
+  }
+  .eyebrow{
+    font-family:'DM Mono';font-size:12px;letter-spacing:.22em;color:var(--gold);
+    margin-bottom:18px;display:flex;align-items:center;gap:10px;z-index:2;position:relative;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--ember);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .eyebrow .api-live{
+    margin-left:8px;padding:2px 8px;border:1px solid rgba(201,162,75,.4);
+    color:var(--gold);font-size:10px;letter-spacing:.15em;
+  }
+  .hero h1{
+    font-size:clamp(56px,11vw,168px);z-index:2;position:relative;
+    max-width:16ch;
+  }
+  .hero h1 em{font-style:normal;color:var(--ember);}
+  .hero-sub{
+    z-index:2;position:relative;max-width:480px;margin-top:22px;
+    color:var(--smoke);font-size:15px;line-height:1.6;
+  }
+  .hero-ctas{display:flex;gap:16px;margin-top:36px;z-index:2;position:relative;flex-wrap:wrap;}
+  .btn{
+    font-family:'DM Mono';font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:16px 28px;text-decoration:none;display:inline-block;
+    transition:transform .3s var(--ease),background .3s var(--ease),color .3s var(--ease);
+  }
+  .btn-fill{background:var(--bone);color:var(--void);}
+  .btn-fill:hover{background:var(--ember);color:var(--bone);transform:translateY(-2px);}
+  .btn-ghost{border:1px solid rgba(242,236,224,.35);color:var(--bone);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+
+  /* ---------- ticker ---------- */
+  .ticker-wrap{
+    border-top:1px solid rgba(242,236,224,.12);
+    border-bottom:1px solid rgba(242,236,224,.12);
+    overflow:hidden;background:var(--char);padding:14px 0;
+  }
+  .ticker{display:flex;white-space:nowrap;animation:scroll 26s linear infinite;width:max-content;}
+  .ticker span{
+    font-family:'DM Mono';font-size:12px;letter-spacing:.18em;color:var(--smoke);
+    padding:0 28px;text-transform:uppercase;
+  }
+  .ticker span b{color:var(--gold);font-weight:500;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- section heading ---------- */
+  .section{padding:110px 4vw;}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-bottom:48px;flex-wrap:wrap;gap:20px;
+  }
+  .section-head h2{font-size:clamp(36px,5vw,64px);}
+  .section-head .count{font-family:'DM Mono';font-size:12px;color:var(--smoke);letter-spacing:.1em;}
+  .section-head p.lede{
+    max-width:56ch;color:var(--smoke);font-size:14px;line-height:1.6;margin-top:12px;
+  }
+
+  /* ---------- category rail ---------- */
+  .rail{
+    display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:8px;
+  }
+  .rail::-webkit-scrollbar{display:none;}
+  .cat-card{
+    position:relative;flex:0 0 280px;height:380px;scroll-snap-align:start;
+    overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;display:block;
+  }
+  .cat-bg{
+    position:absolute;inset:0;
+    background:linear-gradient(160deg,var(--ash),var(--char));
+    transition:transform .6s var(--ease);
+  }
+  .cat-card[data-cat="all-brands"] .cat-bg{background:#0c0a09 url('assets/portrait-black-tee.jpg') center 20%/cover;}
+  .cat-card[data-cat="women"] .cat-bg{background:#0c0a09 url('assets/portrait-green-back.jpg') center 15%/cover;}
+  .cat-card[data-cat="football"] .cat-bg{background:#0c0a09 url('assets/moodboard-triptych.png') center 10%/cover;}
+  .cat-card[data-cat="rawx"] .cat-bg{background:#050505 url('assets/logo-r-explosion.png') center/cover;}
+  .cat-card[data-cat="footwear"] .cat-bg{background:#0c0a09 url('assets/rooftop-campaign.png') center/cover;}
+  .cat-card::before{
+    content:'';position:absolute;inset:0;background:rgba(10,9,8,.28);
+  }
+  .cat-card::after{
+    content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(115deg,rgba(255,255,255,.02) 0 2px,transparent 2px 6px);
+  }
+  .cat-card:hover .cat-bg{transform:scale(1.08);}
+  .cat-overlay{
+    position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;
+    padding:24px;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent 60%);
+  }
+  .cat-overlay .mono{font-size:11px;color:var(--gold);margin-bottom:6px;}
+  .cat-overlay h3{font-size:34px;}
+  .cat-soon{display:block;font-size:9px;color:var(--smoke);margin-top:6px;letter-spacing:.1em;}
+  .cat-arrow{
+    position:absolute;top:20px;right:20px;width:34px;height:34px;
+    border:1px solid rgba(242,236,224,.3);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;transform:translate(-6px,6px);
+    transition:all .35s var(--ease);
+  }
+  .cat-card:hover .cat-arrow{opacity:1;transform:translate(0,0);border-color:var(--gold);color:var(--gold);}
+
+  /* ---------- product grid ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+  .card{
+    position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--char);
+  }
+  .card-bg{
+    position:absolute;inset:0;
+    background:linear-gradient(150deg,var(--ash) 0%,var(--char) 55%,#000 100%);
+    transition:transform .7s var(--ease);
+  }
+  .card:nth-child(1) .card-bg{background:#0c0a09 url('assets/portrait-black-tee.jpg') center 15%/cover;}
+  .card:nth-child(2) .card-bg{background:#0c0a09 url('assets/portrait-green-back.jpg') center 12%/cover;}
+  .card:nth-child(3) .card-bg{background:#0c0a09 url('assets/moodboard-triptych.png') center 55%/cover;}
+  .card:nth-child(4) .card-bg{background:#0c0a09 url('assets/rooftop-campaign.png') center/cover;}
+  .card:nth-child(5) .card-bg{background:#0c0a09 url('assets/denim-patch.jpg') center/cover;}
+  .card:nth-child(6) .card-bg{background:#0c0a09 url('assets/moodboard-triptych.png') center 15%/cover;}
+  .card::before{
+    content:'';position:absolute;inset:0;background:rgba(10,9,8,.22);z-index:1;
+  }
+  .card::after{
+    content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 2px,transparent 2px 6px);
+  }
+  .card:hover .card-bg{transform:scale(1.06);}
+  .card-tag{
+    position:absolute;top:16px;left:16px;font-family:'DM Mono';font-size:10px;
+    letter-spacing:.12em;color:var(--gold);text-transform:uppercase;z-index:2;
+  }
+  .card-info{
+    position:absolute;left:0;right:0;bottom:0;padding:18px;z-index:2;
+    background:linear-gradient(0deg,rgba(0,0,0,.85),transparent 80%);
+  }
+  .card-info h3{font-size:20px;font-family:'Inter';font-weight:500;text-transform:none;letter-spacing:0;line-height:1.2;}
+  .card-price{font-family:'DM Mono';font-size:13px;color:var(--bone);margin-top:4px;}
+  .quick-add{
+    position:absolute;left:0;right:0;bottom:0;padding:18px;z-index:3;
+    background:var(--bone);color:var(--void);
+    display:flex;align-items:center;justify-content:space-between;
+    transform:translateY(100%);transition:transform .4s var(--ease);
+  }
+  .card:hover .quick-add{transform:translateY(0);}
+  .quick-add span{font-family:'DM Mono';font-size:11px;letter-spacing:.1em;text-transform:uppercase;}
+  .quick-add button{
+    background:var(--void);color:var(--bone);border:none;
+    padding:9px 16px;font-family:'DM Mono';font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;cursor:pointer;transition:background .3s;
+  }
+  .quick-add button:hover{background:var(--ember);}
+
+  /* ---------- platform / network map ---------- */
+  .network{background:var(--char);border-top:1px solid rgba(242,236,224,.1);border-bottom:1px solid rgba(242,236,224,.1);}
+  .tiers{display:flex;flex-direction:column;gap:2px;}
+  .tier{
+    display:grid;grid-template-columns:64px 1fr 1.4fr;gap:28px;
+    padding:36px 0;border-bottom:1px solid rgba(242,236,224,.08);align-items:start;
+  }
+  .tier:last-child{border-bottom:none;}
+  .tier-index{font-family:'DM Mono';font-size:13px;color:var(--gold);letter-spacing:.1em;padding-top:6px;}
+  .tier-body h3{font-size:clamp(26px,4vw,42px);margin-bottom:8px;}
+  .tier-body .mono{font-size:11px;color:var(--smoke);}
+  .tier-body p{color:var(--smoke);font-size:13px;line-height:1.6;margin-top:10px;max-width:44ch;}
+  .mark-strip{display:flex;gap:10px;margin-top:16px;}
+  .mark-strip img{
+    width:44px;height:44px;object-fit:cover;border-radius:50%;
+    border:1px solid rgba(242,236,224,.18);background:#000;
+  }
+  .tier-links{display:flex;flex-direction:column;gap:10px;padding-top:6px;}
+  .tier-link{
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    padding:14px 18px;border:1px solid rgba(242,236,224,.12);
+    text-decoration:none;color:var(--bone);transition:border-color .3s var(--ease),background .3s var(--ease);
+  }
+  .tier-link:hover{border-color:var(--gold);background:rgba(201,162,75,.06);}
+  .tier-link .name{font-size:14px;}
+  .tier-link .url{font-family:'DM Mono';font-size:11px;color:var(--smoke);}
+  .tier-link:hover .url{color:var(--gold);}
+  .tier-link .go{font-family:'DM Mono';font-size:11px;color:var(--smoke);}
+
+  @media (max-width:760px){
+    .tier{grid-template-columns:1fr;gap:14px;}
+    .tier-index{padding-top:0;}
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- footer ---------- */
+  footer{
+    padding:90px 4vw 40px;border-top:1px solid rgba(242,236,224,.12);
+    background:var(--char);
+  }
+  .footer-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;margin-bottom:60px;}
+  .footer-top h2{font-size:clamp(32px,5vw,56px);max-width:10ch;}
+  .footer-links{display:flex;gap:60px;flex-wrap:wrap;}
+  .footer-links .mono{color:var(--gold);font-size:11px;margin-bottom:14px;display:block;}
+  .footer-links ul{list-style:none;}
+  .footer-links li{margin-bottom:10px;}
+  .footer-links a{color:var(--smoke);text-decoration:none;font-size:14px;transition:color .3s;}
+  .footer-links a:hover{color:var(--bone);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-family:'DM Mono';font-size:11px;letter-spacing:.08em;color:var(--smoke);
+    padding-top:24px;border-top:1px solid rgba(242,236,224,.08);
+  }
+
+  /* =====================================================
+     DRAWER (integrated site menu — from drawer prototype)
+     ===================================================== */
+  .scrim{
+    position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:290;
+    opacity:0;pointer-events:none;transition:opacity .5s var(--ease);
+  }
+  body.drawer-open .scrim{opacity:1;pointer-events:auto;}
+
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:min(560px,92vw);
+    background:var(--char);z-index:300;
+    display:flex;flex-direction:column;
+    transform:translateX(100%);transition:transform .55s var(--ease);
+    border-left:1px solid rgba(242,236,224,.08);
+  }
+  body.drawer-open .drawer{transform:translateX(0);}
+  .drawer-grain{position:absolute;inset:0;opacity:.04;mix-blend-mode:overlay;pointer-events:none;}
+
+  .drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 28px;border-bottom:1px solid rgba(242,236,224,.08);
+  }
+  .close-btn{
+    background:none;border:1px solid rgba(242,236,224,.25);color:var(--bone);
+    width:36px;height:36px;border-radius:50%;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+    transition:border-color .3s,color .3s,transform .3s var(--ease);
+  }
+  .close-btn:hover{border-color:var(--gold);color:var(--gold);transform:rotate(90deg);}
+
+  .drawer-body{flex:1;display:flex;overflow:hidden;}
+
+  .cat-list{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    padding:0 8px;position:relative;z-index:2;overflow-y:auto;
+  }
+  .cat-item{
+    position:relative;padding:14px 28px;cursor:pointer;
+    opacity:0;transform:translateX(24px);
+    transition:opacity .5s var(--ease),transform .5s var(--ease),background .3s var(--ease);
+    text-decoration:none;color:inherit;display:block;
+  }
+  body.drawer-open .cat-item{opacity:1;transform:translateX(0);}
+  .cat-item:nth-child(1){transition-delay:.06s;}
+  .cat-item:nth-child(2){transition-delay:.11s;}
+  .cat-item:nth-child(3){transition-delay:.16s;}
+  .cat-item:nth-child(4){transition-delay:.21s;}
+  .cat-item:nth-child(5){transition-delay:.26s;}
+  .cat-item:hover{background:rgba(242,236,224,.03);}
+  .cat-row{display:flex;align-items:baseline;gap:16px;}
+  .cat-index{font-family:'DM Mono';font-size:11px;color:var(--smoke);}
+  .cat-item:hover .cat-index{color:var(--gold);}
+  .cat-name{font-family:'Bebas Neue';font-size:clamp(30px,7vw,46px);line-height:1;position:relative;}
+  .cat-name::after{
+    content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--ember);
+    transition:width .4s var(--ease);
+  }
+  .cat-item:hover .cat-name::after{width:100%;}
+  .cat-count{font-family:'DM Mono';font-size:10px;color:var(--smoke);margin-top:2px;display:block;}
+
+  .preview{width:38%;position:relative;overflow:hidden;display:none;}
+  .preview-img{
+    position:absolute;inset:0;opacity:0;transition:opacity .5s var(--ease),transform 7s linear;
+    background:linear-gradient(150deg,var(--ash) 0%,var(--char) 60%,#000 100%);
+  }
+  .preview-img::after{
+    content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 2px,transparent 2px 6px);
+  }
+  .preview-img.active{opacity:1;transform:scale(1.08);}
+  .preview-img[data-cat="all-brands"]{background:#0c0a09 url('assets/portrait-black-tee.jpg') center 20%/cover;}
+  .preview-img[data-cat="women"]{background:#0c0a09 url('assets/portrait-green-back.jpg') center 15%/cover;}
+  .preview-img[data-cat="football"]{background:#0c0a09 url('assets/moodboard-triptych.png') center 10%/cover;}
+  .preview-img[data-cat="rawx"]{background:#050505 url('assets/logo-r-explosion.png') center/cover;}
+  .preview-img[data-cat="footwear"]{background:#0c0a09 url('assets/rooftop-campaign.png') center/cover;}
+  .preview-img::before{
+    content:'';position:absolute;inset:0;background:rgba(10,9,8,.25);
+  }
+  .preview-label{
+    position:absolute;left:24px;bottom:24px;z-index:2;
+    font-family:'DM Mono';font-size:11px;color:var(--gold);letter-spacing:.12em;
+  }
+  @media (min-width:760px){ .preview{display:block;} }
+
+  .drawer-foot{
+    padding:20px 28px;border-top:1px solid rgba(242,236,224,.08);
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  }
+  .foot-links{display:flex;gap:18px;flex-wrap:wrap;}
+  .foot-links a{color:var(--smoke);text-decoration:none;font-family:'DM Mono';font-size:11px;letter-spacing:.08em;transition:color .3s;}
+  .foot-links a:hover{color:var(--bone);}
+  .wa-btn{
+    background:var(--bone);color:var(--void);text-decoration:none;
+    font-family:'DM Mono';font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    padding:11px 18px;transition:background .3s,color .3s;white-space:nowrap;
+  }
+  .wa-btn:hover{background:var(--ember);color:var(--bone);}
+
+  @media (max-width:860px){
+    body{cursor:auto;}
+    #cursor-dot,#cursor-ring,#spotlight{display:none;}
+    .grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+    body{cursor:auto;}
+    #cursor-dot,#cursor-ring,#spotlight{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<svg class="grain" width="100%" height="100%">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)"/>
+</svg>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="spotlight"></div>
+
+<header>
+  <div class="wordmark">HANDS<span>&amp;</span>HEAD</div>
+  <div class="nav-right">
+    <span class="cart-pill mono">Cart (0)</span>
+    <button class="drawer-toggle" id="drawerToggle" aria-expanded="false" aria-controls="siteDrawer">
+      <span class="mono">Menu</span>
+      <span class="burger-icon"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="eyebrow"><span class="dot"></span> PRINT ON DEMAND — BANGLADESH <span class="api-live">API LIVE ⚡</span></div>
+  <h1>FROM THE<br>STREETS TO YOUR <em>WARDROBE</em></h1>
+  <p class="hero-sub">Take a screenshot of the tee you want and send it to our WhatsApp to place your order instantly — or shop directly below. No MOQ, new drops weekly, Bangladesh → world.</p>
+  <div class="hero-ctas">
+    <a href="https://handfilm.myshopify.com/pages/rawx-rani-mukherjee-the-bengal-tigress-in-ai-vfx" class="btn btn-fill" target="_blank" rel="noopener">Enter the Vault ↗</a>
+    <a href="#" class="btn btn-ghost">Order via WhatsApp</a>
+  </div>
+</section>
+
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>ALL BRANDS <b>✦</b> WOMEN <b>✦</b> FOOTBALL <b>✦</b> RAWx <b>✦</b> FOOTWEAR <b>✦</b> BANGLADESH → WORLD <b>✦</b></span>
+    <span>ALL BRANDS <b>✦</b> WOMEN <b>✦</b> FOOTBALL <b>✦</b> RAWx <b>✦</b> FOOTWEAR <b>✦</b> BANGLADESH → WORLD <b>✦</b></span>
+  </div>
+</div>
+
+<section class="section" id="shop">
+  <div class="section-head reveal">
+    <h2>Shop by Category</h2>
+    <span class="count mono">5 categories · live catalog</span>
+  </div>
+  <div class="rail reveal">
+    <a class="cat-card" data-cat="all-brands" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+      <div class="cat-bg"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-overlay"><span class="mono">01</span><h3>All Brands</h3></div>
+    </a>
+    <a class="cat-card" data-cat="women" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+      <div class="cat-bg"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-overlay"><span class="mono">02</span><h3>Women</h3><span class="cat-soon mono">Collection launching soon</span></div>
+    </a>
+    <a class="cat-card" data-cat="football" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+      <div class="cat-bg"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-overlay"><span class="mono">03</span><h3>Football</h3><span class="cat-soon mono">Collection launching soon</span></div>
+    </a>
+    <a class="cat-card" data-cat="rawx" href="https://handfilm.myshopify.com/pages/rawx-master-os" id="rawx" target="_blank" rel="noopener">
+      <div class="cat-bg"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-overlay"><span class="mono">04</span><h3>RAWx</h3></div>
+    </a>
+    <a class="cat-card" data-cat="footwear" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+      <div class="cat-bg"></div>
+      <div class="cat-arrow">→</div>
+      <div class="cat-overlay"><span class="mono">05</span><h3>Footwear</h3><span class="cat-soon mono">Collection launching soon</span></div>
+    </a>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="section-head reveal">
+    <h2>The Drop</h2>
+    <span class="count mono">6 pieces · syncing from Drive</span>
+  </div>
+  <div class="grid reveal">
+    <!-- Confirmed from live handsandhead page: catalog renders via "SYNCING GOOGLE DRIVE ENGINE..." — Drive is the real spine.
+         These 6 cards are static placeholders; wire to the same Drive sync endpoint used at
+         https://handfilm.myshopify.com/pages/handsandhead once the API/webhook is exposed. -->
+    <div class="card">
+      <div class="card-bg"></div>
+      <span class="card-tag">New</span>
+      <div class="card-info"><h3>Drop-Shoulder Tee</h3><div class="card-price">৳650</div></div>
+      <div class="quick-add"><span>S · M · L · XL</span><button>Quick Add</button></div>
+    </div>
+    <div class="card">
+      <div class="card-bg"></div>
+      <span class="card-tag">Women</span>
+      <div class="card-info"><h3>Cropped Track Jacket</h3><div class="card-price">৳1,450</div></div>
+      <div class="quick-add"><span>S · M · L</span><button>Quick Add</button></div>
+    </div>
+    <div class="card">
+      <div class="card-bg"></div>
+      <span class="card-tag">Football</span>
+      <div class="card-info"><h3>Club Jersey — Away Kit</h3><div class="card-price">৳1,200</div></div>
+      <div class="quick-add"><span>S · M · L · XL</span><button>Quick Add</button></div>
+    </div>
+    <div class="card">
+      <div class="card-bg"></div>
+      <span class="card-tag">RAWx</span>
+      <div class="card-info"><h3>Acid Signal Tee</h3><div class="card-price">৳1,100</div></div>
+      <div class="quick-add"><span>S · M · L · XL</span><button>Quick Add</button></div>
+    </div>
+    <div class="card">
+      <div class="card-bg"></div>
+      <span class="card-tag">Footwear</span>
+      <div class="card-info"><h3>Court Runner</h3><div class="card-price">৳2,100</div></div>
+      <div class="quick-add"><span>39 · 40 · 41 · 42</span><button>Quick Add</button></div>
+    </div>
+    <div class="card">
+      <div class="card-bg"></div>
+      <span class="card-tag">Archive</span>
+      <div class="card-info"><h3>Server Rack Hoodie</h3><div class="card-price">৳1,950</div></div>
+      <div class="quick-add"><span>S · M · L · XL</span><button>Quick Add</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= B2C → B2B → BRAND NETWORK MAP ================= -->
+<section class="network">
+  <div class="section" style="padding-bottom:60px;">
+    <div class="section-head reveal">
+      <h2>The Network</h2>
+      <span class="count mono">B2C → B2B → Brand</span>
+    </div>
+    <p class="lede reveal">One print-on-demand operation, three headless surfaces. Shoppers land here, wholesale buyers route through the sourcing terminals, and RAWx sits above both as the brand layer that both surfaces draw from.</p>
+
+    <div class="tiers reveal">
+      <div class="tier">
+        <div class="tier-index">01<br>D2C</div>
+        <div class="tier-body">
+          <span class="mono">Headless B2C Platform</span>
+          <h3>Consumer Storefronts</h3>
+          <p>Where retail customers shop direct — the fashion lifestyle vault and the digital goods store, both on the same Shopify backend.</p>
+        </div>
+        <div class="tier-links">
+          <a class="tier-link" href="https://handfilm.myshopify.com/pages/handsandhead" target="_blank" rel="noopener">
+            <span class="name">Fashion Lifestyle — Hands &amp; Head</span>
+            <span class="url">handfilm.myshopify.com/pages/handsandhead ↗</span>
+          </a>
+          <a class="tier-link" href="https://handfilm.myshopify.com" target="_blank" rel="noopener">
+            <span class="name">Digital Goods — AI Prompt Packs &amp; Reels</span>
+            <span class="url">handfilm.myshopify.com ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="tier-index">02<br>B2B</div>
+        <div class="tier-body">
+          <span class="mono">Headless B2B Platform</span>
+          <h3>Sourcing Terminals</h3>
+          <p>Wholesale and factory-facing tools — RMG production sourcing and the Arutemika EU procurement terminal.</p>
+        </div>
+        <div class="tier-links">
+          <a class="tier-link" href="https://handfilm.github.io/rmg/" target="_blank" rel="noopener">
+            <span class="name">RMG — Ready-Made Garments Sourcing</span>
+            <span class="url">handfilm.github.io/rmg ↗</span>
+          </a>
+          <a class="tier-link" href="https://handfilm.github.io/arutemika-eu/" target="_blank" rel="noopener">
+            <span class="name">Arutemika EU — Procurement Terminal</span>
+            <span class="url">handfilm.github.io/arutemika-eu ↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="tier">
+        <div class="tier-index">03<br>BRAND</div>
+        <div class="tier-body">
+          <span class="mono">RAWx — The Brand</span>
+          <h3>Brand Layer</h3>
+          <p>The creative universe both storefronts pull imagery, muse, and editorial language from — the RAWx OS dashboard and the RAWx brand site.</p>
+          <div class="mark-strip">
+            <img src="assets/logo-hummingbird.png" alt="RAWx infinity/hummingbird mark" loading="lazy">
+            <img src="assets/logo-fitness.png" alt="RAWx Fitness mark" loading="lazy">
+            <img src="assets/logo-lips.png" alt="RAWx lips mark" loading="lazy">
+            <img src="assets/logo-anchor.png" alt="RAWx anchor mark" loading="lazy">
+          </div>
+        </div>
+        <div class="tier-links">
+          <a class="tier-link" href="https://handfilm.github.io/RAWxOS/" target="_blank" rel="noopener">
+            <span class="name">RAWx OS — Brand Dashboard</span>
+            <span class="url">handfilm.github.io/RAWxOS ↗</span>
+          </a>
+          <a class="tier-link" href="https://handfilm.github.io/rawx" target="_blank" rel="noopener">
+            <span class="name">RAWx — Brand Site</span>
+            <span class="url">handfilm.github.io/rawx ↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top reveal">
+    <h2>Screenshot it.<br>Send it.<br>Wear it.</h2>
+    <div class="footer-links">
+      <div>
+        <span class="mono">Shop</span>
+        <ul>
+          <li><a href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">All Brands</a></li>
+          <li><a href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">Women — soon</a></li>
+          <li><a href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">Football — soon</a></li>
+          <li><a href="https://handfilm.myshopify.com/pages/rawx-master-os" target="_blank" rel="noopener">RAWx</a></li>
+          <li><a href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">Footwear — soon</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="mono">Network</span>
+        <ul>
+          <li><a href="https://handfilm.github.io/rmg/" target="_blank" rel="noopener">RMG (B2B)</a></li>
+          <li><a href="https://handfilm.github.io/arutemika-eu/" target="_blank" rel="noopener">Arutemika EU (B2B)</a></li>
+          <li><a href="https://handfilm.github.io/RAWxOS/" target="_blank" rel="noopener">RAWx OS</a></li>
+        </ul>
+      </div>
+      <div>
+        <span class="mono">Order</span>
+        <ul><li><a href="#">WhatsApp</a></li><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 HANDS &amp; HEAD · DHAKA, BANGLADESH</span>
+    <span>23.8103°N · 90.4125°E</span>
+  </div>
+</footer>
+
+<!-- ================= INTEGRATED DRAWER (site menu) ================= -->
+<div class="scrim" id="scrim"></div>
+
+<aside class="drawer" id="siteDrawer" role="dialog" aria-label="Site menu" aria-hidden="true">
+  <div class="drawer-grain"></div>
+  <div class="drawer-head">
+    <span class="mono" style="color:var(--smoke)">Index — 5</span>
+    <button class="close-btn" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="drawer-body">
+    <nav class="cat-list">
+      <a class="cat-item" data-cat="all-brands" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+        <div class="cat-row"><span class="cat-index">01</span><span class="cat-name">All Brands</span></div>
+        <span class="cat-count">Full catalog · live</span>
+      </a>
+      <a class="cat-item" data-cat="women" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+        <div class="cat-row"><span class="cat-index">02</span><span class="cat-name">Women</span></div>
+        <span class="cat-count">Launching soon</span>
+      </a>
+      <a class="cat-item" data-cat="football" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+        <div class="cat-row"><span class="cat-index">03</span><span class="cat-name">Football</span></div>
+        <span class="cat-count">Launching soon</span>
+      </a>
+      <a class="cat-item" data-cat="rawx" href="https://handfilm.myshopify.com/pages/rawx-master-os" target="_blank" rel="noopener">
+        <div class="cat-row"><span class="cat-index">04</span><span class="cat-name">RAWx</span></div>
+        <span class="cat-count">Brand layer</span>
+      </a>
+      <a class="cat-item" data-cat="footwear" href="https://handfilm.myshopify.com/collections/all" target="_blank" rel="noopener">
+        <div class="cat-row"><span class="cat-index">05</span><span class="cat-name">Footwear</span></div>
+        <span class="cat-count">Launching soon</span>
+      </a>
+    </nav>
+
+    <div class="preview" id="preview">
+      <div class="preview-img active" data-cat="all-brands"></div>
+      <div class="preview-img" data-cat="women"></div>
+      <div class="preview-img" data-cat="football"></div>
+      <div class="preview-img" data-cat="rawx"></div>
+      <div class="preview-img" data-cat="footwear"></div>
+      <span class="preview-label mono" id="preview-label">All Brands — Full catalog</span>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <div class="foot-links">
+      <a href="#">Lookbook</a>
+      <a href="#">About</a>
+      <a href="https://handfilm.myshopify.com/pages/contact" target="_blank" rel="noopener">Contact</a>
+    </div>
+    <a href="#" class="wa-btn">Order via WhatsApp</a>
+  </div>
+</aside>
+
+<script>
+  // ---- custom cursor + hard-light spotlight ----
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(hover:none)').matches;
+
+  if(!reduceMotion && !isTouch){
+    let mx=0,my=0,rx=0,ry=0;
+    window.addEventListener('mousemove', e=>{
+      mx=e.clientX; my=e.clientY;
+      dot.style.left=mx+'px'; dot.style.top=my+'px';
+      document.documentElement.style.setProperty('--mx', mx+'px');
+      document.documentElement.style.setProperty('--my', my+'px');
+    });
+    function loop(){
+      rx += (mx-rx)*0.15; ry += (my-ry)*0.15;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    document.querySelectorAll('.card, .cat-card, a, button').forEach(el=>{
+      el.addEventListener('mouseenter', ()=>ring.classList.add('view'));
+      el.addEventListener('mouseleave', ()=>ring.classList.remove('view'));
+    });
+  }
+
+  // ---- scroll reveal ----
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); } });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ---- integrated drawer menu ----
+  const body = document.body;
+  const drawerToggle = document.getElementById('drawerToggle');
+  const drawerClose = document.getElementById('drawerClose');
+  const scrim = document.getElementById('scrim');
+  const drawerEl = document.getElementById('siteDrawer');
+  const catItems = document.querySelectorAll('.cat-item');
+  const previews = document.querySelectorAll('.preview-img');
+  const label = document.getElementById('preview-label');
+
+  function openDrawer(){
+    body.classList.add('drawer-open');
+    drawerToggle.setAttribute('aria-expanded','true');
+    drawerEl.setAttribute('aria-hidden','false');
+  }
+  function closeDrawer(){
+    body.classList.remove('drawer-open');
+    drawerToggle.setAttribute('aria-expanded','false');
+    drawerEl.setAttribute('aria-hidden','true');
+  }
+
+  drawerToggle.addEventListener('click', ()=> body.classList.contains('drawer-open') ? closeDrawer() : openDrawer());
+  drawerClose.addEventListener('click', closeDrawer);
+  scrim.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeDrawer(); });
+
+  catItems.forEach(item=>{
+    item.addEventListener('mouseenter', ()=>{
+      const cat = item.dataset.cat;
+      previews.forEach(p=> p.classList.toggle('active', p.dataset.cat === cat));
+      const name = item.querySelector('.cat-name').textContent;
+      const count = item.querySelector('.cat-count').textContent;
+      label.textContent = `${name} — ${count}`;
+    });
+    item.addEventListener('click', closeDrawer);
+  });
+</script>
+
+</body>
+</html>

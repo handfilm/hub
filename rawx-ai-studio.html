@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en" data-module="hero">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWx — NexOS // HEADLESS CONTENT OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Barlow+Condensed:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RAWX NEXOS — CSS ARCHITECTURE
+   ============================================================ */
+
+:root {
+  --void:        #050505;
+  --grid:        #1a1a1a;
+  --acid:        #b8ff00;
+  --acid-dim:    #7aaa00;
+  --acid-glow:   rgba(184,255,0,0.15);
+  --hazard:      #ff3300;
+  --hazard-dim:  rgba(255,51,0,0.12);
+  --white:       #f0f0f0;
+  --white-dim:   #888888;
+  --white-ghost: rgba(240,240,240,0.04);
+  --mono:        'JetBrains Mono', 'Space Mono', monospace;
+  --brutal:      'Barlow Condensed', sans-serif;
+  --border:      1px solid rgba(240,240,240,0.08);
+  --border-acid: 1px solid rgba(184,255,0,0.3);
+  --nav-w:       64px;
+  --transition:  0.18s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 13px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--acid) var(--void);
+  cursor: none;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--acid); }
+
+body {
+  background: var(--void);
+  color: var(--white);
+  font-family: var(--mono);
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---- CUSTOM CURSOR ---- */
+#cursor-ring,
+#cursor-dot {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%,-50%);
+  mix-blend-mode: difference;
+}
+#cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid var(--acid);
+  transition: width .12s, height .12s, opacity .12s;
+  opacity: 0.7;
+}
+#cursor-dot {
+  width: 4px; height: 4px;
+  background: var(--acid);
+}
+body.cursor-hover #cursor-ring { width: 48px; height: 48px; opacity: 1; }
+body.cursor-active #cursor-ring { width: 20px; height: 20px; }
+
+/* ---- BOOT SEQUENCE ---- */
+#boot-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: var(--void);
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: center;
+  padding: 48px;
+  transition: opacity 0.6s ease;
+}
+#boot-overlay.done { opacity: 0; pointer-events: none; }
+#boot-log {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--acid);
+  line-height: 2;
+  max-width: 600px;
+}
+#boot-log .b-line { opacity: 0; }
+#boot-log .b-line.show { opacity: 1; }
+#boot-bar {
+  margin-top: 32px;
+  width: 300px; height: 2px;
+  background: var(--void-3);
+  position: relative;
+  overflow: hidden;
+}
+#boot-bar::after {
+  content: '';
+  position: absolute; inset-y: 0; left: 0;
+  width: 0%; background: var(--acid);
+  transition: width 1.8s cubic-bezier(0.2,0,0.4,1);
+}
+#boot-bar.run::after { width: 100%; }
+#boot-version {
+  margin-top: 16px;
+  font-size: 10px;
+  color: var(--white-dim);
+}
+
+/* ---- LAYOUT SHELL ---- */
+#os-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---- SIDEBAR NAV ---- */
+#nav-rail {
+  height: 100vh;
+  background: var(--void-2);
+  border-right: var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+}
+#nav-rail::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--acid) 40%, var(--acid) 60%, transparent);
+  opacity: 0.3;
+}
+
+#nav-logo {
+  font-family: var(--brutal);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  padding: 12px 0;
+  border-bottom: var(--border);
+  width: 100%;
+  text-align: center;
+  padding-bottom: 20px;
+  margin-bottom: 12px;
+}
+#nav-logo span { color: var(--acid); }
+
+.nav-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--white-dim);
+  transition: color var(--transition), background var(--transition);
+  outline: none;
+  border-bottom: var(--border);
+}
+.nav-btn:hover { color: var(--white); background: var(--white-ghost); }
+.nav-btn.active { color: var(--acid); background: var(--acid-glow); }
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 20%; bottom: 20%;
+  width: 2px;
+  background: var(--acid);
+  border-radius: 1px 0 0 1px;
+}
+.nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.nav-btn .nav-label {
+  position: absolute;
+  left: calc(100% + 12px);
+  background: var(--void-3);
+  border: var(--border-acid);
+  color: var(--acid);
+  font-family: var(--mono);
+  font-size: 10px;
+  white-space: nowrap;
+  padding: 4px 10px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 200;
+}
+.nav-btn:hover .nav-label { opacity: 1; transform: translateX(0); }
+
+/* ---- TOPBAR ---- */
+#topbar {
+  position: fixed;
+  top: 0; left: var(--nav-w); right: 0;
+  height: 40px;
+  background: rgba(5,5,5,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 50;
+  gap: 24px;
+}
+#topbar-module {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--acid);
+  letter-spacing: 0.12em;
+}
+#topbar-crumb {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--white-dim);
+}
+#topbar-clock {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--white-dim);
+}
+#topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--acid);
+}
+#topbar-status::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--acid);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ---- MAIN CONTENT ---- */
+#main-view {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 40px;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+/* ---- STRUCTURAL GRID BACKGROUND ---- */
+#main-view::before {
+  content: '';
+  position: fixed;
+  top: 40px; left: var(--nav-w); right: 0; bottom: 0;
+  background-image:
+    linear-gradient(rgba(240,240,240,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,240,240,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- SECTIONS ---- */
+.module-section {
+  min-height: 100vh;
+  padding: 64px 48px 80px;
+  position: relative;
+  z-index: 1;
+}
+.module-section + .module-section {
+  border-top: var(--border);
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--acid);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+.section-label::before {
+  content: attr(data-index);
+  color: var(--white-dim);
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  background: rgba(240,240,240,0.08);
+}
+
+/* ============================================================
+   MODULE: HERO (#module-hero)
+   ============================================================ */
+#module-hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 40px);
+  padding: 64px 48px;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#hero-wordmark {
+  font-family: var(--brutal);
+  font-weight: 900;
+  font-size: clamp(120px, 20vw, 260px);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  position: relative;
+  z-index: 2;
+  user-select: none;
+}
+#hero-wordmark .r { color: var(--acid); }
+#hero-wordmark .ghost {
+  position: absolute;
+  top: 4px; left: 4px;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(184,255,0,0.15);
+  pointer-events: none;
+  z-index: 1;
+}
+
+#hero-descriptor {
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--white-dim);
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  z-index: 2;
+}
+#hero-descriptor span { color: var(--acid); }
+
+#hero-tagline {
+  margin-top: 48px;
+  font-family: var(--brutal);
+  font-weight: 300;
+  font-size: clamp(22px, 3vw, 40px);
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  max-width: 640px;
+  border-left: 3px solid var(--acid);
+  padding-left: 24px;
+  z-index: 2;
+}
+
+#hero-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1px;
+  margin-top: 64px;
+  background: rgba(240,240,240,0.08);
+  border: var(--border);
+  z-index: 2;
+}
+
+.hero-mod-card {
+  background: var(--void);
+  padding: 20px;
+  cursor: none;
+  transition: background var(--transition), color var(--transition);
+  border: none;
+  text-align: left;
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+}
+.hero-mod-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.hero-mod-card:hover { background: var(--void-3); }
+.hero-mod-card:hover::before { transform: scaleX(1); }
+.hero-mod-card:hover .hmc-arrow { color: var(--acid); transform: translateX(4px); }
+
+.hmc-index {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--white-dim);
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+.hmc-title {
+  font-family: var(--brutal);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.hmc-sub {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--white-dim);
+  line-height: 1.6;
+}
+.hmc-arrow {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--white-dim);
+  transition: color var(--transition), transform var(--transition);
+  display: block;
+}
+
+#hero-bg-text {
+  position: absolute;
+  bottom: -20px; right: -20px;
+  font-family: var(--brutal);
+  font-weight: 900;
+  font-size: clamp(80px, 16vw, 180px);
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(240,240,240,0.04);
+  pointer-events: none;
+  letter-spacing: -0.02em;
+  user-select: none;
+  z-index: 0;
+  line-height: 1;
+}
+
+/* ============================================================
+   MODULE: SLIDER (#module-slider)
+   ============================================================ */
+#module-slider {
+  background: var(--void-2);
+}
+
+.slider-viewport {
+  width: 100%;
+  aspect-ratio: 16/7;
+  background: var(--void-3);
+  border: var(--border);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+
+.slider-frame {
+  width: 100%; height: 100%;
+  border: none;
+  display: none;
+}
+.slider-frame.active { display: block; }
+
+.slider-placeholder {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px;
+  z-index: 1;
+}
+.slider-placeholder.hidden { display: none; }
+.slider-placeholder-icon {
+  width: 64px; height: 64px;
+  border: 1px solid rgba(240,240,240,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.slider-placeholder-icon svg { width: 28px; height: 28px; stroke: var(--white-dim); fill: none; stroke-width: 1; }
+.slider-placeholder p {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--white-dim);
+  letter-spacing: 0.1em;
+}
+
+.slider-controls {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.slider-tab {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--void-3);
+  border: none;
+  color: var(--white-dim);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: none;
+  transition: background var(--transition), color var(--transition);
+  text-align: left;
+  position: relative;
+}
+.slider-tab:hover { background: var(--void-2); color: var(--white); }
+.slider-tab.active {
+  background: var(--acid-glow);
+  color: var(--acid);
+  border-bottom: 1px solid var(--acid);
+}
+
+.external-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 10px 20px;
+  background: none;
+  border: var(--border-acid);
+  color: var(--acid);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: none;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+.external-link-btn:hover { background: var(--acid); color: var(--void); }
+.external-link-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ============================================================
+   MODULE: AI STUDIO (#module-ai-studio)
+   ============================================================ */
+#module-ai-studio {}
+
+.studio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(240,240,240,0.08);
+  border: var(--border);
+  margin-bottom: 32px;
+}
+
+.studio-panel {
+  background: var(--void);
+  padding: 28px;
+  position: relative;
+}
+.studio-panel-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--acid);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.studio-panel-label::before {
+  content: '';
+  width: 4px; height: 4px;
+  background: var(--acid);
+  display: block;
+}
+.studio-panel h3 {
+  font-family: var(--brutal);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.studio-panel p {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--white-dim);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.workflow-chain {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: var(--border);
+}
+.wf-step {
+  padding: 12px 16px;
+  border-bottom: var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+.wf-step:last-child { border-bottom: none; }
+.wf-step-n {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--acid);
+  min-width: 24px;
+}
+.wf-step-tool {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--white);
+  font-weight: 700;
+}
+.wf-step-role {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--white-dim);
+  margin-left: auto;
+}
+
+/* ============================================================
+   MODULE: BRAND BIBLE (#module-bible)
+   ============================================================ */
+#module-bible {}
+
+.bible-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: rgba(240,240,240,0.08);
+  margin-bottom: 32px;
+}
+.bible-card {
+  background: var(--void);
+  padding: 28px;
+}
+.bible-card-head {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--white-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  border-bottom: var(--border);
+  padding-bottom: 10px;
+}
+.bible-card h3 {
+  font-family: var(--brutal);
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.bible-card p {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--white-dim);
+  line-height: 1.8;
+}
+
+.color-swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.swatch {
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 4px 6px;
+}
+.swatch-label {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.type-sample {
+  margin-bottom: 8px;
+}
+.type-sample .ts-name {
+  font-size: 9px;
+  color: var(--white-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+}
+.type-sample .ts-text { line-height: 1.2; }
+.ts-display { font-family: var(--brutal); font-weight: 900; font-size: 32px; }
+.ts-mono { font-family: var(--mono); font-size: 11px; color: var(--acid); }
+
+/* ============================================================
+   MODULE: CORE / SHOP (#module-core)
+   ============================================================ */
+#module-core {}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  background: rgba(240,240,240,0.08);
+  border: var(--border);
+  margin-bottom: 32px;
+}
+
+.product-card {
+  background: var(--void);
+  padding: 0;
+  cursor: none;
+  transition: background var(--transition);
+  text-decoration: none;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+.product-card:hover { background: var(--void-3); }
+.product-card:hover .pc-img-overlay { opacity: 1; }
+
+.pc-img-wrap {
+  aspect-ratio: 3/4;
+  background: var(--void-3);
+  position: relative;
+  overflow: hidden;
+}
+.pc-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition: opacity var(--transition), transform 0.4s ease;
+}
+.product-card:hover .pc-img-wrap img { opacity: 1; transform: scale(1.03); }
+.pc-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(5,5,5,0.8) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.pc-img-skeleton {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, var(--void-3) 25%, var(--void-2) 50%, var(--void-3) 75%);
+  background-size: 200% 200%;
+  animation: shimmer 1.8s infinite;
+  display: flex; align-items: center; justify-content: center;
+}
+.pc-img-skeleton svg { width: 32px; height: 32px; stroke: var(--grid); fill: none; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.pc-meta {
+  padding: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: var(--border);
+}
+.pc-tag {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--acid);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.pc-title {
+  font-family: var(--brutal);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.pc-price {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--white-dim);
+  margin-top: auto;
+}
+.pc-price [data-shopify-target="price"] { color: var(--acid); font-weight: 700; }
+
+/* Shopify data targets */
+[data-shopify-target] { transition: opacity 0.3s; }
+[data-shopify-target].loading { opacity: 0.4; }
+
+/* ============================================================
+   MODULE: MCC (#module-mcc)
+   ============================================================ */
+#module-mcc {}
+
+.iframe-full {
+  width: 100%;
+  height: 80vh;
+  border: var(--border);
+  background: var(--void-2);
+}
+.iframe-wrapper {
+  position: relative;
+}
+.iframe-topbar {
+  background: var(--void-2);
+  border: var(--border);
+  border-bottom: none;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--white-dim);
+}
+.iframe-dots { display: flex; gap: 4px; }
+.iframe-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(240,240,240,0.15);
+}
+.iframe-dots span:first-child { background: var(--hazard); }
+.iframe-url { color: var(--acid); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ============================================================
+   SECTION HEADINGS
+   ============================================================ */
+.module-title {
+  font-family: var(--brutal);
+  font-weight: 900;
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.module-title span { color: var(--acid); }
+
+.module-subtitle {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--white-dim);
+  letter-spacing: 0.12em;
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.module-subtitle::after {
+  content: '';
+  height: 1px;
+  width: 80px;
+  background: rgba(240,240,240,0.12);
+}
+
+/* ============================================================
+   SCROLL PROGRESS & SECTION INDICATOR
+   ============================================================ */
+#scroll-rail {
+  position: fixed;
+  right: 0; top: 40px; bottom: 0;
+  width: 3px;
+  background: var(--void-3);
+  z-index: 100;
+}
+#scroll-thumb {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  background: var(--acid);
+  height: 0%;
+  transition: height 0.05s;
+  box-shadow: 0 0 8px var(--acid);
+}
+
+/* ============================================================
+   GLITCH TRANSITION OVERLAY
+   ============================================================ */
+#glitch-overlay {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 8000;
+  display: none;
+}
+#glitch-overlay.fire {
+  display: block;
+  animation: glitch-flash 0.22s forwards;
+}
+@keyframes glitch-flash {
+  0%   { background: transparent; }
+  10%  { background: rgba(184,255,0,0.06); }
+  15%  { background: transparent; }
+  25%  { background: rgba(184,255,0,0.04); clip-path: inset(30% 0 50% 0); }
+  30%  { background: transparent; clip-path: none; }
+  45%  { background: rgba(255,51,0,0.03); clip-path: inset(60% 0 20% 0); }
+  50%  { background: transparent; clip-path: none; }
+  100% { background: transparent; }
+}
+
+/* ============================================================
+   SECTION HIGHLIGHT ON CLICK (scroll reveal)
+   ============================================================ */
+.module-section { opacity: 0; animation: fadeInSection 0.5s ease forwards; animation-play-state: paused; }
+.module-section.in-view { animation-play-state: running; }
+@keyframes fadeInSection {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  :root { --nav-w: 48px; }
+  .studio-grid { grid-template-columns: 1fr; }
+  .bible-grid { grid-template-columns: 1fr 1fr; }
+  .module-section { padding: 40px 24px 60px; }
+}
+@media (max-width: 600px) {
+  :root { --nav-w: 44px; }
+  .bible-grid { grid-template-columns: 1fr; }
+  #hero-wordmark { font-size: 80px; }
+  #hero-modules-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   SCANLINE overlay
+   ============================================================ */
+#crt-lines {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  opacity: 0.4;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.divider {
+  height: 1px;
+  background: rgba(240,240,240,0.08);
+  margin: 48px 0;
+}
+.acid { color: var(--acid); }
+.mono { font-family: var(--mono); font-size: 10px; }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-ring"></div>
+<div id="cursor-dot"></div>
+
+<!-- CRT SCANLINES -->
+<div id="crt-lines"></div>
+
+<!-- GLITCH TRANSITION -->
+<div id="glitch-overlay"></div>
+
+<!-- BOOT SEQUENCE -->
+<div id="boot-overlay">
+  <div id="boot-log">
+    <div class="b-line">RAWX_NEXOS v2.1.0 — HEADLESS CONTENT OS</div>
+    <div class="b-line">Initializing kernel modules...</div>
+    <div class="b-line">Loading brutalist render engine... <span style="color:#f0f0f0">OK</span></div>
+    <div class="b-line">Mounting asset manifests... <span style="color:#f0f0f0">OK</span></div>
+    <div class="b-line">Connecting to Shopify GraphQL endpoint... <span style="color:#f0f0f0">STANDBY</span></div>
+    <div class="b-line">Injecting module shell... <span style="color:#f0f0f0">OK</span></div>
+    <div class="b-line">CRT overlay engaged.</div>
+    <div class="b-line" id="boot-ready">SYSTEM READY — RAWX_OS ONLINE <span style="color:#050505;background:#b8ff00;padding:0 6px">ENTER</span></div>
+  </div>
+  <div id="boot-bar"></div>
+  <div id="boot-version">BUILD 2025.001 // RAWx × HANDFILM // BD</div>
+</div>
+
+<!-- OS SHELL -->
+<div id="os-shell">
+
+  <!-- SIDEBAR NAV -->
+  <nav id="nav-rail" aria-label="NexOS Navigation">
+    <div id="nav-logo">RAW<span>x</span></div>
+
+    <button class="nav-btn active" data-target="module-hero" title="Home">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">HOME // NEXOS</span>
+    </button>
+
+    <button class="nav-btn" data-target="module-slider" title="Visual OS">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span class="nav-label">VISUAL OS</span>
+    </button>
+
+    <button class="nav-btn" data-target="module-ai-studio" title="AI Studio">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span class="nav-label">AI STUDIO</span>
+    </button>
+
+    <button class="nav-btn" data-target="module-bible" title="Brand Bible">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span class="nav-label">BRAND BIBLE</span>
+    </button>
+
+    <button class="nav-btn" data-target="module-core" title="Shop Core">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="nav-label">SHOP CORE</span>
+    </button>
+
+    <button class="nav-btn" data-target="module-mcc" title="MCC Portal">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span class="nav-label">MCC PORTAL</span>
+    </button>
+
+  </nav>
+
+  <!-- MAIN VIEW -->
+  <div id="main-view">
+
+    <!-- TOPBAR -->
+    <div id="topbar">
+      <div id="topbar-module">RAWX_NEXOS</div>
+      <div id="topbar-crumb">//&nbsp;<span id="topbar-page">HOME</span></div>
+      <div id="topbar-clock"></div>
+      <div id="topbar-status">LIVE</div>
+    </div>
+
+    <!-- ================================================================
+         SECTION 00: HERO
+         ================================================================ -->
+    <section class="module-section" id="module-hero">
+      <div id="hero-bg-text" aria-hidden="true">RAWX</div>
+
+      <div class="section-label" data-index="00">SYSTEM ENTRY // RAWX NEXOS</div>
+
+      <div id="hero-wordmark" aria-label="RAWx">
+        <div class="ghost" aria-hidden="true">RAWx</div>
+        <span class="r">R</span>AWx
+      </div>
+
+      <div id="hero-descriptor">
+        <span>INDUSTRIAL TECHNO APPAREL</span>
+        <span style="color:var(--white-dim)">×</span>
+        <span>BANGLADESH // GLOBAL</span>
+        <span style="color:var(--white-dim)">×</span>
+        <span>EST. 2024</span>
+      </div>
+
+      <div id="hero-tagline">
+        Brutalist garments engineered for those who build systems, break cycles, and wear their architecture.
+      </div>
+
+      <!-- MODULE NAVIGATION GRID -->
+      <div id="hero-modules-grid">
+        <a href="#module-slider" class="hero-mod-card" data-scroll-to="module-slider">
+          <div class="hmc-index">MODULE_01</div>
+          <div class="hmc-title">Visual OS</div>
+          <div class="hmc-sub">4K/8K showcase engine<br>Slider + campaign drops</div>
+          <span class="hmc-arrow">→</span>
+        </a>
+        <a href="#module-ai-studio" class="hero-mod-card" data-scroll-to="module-ai-studio">
+          <div class="hmc-index">MODULE_02</div>
+          <div class="hmc-title">AI Studio</div>
+          <div class="hmc-sub">Handfilm × Grok × Gemini<br>Full AI production chain</div>
+          <span class="hmc-arrow">→</span>
+        </a>
+        <a href="#module-bible" class="hero-mod-card" data-scroll-to="module-bible">
+          <div class="hmc-index">MODULE_03</div>
+          <div class="hmc-title">Brand Bible</div>
+          <div class="hmc-sub">RAWx identity system<br>Colors, type, doctrine</div>
+          <span class="hmc-arrow">→</span>
+        </a>
+        <a href="#module-core" class="hero-mod-card" data-scroll-to="module-core">
+          <div class="hmc-index">MODULE_04</div>
+          <div class="hmc-title">Shop Core</div>
+          <div class="hmc-sub">Headless product grid<br>GraphQL-ready</div>
+          <span class="hmc-arrow">→</span>
+        </a>
+        <a href="#module-mcc" class="hero-mod-card" data-scroll-to="module-mcc">
+          <div class="hmc-index">MODULE_05</div>
+          <div class="hmc-title">MCC Portal</div>
+          <div class="hmc-sub">Master Command Center<br>Brand ecosystem hub</div>
+          <span class="hmc-arrow">→</span>
+        </a>
+        <a href="https://handfilm.github.io/rawx" target="_blank" rel="noopener" class="hero-mod-card">
+          <div class="hmc-index">EXTERNAL_00</div>
+          <div class="hmc-title">RAWx Live</div>
+          <div class="hmc-sub">GitHub Pages<br>handfilm.github.io/rawx</div>
+          <span class="hmc-arrow" style="color:var(--acid)">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SECTION 01: VISUAL OS / SLIDER
+         ================================================================ -->
+    <section class="module-section" id="module-slider">
+      <div class="section-label" data-index="01">VISUAL SHOWCASE // CAMPAIGN ENGINE</div>
+      <h2 class="module-title">VISUAL <span>OS</span></h2>
+      <p class="module-subtitle">4K/8K CAMPAIGN CONTENT // SLIDER SYSTEM // RAWX MASTER OS</p>
+
+      <div class="iframe-wrapper">
+        <div class="iframe-topbar">
+          <div class="iframe-dots"><span></span><span></span><span></span></div>
+          <div class="iframe-url" id="slider-url-display">handfilm.myshopify.com/pages/rawx-master-os-slider-1</div>
+          <span style="margin-left:auto; color:var(--acid);">LIVE FEED</span>
+        </div>
+
+        <div class="slider-viewport">
+          <!-- Placeholder shown before iframe loads -->
+          <div class="slider-placeholder" id="slider-ph">
+            <div class="slider-placeholder-icon">
+              <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <p>SELECT SOURCE BELOW TO LOAD</p>
+          </div>
+          <iframe
+            id="iframe-slider"
+            class="slider-frame"
+            title="RAWx Master OS Slider"
+            loading="lazy"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <div class="slider-controls">
+          <button class="slider-tab active" data-iframe-src="https://handfilm.myshopify.com/pages/rawx-master-os-slider-1" data-label="handfilm.myshopify.com/pages/rawx-master-os-slider-1">
+            SLIDER_v1 // MASTER OS
+          </button>
+          <button class="slider-tab" data-iframe-src="https://handfilm.myshopify.com/pages/rawx-os-v2" data-label="handfilm.myshopify.com/pages/rawx-os-v2">
+            OS_v2 // VISUAL ENGINE
+          </button>
+          <button class="slider-tab" data-iframe-src="https://handfilm.myshopify.com/pages/rawx-master-os" data-label="handfilm.myshopify.com/pages/rawx-master-os">
+            MASTER OS // FULL
+          </button>
+        </div>
+      </div>
+
+      <a href="https://handfilm.myshopify.com/pages/rawx-master-os-slider-1" target="_blank" rel="noopener" class="external-link-btn" style="margin-top:20px">
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        OPEN FULL PAGE
+      </a>
+    </section>
+
+    <!-- ================================================================
+         SECTION 02: AI STUDIO
+         ================================================================ -->
+    <section class="module-section" id="module-ai-studio">
+      <div class="section-label" data-index="02">AI PRODUCTION // HANDFILM METHOD</div>
+      <h2 class="module-title">AI <span>STUDIO</span></h2>
+      <p class="module-subtitle">GENERATIVE WORKFLOW // GEMINI → CLAUDE → GROK → CAPCUT</p>
+
+      <div class="studio-grid">
+        <div class="studio-panel">
+          <div class="studio-panel-label">PRODUCTION CHAIN</div>
+          <h3>Handfilm Method</h3>
+          <p>One selfie → Gemini character sheet → Grok animation → CapCut reel in ~10 minutes. The proprietary BUMBEAT Physics v2.1 motion system driving every output.</p>
+
+          <div class="workflow-chain">
+            <div class="wf-step">
+              <span class="wf-step-n">01</span>
+              <span class="wf-step-tool">GEMINI</span>
+              <span class="wf-step-role">IDEA // ARCHITECTURE // CHARACTER SHEET</span>
+            </div>
+            <div class="wf-step">
+              <span class="wf-step-n">02</span>
+              <span class="wf-step-tool">CLAUDE</span>
+              <span class="wf-step-role">BUILD // WRITE // SYSTEMS</span>
+            </div>
+            <div class="wf-step">
+              <span class="wf-step-n">03</span>
+              <span class="wf-step-tool">GROK IMAGINE</span>
+              <span class="wf-step-role">IMAGE // VIDEO // BUMBEAT PHYSICS</span>
+            </div>
+            <div class="wf-step">
+              <span class="wf-step-n">04</span>
+              <span class="wf-step-tool">CAPCUT</span>
+              <span class="wf-step-role">ASSEMBLY // SPEED RAMPS // BEAT SYNC</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-panel">
+          <div class="studio-panel-label">LIVE MODULES</div>
+          <h3>RAWx AI Engine</h3>
+          <p>Direct access to the Shopify-hosted AI Studio and Handfilm methodology pages. Load any module into the embedded viewport or open in full screen.</p>
+
+          <div class="workflow-chain">
+            <div class="wf-step" style="flex-direction:column; align-items:flex-start; gap:6px">
+              <span class="wf-step-n">STUDIO</span>
+              <a href="https://handfilm.myshopify.com/pages/rawx-ai-studio" target="_blank" rel="noopener" class="external-link-btn" style="margin-top:0; font-size:9px">
+                <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                RAWX AI STUDIO
+              </a>
+            </div>
+            <div class="wf-step" style="flex-direction:column; align-items:flex-start; gap:6px">
+              <span class="wf-step-n">HANDFILM</span>
+              <a href="https://handfilm.myshopify.com/pages/handfilm" target="_blank" rel="noopener" class="external-link-btn" style="margin-top:0; font-size:9px">
+                <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                HANDFILM METHODOLOGY
+              </a>
+            </div>
+            <div class="wf-step" style="flex-direction:column; align-items:flex-start; gap:6px">
+              <span class="wf-step-n">LIVE</span>
+              <button class="external-link-btn" style="margin-top:0; font-size:9px; cursor:none" onclick="loadSliderSrc('https://handfilm.myshopify.com/pages/rawx-ai-studio')">
+                <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                LOAD IN VIEWPORT ABOVE
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="iframe-wrapper">
+        <div class="iframe-topbar">
+          <div class="iframe-dots"><span></span><span></span><span></span></div>
+          <div class="iframe-url">handfilm.myshopify.com/pages/rawx-ai-studio</div>
+        </div>
+        <iframe
+          src="https://handfilm.myshopify.com/pages/rawx-ai-studio"
+          class="iframe-full"
+          title="RAWx AI Studio"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SECTION 03: BRAND BIBLE
+         ================================================================ -->
+    <section class="module-section" id="module-bible">
+      <div class="section-label" data-index="03">IDENTITY SYSTEM // DOCTRINE</div>
+      <h2 class="module-title">BRAND <span>BIBLE</span></h2>
+      <p class="module-subtitle">RAWX IDENTITY // COLORS // TYPOGRAPHY // PHILOSOPHY</p>
+
+      <div class="bible-grid">
+        <div class="bible-card">
+          <div class="bible-card-head">COLOR SYSTEM</div>
+          <div class="color-swatches">
+            <div class="swatch" style="background:#050505; border:1px solid rgba(240,240,240,0.1)">
+              <span class="swatch-label" style="color:#f0f0f0">VOID #050505</span>
+            </div>
+            <div class="swatch" style="background:#b8ff00;">
+              <span class="swatch-label" style="color:#050505">ACID #B8FF00</span>
+            </div>
+            <div class="swatch" style="background:#ff3300;">
+              <span class="swatch-label" style="color:#fff">HAZARD #FF3300</span>
+            </div>
+            <div class="swatch" style="background:#f0f0f0;">
+              <span class="swatch-label" style="color:#050505">RAW #F0F0F0</span>
+            </div>
+          </div>
+          <p>Void-first. Every surface begins in #050505. Acid green is the signal — used only for active states, critical data, confirmation. Hazard red for destruction, deletion, alerts.</p>
+        </div>
+
+        <div class="bible-card">
+          <div class="bible-card-head">TYPOGRAPHY</div>
+          <div class="type-sample">
+            <div class="ts-name">DISPLAY // BRUTAL CONDENSED</div>
+            <div class="ts-text ts-display" style="font-size:28px; color:#f0f0f0">RAWx</div>
+          </div>
+          <div class="type-sample">
+            <div class="ts-name">DATA // JETBRAINS MONO</div>
+            <div class="ts-text ts-mono">SYS://RAWX_OS v2.1</div>
+          </div>
+          <p style="margin-top:12px">Barlow Condensed 900 for wordmarks and headings. JetBrains Mono for all data, labels, and interface copy. Zero serif. Zero decoration.</p>
+        </div>
+
+        <div class="bible-card">
+          <div class="bible-card-head">DOCTRINE</div>
+          <h3 style="font-size:18px; margin-bottom:16px; line-height:1.4">THE RAWX MANIFESTO</h3>
+          <p>Industrial techno garments built in Bangladesh for a global market that knows the difference between apparel and architecture. Brutalist construction. Intentional destruction. Every seam is a system.</p>
+          <a href="https://handfilm.myshopify.com/pages/rawx-brand-bible" target="_blank" rel="noopener" class="external-link-btn" style="margin-top:20px">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            FULL BRAND BIBLE
+          </a>
+        </div>
+      </div>
+
+      <div class="iframe-wrapper" style="margin-top:32px">
+        <div class="iframe-topbar">
+          <div class="iframe-dots"><span></span><span></span><span></span></div>
+          <div class="iframe-url">handfilm.myshopify.com/pages/rawx-brand-bible</div>
+        </div>
+        <iframe
+          src="https://handfilm.myshopify.com/pages/rawx-brand-bible"
+          class="iframe-full"
+          title="RAWx Brand Bible"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SECTION 04: SHOP CORE
+         ================================================================ -->
+    <section class="module-section" id="module-core">
+      <div class="section-label" data-index="04">PRODUCT ENGINE // GRAPHQL READY</div>
+      <h2 class="module-title">SHOP <span>CORE</span></h2>
+      <p class="module-subtitle">HEADLESS PRODUCT GRID // SHOPIFY GRAPHQL API // DATA TARGETS ACTIVE</p>
+
+      <!-- PRODUCT GRID — GraphQL injection ready via data-shopify-target -->
+      <div class="product-grid" id="product-grid">
+
+        <!-- PRODUCT CARD TEMPLATE — 6 placeholder cards -->
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="product-card" data-shopify-target="product-card">
+          <div class="pc-img-wrap">
+            <div class="pc-img-skeleton">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+          </div>
+          <div class="pc-meta">
+            <span class="pc-tag" data-shopify-target="product-type">APPAREL // RAWX</span>
+            <span class="pc-title" data-shopify-target="product-title">VOID CARGO — TYPE 01</span>
+            <span class="pc-price"><span data-shopify-target="price">$0.00</span></span>
+          </div>
+        </a>
+
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="product-card" data-shopify-target="product-card">
+          <div class="pc-img-wrap">
+            <div class="pc-img-skeleton"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          </div>
+          <div class="pc-meta">
+            <span class="pc-tag" data-shopify-target="product-type">OUTERWEAR // RAWx</span>
+            <span class="pc-title" data-shopify-target="product-title">INDUSTRIAL SHELL — v2</span>
+            <span class="pc-price"><span data-shopify-target="price">$0.00</span></span>
+          </div>
+        </a>
+
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="product-card" data-shopify-target="product-card">
+          <div class="pc-img-wrap">
+            <div class="pc-img-skeleton"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          </div>
+          <div class="pc-meta">
+            <span class="pc-tag" data-shopify-target="product-type">TECHNICAL // RAWx</span>
+            <span class="pc-title" data-shopify-target="product-title">SERVER RACK HOODIE</span>
+            <span class="pc-price"><span data-shopify-target="price">$0.00</span></span>
+          </div>
+        </a>
+
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="product-card" data-shopify-target="product-card">
+          <div class="pc-img-wrap">
+            <div class="pc-img-skeleton"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          </div>
+          <div class="pc-meta">
+            <span class="pc-tag" data-shopify-target="product-type">BOTTOMS // RAWx</span>
+            <span class="pc-title" data-shopify-target="product-title">BRUTALIST CARGO PANT</span>
+            <span class="pc-price"><span data-shopify-target="price">$0.00</span></span>
+          </div>
+        </a>
+
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="product-card" data-shopify-target="product-card">
+          <div class="pc-img-wrap">
+            <div class="pc-img-skeleton"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          </div>
+          <div class="pc-meta">
+            <span class="pc-tag" data-shopify-target="product-type">TEE // RAWx</span>
+            <span class="pc-title" data-shopify-target="product-title">ACID SIGNAL DROP TEE</span>
+            <span class="pc-price"><span data-shopify-target="price">$0.00</span></span>
+          </div>
+        </a>
+
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="product-card" data-shopify-target="product-card">
+          <div class="pc-img-wrap">
+            <div class="pc-img-skeleton"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          </div>
+          <div class="pc-meta">
+            <span class="pc-tag" data-shopify-target="product-type">ACCESSORY // RAWx</span>
+            <span class="pc-title" data-shopify-target="product-title">TERMINAL TOTE BAG</span>
+            <span class="pc-price"><span data-shopify-target="price">$0.00</span></span>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- GraphQL endpoint annotation -->
+      <div style="padding:16px; border:var(--border); background:var(--void-2); font-family:var(--mono); font-size:9px; color:var(--white-dim); line-height:2;">
+        <div style="color:var(--acid); margin-bottom:8px;">// GRAPHQL INJECTION TARGET MAP</div>
+        <div><span style="color:var(--white)">data-shopify-target</span>="product-card" → Container node per product</div>
+        <div><span style="color:var(--white)">data-shopify-target</span>="product-title" → product.title</div>
+        <div><span style="color:var(--white)">data-shopify-target</span>="product-type" → product.productType</div>
+        <div><span style="color:var(--white)">data-shopify-target</span>="price" → product.variants.edges[0].node.price.amount</div>
+        <div style="margin-top:8px; color:var(--white-dim)">// endpoint: handfilm.myshopify.com/api/2024-01/graphql.json</div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;">
+        <a href="https://handfilm.myshopify.com/collections/rawx" target="_blank" rel="noopener" class="external-link-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          SHOPIFY STORE
+        </a>
+        <a href="https://handfilm.github.io/rawx" target="_blank" rel="noopener" class="external-link-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          RAWX LANDING
+        </a>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SECTION 05: MCC PORTAL
+         ================================================================ -->
+    <section class="module-section" id="module-mcc">
+      <div class="section-label" data-index="05">MASTER COMMAND CENTER // ECOSYSTEM HUB</div>
+      <h2 class="module-title">MCC <span>PORTAL</span></h2>
+      <p class="module-subtitle">HANDFILM × RAWX × H&H // FULL ECOSYSTEM VIEW</p>
+
+      <div class="iframe-wrapper">
+        <div class="iframe-topbar">
+          <div class="iframe-dots"><span></span><span></span><span></span></div>
+          <div class="iframe-url">handfilm.github.io/mcc/</div>
+          <span style="margin-left:auto; color:var(--acid);">MCC</span>
+        </div>
+        <iframe
+          src="https://handfilm.github.io/mcc/"
+          class="iframe-full"
+          style="height:85vh"
+          title="Master Command Center"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap;">
+        <a href="https://handfilm.github.io/mcc/" target="_blank" rel="noopener" class="external-link-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          OPEN MCC FULL
+        </a>
+        <a href="https://handfilm.myshopify.com/pages/rawx-master-os" target="_blank" rel="noopener" class="external-link-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          RAWX MASTER OS
+        </a>
+      </div>
+    </section>
+
+  </div><!-- /main-view -->
+</div><!-- /os-shell -->
+
+<!-- SCROLL RAIL -->
+<div id="scroll-rail"><div id="scroll-thumb"></div></div>
+
+<script>
+/* ============================================================
+   RAWX NEXOS — VANILLA JS ENGINE
+   ============================================================ */
+
+(function() {
+  'use strict';
+
+  // ---- CURSOR ----
+  const ring = document.getElementById('cursor-ring');
+  const dot  = document.getElementById('cursor-dot');
+  let mx = 0, my = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+    ring.style.left = mx + 'px';
+    ring.style.top  = my + 'px';
+  });
+
+  document.querySelectorAll('a, button, .hero-mod-card, .nav-btn, .slider-tab, .product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
+  document.addEventListener('mousedown', () => document.body.classList.add('cursor-active'));
+  document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-active'));
+
+  // ---- CLOCK ----
+  const clockEl = document.getElementById('topbar-clock');
+  function updateClock() {
+    const n = new Date();
+    const pad = v => String(v).padStart(2,'0');
+    clockEl.textContent = `${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())} // ${n.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase()}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ---- BOOT SEQUENCE ----
+  const bootEl   = document.getElementById('boot-overlay');
+  const bootBar  = document.getElementById('boot-bar');
+  const bLines   = document.querySelectorAll('.b-line');
+
+  function runBoot() {
+    let i = 0;
+    function showNext() {
+      if (i < bLines.length) {
+        bLines[i].classList.add('show');
+        i++;
+        setTimeout(showNext, i === 1 ? 120 : 180);
+      }
+    }
+    showNext();
+    setTimeout(() => bootBar.classList.add('run'), 300);
+    setTimeout(() => {
+      bootEl.classList.add('done');
+      setTimeout(() => bootEl.remove(), 700);
+      revealSections();
+    }, 2400);
+  }
+  runBoot();
+
+  // ---- SECTION REVEAL (IntersectionObserver) ----
+  function revealSections() {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.module-section').forEach(s => obs.observe(s));
+  }
+
+  // ---- SIDEBAR NAV — smooth scroll to section ----
+  const navBtns   = document.querySelectorAll('.nav-btn');
+  const pageLabel = document.getElementById('topbar-page');
+  const glitch    = document.getElementById('glitch-overlay');
+
+  const sectionLabels = {
+    'module-hero':      'HOME',
+    'module-slider':    'VISUAL OS',
+    'module-ai-studio': 'AI STUDIO',
+    'module-bible':     'BRAND BIBLE',
+    'module-core':      'SHOP CORE',
+    'module-mcc':       'MCC PORTAL',
+  };
+
+  function fireGlitch(cb) {
+    glitch.classList.remove('fire');
+    void glitch.offsetWidth;
+    glitch.classList.add('fire');
+    setTimeout(() => { glitch.classList.remove('fire'); if(cb) cb(); }, 220);
+  }
+
+  function setActiveNav(targetId) {
+    navBtns.forEach(b => {
+      b.classList.toggle('active', b.dataset.target === targetId);
+    });
+    if (sectionLabels[targetId]) pageLabel.textContent = sectionLabels[targetId];
+  }
+
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.target;
+      const targetEl = document.getElementById(targetId);
+      if (!targetEl) return;
+      fireGlitch();
+      setTimeout(() => {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveNav(targetId);
+      }, 80);
+    });
+  });
+
+  // Hero module grid cards scroll
+  document.querySelectorAll('[data-scroll-to]').forEach(card => {
+    card.addEventListener('click', e => {
+      e.preventDefault();
+      const targetId = card.dataset.scrollTo;
+      const targetEl = document.getElementById(targetId);
+      if (!targetEl) return;
+      fireGlitch();
+      setTimeout(() => {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveNav(targetId);
+      }, 80);
+    });
+  });
+
+  // ---- SCROLL SPY ----
+  const mainView = document.getElementById('main-view');
+  const scrollThumb = document.getElementById('scroll-thumb');
+  const allSections = document.querySelectorAll('.module-section');
+
+  mainView.addEventListener('scroll', () => {
+    // Scroll progress bar
+    const pct = mainView.scrollTop / (mainView.scrollHeight - mainView.clientHeight);
+    scrollThumb.style.height = (pct * 100) + '%';
+
+    // Active section spy
+    let current = 'module-hero';
+    allSections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= 80) current = sec.id;
+    });
+    setActiveNav(current);
+  });
+
+  // ---- SLIDER TABS ----
+  const iframeSlider = document.getElementById('iframe-slider');
+  const sliderPh     = document.getElementById('slider-ph');
+  const sliderUrlEl  = document.getElementById('slider-url-display');
+  const sliderTabs   = document.querySelectorAll('.slider-tab');
+
+  sliderTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      sliderTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const src = tab.dataset.iframeSrc;
+      const lbl = tab.dataset.label;
+      if (src) {
+        iframeSlider.src = src;
+        iframeSlider.classList.add('active');
+        sliderPh.classList.add('hidden');
+        if (sliderUrlEl && lbl) sliderUrlEl.textContent = lbl;
+      }
+    });
+  });
+
+  // Auto-load first slider tab
+  const firstTab = document.querySelector('.slider-tab.active');
+  if (firstTab && firstTab.dataset.iframeSrc) {
+    iframeSlider.src = firstTab.dataset.iframeSrc;
+    iframeSlider.classList.add('active');
+    sliderPh.classList.add('hidden');
+  }
+
+  // ---- GLOBAL loadSliderSrc (called from AI studio section) ----
+  window.loadSliderSrc = function(src) {
+    const sliderSection = document.getElementById('module-slider');
+    iframeSlider.src = src;
+    iframeSlider.classList.add('active');
+    if (sliderPh) sliderPh.classList.add('hidden');
+    fireGlitch();
+    setTimeout(() => {
+      sliderSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setActiveNav('module-slider');
+    }, 80);
+  };
+
+  // ---- KEYBOARD SHORTCUTS ----
+  const keyMap = {
+    '1': 'module-hero',
+    '2': 'module-slider',
+    '3': 'module-ai-studio',
+    '4': 'module-bible',
+    '5': 'module-core',
+    '6': 'module-mcc',
+  };
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    const targetId = keyMap[e.key];
+    if (targetId) {
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        fireGlitch();
+        setTimeout(() => {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setActiveNav(targetId);
+        }, 80);
+      }
+    }
+  });
+
+  // ---- HERO WORDMARK GLITCH ON HOVER ----
+  const wordmark = document.getElementById('hero-wordmark');
+  if (wordmark) {
+    let glitching = false;
+    wordmark.addEventListener('mouseenter', () => {
+      if (glitching) return;
+      glitching = true;
+      fireGlitch();
+      setTimeout(() => { glitching = false; }, 400);
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>

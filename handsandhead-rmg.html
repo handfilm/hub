@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="HANDS & HEAD — Bangladesh RMG apparel manufacturer. BSCI-audited. Knitwear, Woven, Activewear, Lingerie. MOQ 200 pcs. FOB Chittagong. EU & US export partner.">
+<meta property="og:title" content="HANDS & HEAD — Bangladesh RMG | EU & US Export Partner">
+<meta property="og:description" content="Premium Bangladesh apparel manufacturing. BSCI audited. T-shirts, Cargo, Activewear, Lingerie. MOQ 200 pcs. Serving Netherlands, Germany, UK, US, Japan.">
+<title>HANDS & HEAD — Bangladesh RMG | EU & US Export Partner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600&family=Hind+Siliguri:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080808;--bg2:#101010;--bg3:#161616;
+  --border:#1e1e1e;--border2:#2a2a2a;
+  --text:#e8e8e8;--muted:#666;--muted2:#444;
+  --gold:#c4963a;--gold2:#e0b050;--green:#aaff00;--red:#ff3c3c;
+  --white:#fff;
+  --ff-disp:'Bebas Neue',sans-serif;
+  --ff-mono:'DM Mono',monospace;
+  --ff-body:'Inter',sans-serif;
+  --ff-bn:'Hind Siliguri',sans-serif;
+  --ff-ja:'Noto Sans JP',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--ff-body);font-size:15px;line-height:1.6;overflow-x:hidden}
+.lang-bn body,.lang-bn p,.lang-bn span[data-lang="bn"]{font-family:var(--ff-bn)}
+.lang-ja body,.lang-ja p,.lang-ja span[data-lang="ja"]{font-family:var(--ff-ja)}
+[data-lang]{display:none}
+.lang-en [data-lang="en"],.lang-nl [data-lang="nl"],.lang-de [data-lang="de"],.lang-bn [data-lang="bn"],.lang-ja [data-lang="ja"]{display:inherit}
+
+/* TICKER */
+.ticker-wrap{background:var(--gold);overflow:hidden;height:32px;display:flex;align-items:center}
+.ticker-track{display:flex;animation:ticker 60s linear infinite;white-space:nowrap}
+.ticker-track span{font-family:var(--ff-mono);font-size:11px;font-weight:500;color:#0a0a0a;letter-spacing:.08em;padding:0 2rem}
+.ticker-track span::after{content:'◆';margin-left:2rem;opacity:.5}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--ff-disp);font-size:18px;letter-spacing:.08em;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:.5rem}
+.nav-logo span{color:var(--gold)}
+.nav-logo .amp{color:var(--muted);font-size:14px}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:.75rem}
+.lang-toggle{display:flex;gap:3px}
+.lang-btn{font-family:var(--ff-mono);font-size:10px;letter-spacing:.06em;padding:4px 8px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;text-transform:uppercase}
+.lang-btn.active,.lang-btn:hover{border-color:var(--gold);color:var(--gold)}
+.nav-cta{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;padding:8px 18px;background:var(--gold);color:#0a0a0a;text-decoration:none;font-weight:500;transition:background .2s;text-transform:uppercase}
+.nav-cta:hover{background:var(--gold2)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none}
+.hamburger span{width:22px;height:1px;background:var(--text);display:block}
+.mobile-nav{display:none;flex-direction:column;position:fixed;top:88px;left:0;right:0;background:rgba(8,8,8,.98);border-bottom:1px solid var(--border);z-index:99;padding:1rem 2rem 2rem}
+.mobile-nav.open{display:flex}
+.mobile-nav a{font-family:var(--ff-mono);font-size:13px;letter-spacing:.1em;color:var(--muted);text-decoration:none;text-transform:uppercase;padding:.75rem 0;border-bottom:1px solid var(--border)}
+
+/* HERO SLIDER */
+.slider{position:relative;height:95vh;min-height:540px;overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;display:flex;flex-direction:column;justify-content:flex-end;padding:4rem 2rem}
+.slide.active{opacity:1}
+.slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 8s ease}
+.slide.active .slide-bg{transform:scale(1.04)}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.1) 100%)}
+.slide-tag{font-family:var(--ff-mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;position:relative;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem}
+.slide-tag::before{content:'';width:28px;height:1px;background:var(--gold);display:inline-block}
+.slide-headline{font-family:var(--ff-disp);font-size:clamp(52px,9vw,120px);line-height:.92;letter-spacing:.02em;color:var(--white);position:relative;margin-bottom:1.5rem}
+.slide-headline .acc{color:var(--gold)}
+.slide-headline .dim{color:var(--muted2)}
+.lang-bn .slide-headline{font-family:var(--ff-bn);font-size:clamp(36px,6vw,80px);line-height:1.1;letter-spacing:0}
+.lang-ja .slide-headline{font-family:var(--ff-ja);font-size:clamp(32px,5vw,70px);line-height:1.2;letter-spacing:0}
+.slide-sub{font-family:var(--ff-mono);font-size:12px;color:var(--muted);letter-spacing:.06em;max-width:440px;line-height:1.8;position:relative;margin-bottom:2.5rem}
+.slide-actions{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;position:relative}
+.btn-primary{font-family:var(--ff-mono);font-size:12px;letter-spacing:.12em;padding:13px 28px;background:var(--gold);color:#0a0a0a;border:none;cursor:pointer;text-decoration:none;font-weight:500;text-transform:uppercase;transition:background .2s;display:inline-block}
+.btn-primary:hover{background:var(--gold2)}
+.btn-ghost{font-family:var(--ff-mono);font-size:12px;letter-spacing:.12em;padding:13px 28px;background:transparent;color:var(--text);border:1px solid var(--border2);cursor:pointer;text-decoration:none;text-transform:uppercase;transition:all .2s;display:inline-block}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.slide-badge{position:absolute;top:2rem;right:2rem;display:flex;flex-direction:column;align-items:flex-end;gap:.4rem}
+.badge-item{font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;padding:5px 12px;border:1px solid var(--border2);color:var(--muted);text-transform:uppercase}
+.badge-item.live{border-color:var(--green);color:var(--green)}
+/* Slider controls */
+.slider-dots{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;gap:.75rem;z-index:10}
+.dot{width:28px;height:2px;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.dot::after{content:'';position:absolute;left:0;top:0;height:100%;width:0;background:var(--gold);transition:width 5s linear}
+.dot.active{background:rgba(196,150,58,.3)}
+.dot.active::after{width:100%}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);border:1px solid var(--border2);color:var(--text);font-size:20px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s;backdrop-filter:blur(8px)}
+.slider-arrow:hover{border-color:var(--gold);color:var(--gold)}
+.slider-arrow.prev{left:1.5rem}
+.slider-arrow.next{right:1.5rem}
+.slide-cat-label{position:absolute;bottom:0;right:0;font-family:var(--ff-mono);font-size:9px;letter-spacing:.15em;color:var(--muted2);text-transform:uppercase;padding:.5rem 1rem;border-top:1px solid var(--border);border-left:1px solid var(--border)}
+
+/* STATS */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border)}
+.stat-item{padding:2.5rem 2rem;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:var(--ff-disp);font-size:52px;line-height:1;color:var(--white);letter-spacing:.02em}
+.stat-num .unit{font-size:28px;color:var(--gold)}
+.stat-label{font-family:var(--ff-mono);font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.stat-sub{font-family:var(--ff-mono);font-size:10px;color:var(--muted2);letter-spacing:.06em}
+.lang-bn .stat-label{font-family:var(--ff-bn)}
+.lang-ja .stat-label{font-family:var(--ff-ja)}
+
+/* SECTIONS */
+.section{padding:5rem 2rem;border-bottom:1px solid var(--border)}
+.section-eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold)}
+.section-title{font-family:var(--ff-disp);font-size:clamp(36px,5vw,64px);line-height:.96;letter-spacing:.02em;color:var(--white);margin-bottom:1rem}
+.section-title .acc{color:var(--gold)}
+.section-sub{font-family:var(--ff-mono);font-size:12px;color:var(--muted);letter-spacing:.06em;max-width:560px;line-height:1.8;margin-bottom:3rem}
+.lang-bn .section-title,.lang-bn .section-sub{font-family:var(--ff-bn);letter-spacing:0;line-height:1.5}
+.lang-ja .section-title,.lang-ja .section-sub{font-family:var(--ff-ja);letter-spacing:.02em}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* PRODUCTS */
+.cat-tabs{display:flex;gap:0;margin-bottom:2.5rem;border-bottom:1px solid var(--border)}
+.cat-tab{font-family:var(--ff-mono);font-size:11px;letter-spacing:.12em;padding:12px 24px;border:none;background:transparent;color:var(--muted);cursor:pointer;text-transform:uppercase;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.cat-tab.active,.cat-tab:hover{color:var(--gold);border-bottom-color:var(--gold)}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--border)}
+.product-card{background:var(--bg2);position:relative;overflow:hidden;cursor:pointer;transition:background .2s;display:none}
+.product-card.visible{display:block}
+.product-card:hover{background:var(--bg3)}
+.product-card:hover .p-overlay{opacity:1}
+.product-card:hover .p-img{filter:grayscale(0%) brightness(1.05)}
+.p-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:grayscale(10%) brightness(.9);transition:filter .3s}
+.p-overlay{position:absolute;inset:0;background:rgba(196,150,58,.06);display:flex;align-items:flex-end;padding:1.25rem;opacity:0;transition:opacity .2s;pointer-events:none}
+.p-overlay-btn{font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;padding:8px 20px;background:var(--gold);color:#0a0a0a;text-transform:uppercase;font-weight:500}
+.p-info{padding:1.25rem}
+.p-cat{font-family:var(--ff-mono);font-size:9px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:.4rem}
+.p-name{font-family:var(--ff-disp);font-size:20px;letter-spacing:.04em;color:var(--white);margin-bottom:.75rem}
+.p-specs{display:flex;flex-direction:column;gap:.3rem}
+.spec-row{display:flex;justify-content:space-between;align-items:center;font-family:var(--ff-mono);font-size:10px;letter-spacing:.06em}
+.spec-k{color:var(--muted2)}.spec-v{color:var(--text)}
+
+/* WHY US */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);margin-top:3rem}
+.why-card{background:var(--bg2);padding:2.5rem 2rem;position:relative}
+.why-num{font-family:var(--ff-disp);font-size:64px;line-height:1;color:var(--border2);position:absolute;top:1.5rem;right:1.5rem;letter-spacing:.04em}
+.why-icon{font-size:28px;margin-bottom:1.25rem;display:block}
+.why-title{font-family:var(--ff-disp);font-size:22px;letter-spacing:.06em;color:var(--white);margin-bottom:.75rem}
+.why-desc{font-family:var(--ff-mono);font-size:11px;color:var(--muted);letter-spacing:.05em;line-height:1.8}
+.why-hl{font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;color:var(--gold);margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-transform:uppercase}
+
+/* MARKETS */
+.markets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);margin-top:3rem}
+.mkt-card{background:var(--bg2);padding:2rem;display:flex;flex-direction:column;gap:1rem}
+.mkt-flag{font-size:34px}
+.mkt-name{font-family:var(--ff-disp);font-size:26px;letter-spacing:.06em;color:var(--white)}
+.mkt-stats{display:flex;flex-direction:column;gap:.4rem}
+.mkt-stat{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:var(--muted);display:flex;gap:.5rem}
+.mkt-stat strong{color:var(--gold)}
+.mkt-tag{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;color:var(--green);text-transform:uppercase;padding-top:.75rem;border-top:1px solid var(--border)}
+
+/* COMPLIANCE */
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--border);margin-top:3rem}
+.comp-card{background:var(--bg2);padding:2rem}
+.comp-badge{font-family:var(--ff-disp);font-size:32px;letter-spacing:.06em;color:var(--gold);margin-bottom:.5rem}
+.comp-name{font-family:var(--ff-mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem}
+.comp-desc{font-family:var(--ff-mono);font-size:11px;color:var(--muted);letter-spacing:.04em;line-height:1.7}
+.comp-status{margin-top:1rem;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;color:var(--green);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
+.comp-status::before{content:'●';animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* PROCESS */
+.process-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0}
+.process-step{padding:2rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative}
+.step-img{width:100%;height:150px;object-fit:cover;display:block;margin-bottom:1.25rem;filter:grayscale(15%) brightness(.9);transition:filter .3s}
+.process-step:hover .step-img{filter:grayscale(0%) brightness(1)}
+.step-num{font-family:var(--ff-disp);font-size:48px;color:var(--border2);line-height:1;margin-bottom:.75rem}
+.step-title{font-family:var(--ff-disp);font-size:20px;letter-spacing:.06em;color:var(--white);margin-bottom:.5rem}
+.step-desc{font-family:var(--ff-mono);font-size:10px;color:var(--muted);letter-spacing:.05em;line-height:1.7}
+.step-time{margin-top:.75rem;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase}
+
+/* TRACKER */
+.tracker-wrap{background:var(--bg2);border:1px solid var(--border);margin-top:3rem;overflow:hidden}
+.tracker-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--border);background:var(--bg3)}
+.tracker-title{font-family:var(--ff-mono);font-size:11px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase}
+.tracker-live{font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;color:var(--green);display:flex;align-items:center;gap:.4rem}
+.tracker-live::before{content:'●';animation:pulse 1.5s infinite}
+.tracker-order{padding:1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:1.5rem}
+.order-key{font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;color:var(--muted2);text-transform:uppercase;margin-bottom:.25rem}
+.order-val{font-family:var(--ff-mono);font-size:13px;color:var(--white);letter-spacing:.04em}
+.order-val.gold{color:var(--gold)}.order-val.green{color:var(--green)}
+.tracker-stages{padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.stage-row{display:flex;align-items:center;gap:1rem}
+.stage-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.stage-dot.done{background:var(--gold)}.stage-dot.active{background:var(--green);animation:pulse 1.5s infinite}
+.stage-name{font-family:var(--ff-mono);font-size:11px;letter-spacing:.08em;color:var(--text)}
+.stage-name.muted{color:var(--muted2)}
+.stage-date{font-family:var(--ff-mono);font-size:9px;letter-spacing:.06em;color:var(--muted2);margin-top:.15rem}
+.stage-pct{font-family:var(--ff-mono);font-size:11px;letter-spacing:.06em;color:var(--gold);margin-left:auto}
+.stage-pct.muted{color:var(--muted2)}
+.prog-wrap{padding:1.5rem;border-top:1px solid var(--border)}
+.prog-label{display:flex;justify-content:space-between;margin-bottom:.5rem;font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:var(--muted)}
+.prog-bar{height:3px;background:var(--border2);overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);width:65%;transition:width 1s ease}
+
+/* RFQ */
+.rfq-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem}
+.rfq-pts{display:flex;flex-direction:column;gap:1.25rem;margin-top:2rem}
+.rfq-pt{display:flex;gap:1rem;align-items:flex-start}
+.rfq-pt-icon{font-size:18px;flex-shrink:0;margin-top:.1rem}
+.rfq-pt-txt{font-family:var(--ff-mono);font-size:11px;color:var(--muted);letter-spacing:.05em;line-height:1.7}
+.rfq-pt-txt strong{color:var(--gold);display:block;font-size:12px;margin-bottom:.25rem;letter-spacing:.08em}
+.rfq-form{display:flex;flex-direction:column;gap:1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-label{font-family:var(--ff-mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.form-input,.form-select,.form-textarea{background:var(--bg2);border:1px solid var(--border2);color:var(--text);font-family:var(--ff-mono);font-size:12px;padding:12px 14px;outline:none;transition:border-color .2s;width:100%;letter-spacing:.04em;-webkit-appearance:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-textarea{resize:vertical;min-height:100px}
+.form-submit{font-family:var(--ff-mono);font-size:12px;letter-spacing:.15em;padding:16px;background:var(--gold);color:#0a0a0a;border:none;cursor:pointer;font-weight:500;text-transform:uppercase;transition:background .2s;width:100%;margin-top:.5rem}
+.form-submit:hover{background:var(--gold2)}
+.form-note{font-family:var(--ff-mono);font-size:10px;color:var(--muted2);letter-spacing:.05em;text-align:center;line-height:1.7}
+.form-success{display:none;text-align:center;padding:3rem;background:var(--bg3);border:1px solid var(--gold)}
+.form-success .si{font-size:40px;margin-bottom:1rem}
+.form-success h3{font-family:var(--ff-disp);font-size:28px;color:var(--gold);letter-spacing:.06em;margin-bottom:.75rem}
+.form-success p{font-family:var(--ff-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;line-height:1.7}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--border);margin-top:3rem}
+.contact-card{background:var(--bg2);padding:2rem;display:flex;flex-direction:column;gap:1rem}
+.contact-icon{font-size:28px}
+.contact-type{font-family:var(--ff-mono);font-size:9px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase}
+.contact-val{font-family:var(--ff-mono);font-size:13px;color:var(--white);letter-spacing:.04em;word-break:break-all}
+.contact-note{font-family:var(--ff-mono);font-size:10px;color:var(--muted2);letter-spacing:.05em;line-height:1.6}
+.contact-cta{display:inline-block;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;padding:8px 20px;background:var(--gold);color:#0a0a0a;text-decoration:none;text-transform:uppercase;font-weight:500;transition:background .2s;width:fit-content}
+.contact-cta:hover{background:var(--gold2)}
+
+/* GALLERY STRIP */
+.gallery-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);margin-top:3rem}
+.gi{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--bg2);cursor:pointer}
+.gi img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(20%) brightness(.85);transition:filter .4s,transform .4s}
+.gi:hover img{filter:grayscale(0%) brightness(1);transform:scale(1.04)}
+.gi-cap{position:absolute;bottom:0;left:0;right:0;padding:.6rem .75rem;background:linear-gradient(transparent,rgba(0,0,0,.85));font-family:var(--ff-mono);font-size:9px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;opacity:0;transition:opacity .3s}
+.gi:hover .gi-cap{opacity:1}
+.gi.wide{grid-column:span 2;aspect-ratio:16/9}
+
+/* FOOTER */
+footer{padding:3rem 2rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2rem}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:2rem}
+.footer-logo{font-family:var(--ff-disp);font-size:26px;letter-spacing:.08em;color:var(--white);margin-bottom:.5rem}
+.footer-logo span{color:var(--gold)}
+.footer-tag{font-family:var(--ff-mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.footer-col-title{font-family:var(--ff-mono);font-size:9px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:.75rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.footer-links a{font-family:var(--ff-mono);font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:.06em;transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{padding-top:2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-copy,.footer-coords{font-family:var(--ff-mono);font-size:10px;color:var(--muted2);letter-spacing:.08em}
+
+/* WHATSAPP FLOAT */
+.wa-float{position:fixed;bottom:2rem;right:2rem;width:52px;height:52px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;text-decoration:none;box-shadow:0 4px 24px rgba(37,211,102,.3);z-index:99;transition:transform .2s,box-shadow .2s}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(37,211,102,.5)}
+
+
+/* PORTALS DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.portals-drawer{position:fixed;top:0;right:-360px;width:320px;height:100vh;background:#0e0e0e;border-left:1px solid #1e1e1e;z-index:201;transition:right .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;display:flex;flex-direction:column}
+.portals-drawer.open{right:0}
+.drawer-header{padding:1.5rem;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;justify-content:space-between;background:#080808}
+.drawer-htitle{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.12em;color:#fff}
+.drawer-htitle span{color:#c4963a}
+.drawer-close{font-size:18px;color:#555;cursor:pointer;background:none;border:none;line-height:1;padding:6px;transition:color .2s}
+.drawer-close:hover{color:#c4963a}
+.drawer-body{padding:1.5rem;display:flex;flex-direction:column;gap:.75rem;flex:1}
+.drawer-sec-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;color:#c4963a;text-transform:uppercase;padding:.5rem 0;border-bottom:1px solid #1e1e1e;margin-bottom:.25rem}
+.pc{border:1px solid #1e1e1e;padding:1.25rem;text-decoration:none;display:block;transition:border-color .2s,background .2s;position:relative;background:#0a0a0a}
+.pc:hover{border-color:#c4963a;background:#161616}
+.pc.active{border-color:#c4963a40;background:#0a0a0a;opacity:.55;pointer-events:none;cursor:default}
+.pc.parent{border-color:#c4963a33}
+.pc.parent:hover{border-color:#c4963a;background:#161616}
+.pc-eye{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:#c4963a;text-transform:uppercase;margin-bottom:.4rem}
+.pc-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.06em;color:#fff;margin-bottom:.4rem;line-height:1}
+.pc-desc{font-family:'DM Mono',monospace;font-size:10px;color:#555;letter-spacing:.04em;line-height:1.6}
+.pc-arrow{position:absolute;top:1.25rem;right:1.25rem;color:#c4963a;font-size:14px;font-family:'DM Mono',monospace}
+.pc.active .pc-arrow{display:none}
+.active-badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;color:#aaff00;text-transform:uppercase;margin-top:.5rem;display:flex;align-items:center;gap:.3rem}
+.active-badge::before{content:'●';animation:pulse 2s infinite}
+.drawer-footer{padding:1.25rem 1.5rem;border-top:1px solid #1e1e1e;font-family:'DM Mono',monospace;font-size:9px;color:#333;letter-spacing:.08em}
+.portals-btn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;padding:7px 12px;border:1px solid #2a2a2a;background:transparent;color:#555;cursor:pointer;transition:all .2s;text-transform:uppercase;display:flex;align-items:center;gap:.4rem;white-space:nowrap}
+.portals-btn:hover{border-color:#c4963a;color:#c4963a}
+/* PORTALS SECTION */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--border);margin-top:3rem}
+.pgc{padding:2.5rem 2rem;text-decoration:none;display:flex;flex-direction:column;gap:.75rem;background:var(--bg2);transition:background .2s;position:relative;border:none}
+.pgc:hover{background:var(--bg3)}
+.pgc.active-portal{background:var(--bg3);border-left:2px solid var(--gold)}
+.pgc-eye{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:#c4963a;text-transform:uppercase}
+.pgc-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.06em;color:#fff;line-height:1}
+.pgc-desc{font-family:'DM Mono',monospace;font-size:11px;color:#555;letter-spacing:.04em;line-height:1.7;flex:1}
+.pgc-link{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:#c4963a;text-transform:uppercase;margin-top:.5rem}
+.pgc.active-portal .pgc-link{color:#aaff00}
+.pgc-badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;color:#aaff00;text-transform:uppercase;display:inline-flex;align-items:center;gap:.3rem;margin-top:-.25rem}
+.pgc-badge::before{content:'●';animation:pulse 2s infinite}
+/* CATALOGUE MODULE CSS */
+.catalogue-section {
+  padding: 60px 20px;
+  background-color: #050505; /* Deep, raw background */
+  border-top: 1px solid #333; /* Clean separation line */
+}
+
+/* The Grid System */
+.catalogue-grid {
+  display: grid;
+  /* Auto-fits columns minimum 180px wide, stretching to fill space */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px; /* Sharp, precise spacing */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Image Container */
+.catalogue-item {
+  width: 100%;
+  aspect-ratio: 4 / 5; /* Classic portrait aspect ratio for apparel */
+  overflow: hidden;
+  background-color: #111;
+}
+
+/* Image Behavior */
+.catalogue-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Forces a brutal, high-contrast look on load */
+  filter: grayscale(100%) contrast(1.2); 
+  transition: all 0.3s ease;
+}
+
+/* Interaction: Color reveals on tap/hover */
+.catalogue-item:hover img,
+.catalogue-item:active img {
+  filter: grayscale(0%) contrast(1);
+  transform: scale(1.03); /* Subtle mechanical punch inward */
+}
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .nav-cta{display:none}
+  .slider{height:85vh}
+  .stats-bar{grid-template-columns:1fr 1fr}
+  .stat-item{border-right:none;border-bottom:1px solid var(--border)}
+  .stat-item:nth-child(odd){border-right:1px solid var(--border)}
+  .rfq-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .gallery-strip{grid-template-columns:repeat(2,1fr)}
+  .gi.wide{grid-column:span 1;aspect-ratio:4/3}
+  .slide-badge{display:none}
+}
+@media(max-width:600px){
+  .slide-headline{font-size:42px}
+  .cat-tab{font-size:10px;padding:10px 14px;letter-spacing:.08em}
+}
+</style>
+</head>
+<body class="lang-en">
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker">
+    <span>EST. 1998</span><span>BSCI AUDITED FACTORY</span><span>MOQ FROM 200 PCS / STYLE</span>
+    <span>FOB CHITTAGONG</span><span>30–45 DAY LEAD TIME</span><span>SAMPLE IN 10 DAYS</span>
+    <span>KNITWEAR · WOVEN · ACTIVEWEAR · LINGERIE</span><span>EU & US COMPLIANT</span>
+    <span>NL · DE · UK · ES · US · JP</span><span>OEKO-TEX READY</span><span>GOTS READY</span>
+    <span>T/T · L/C · DP PAYMENT</span><span>24H RESPONSE</span>
+    <span>EST. 1998</span><span>BSCI AUDITED FACTORY</span><span>MOQ FROM 200 PCS / STYLE</span>
+    <span>FOB CHITTAGONG</span><span>30–45 DAY LEAD TIME</span><span>SAMPLE IN 10 DAYS</span>
+    <span>KNITWEAR · WOVEN · ACTIVEWEAR · LINGERIE</span><span>EU & US COMPLIANT</span>
+    <span>NL · DE · UK · ES · US · JP</span><span>OEKO-TEX READY</span><span>GOTS READY</span>
+    <span>T/T · L/C · DP PAYMENT</span><span>24H RESPONSE</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">HANDS<span class="amp"> & </span><span>HEAD</span></a>
+  <ul class="nav-links">
+    <li><a href="#products" data-lang="en">Products</a><a href="#products" data-lang="nl">Producten</a><a href="#products" data-lang="de">Produkte</a><a href="#products" data-lang="bn">পণ্য</a><a href="#products" data-lang="ja">製品</a></li>
+    <li><a href="#compliance">Compliance</a></li>
+    <li><a href="#process" data-lang="en">Process</a><a href="#process" data-lang="nl">Proces</a><a href="#process" data-lang="de">Prozess</a><a href="#process" data-lang="bn">প্রক্রিয়া</a><a href="#process" data-lang="ja">プロセス</a></li>
+    <li><a href="#tracker">Tracker</a></li>
+    <li><a href="#contact" data-lang="en">Contact</a><a href="#contact" data-lang="nl">Contact</a><a href="#contact" data-lang="de">Kontakt</a><a href="#contact" data-lang="bn">যোগাযোগ</a><a href="#contact" data-lang="ja">お問い合わせ</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('nl',this)">NL</button>
+      <button class="lang-btn" onclick="setLang('de',this)">DE</button>
+      <button class="lang-btn" onclick="setLang('bn',this)">বাং</button>
+      <button class="lang-btn" onclick="setLang('ja',this)">日本</button>
+    </div>
+    <a href="#rfq" class="nav-cta">
+      <span data-lang="en">Request Quote</span>
+      <span data-lang="nl">Offerte</span>
+      <span data-lang="de">Angebot</span>
+      <span data-lang="bn">মূল্য জানুন</span>
+      <span data-lang="ja">見積もり</span>
+    </a>
+    <button class="portals-btn" onclick="openDrawer()">⊞ PORTALS</button>
+    <button class="hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#products" onclick="toggleMobileNav()">Products</a>
+  <a href="#compliance" onclick="toggleMobileNav()">Compliance</a>
+  <a href="#process" onclick="toggleMobileNav()">Process</a>
+  <a href="#tracker" onclick="toggleMobileNav()">Tracker</a>
+  <a href="#rfq" onclick="toggleMobileNav()">Request Quote</a>
+  <a href="#contact" onclick="toggleMobileNav()">Contact</a>
+</div>
+
+<!-- HERO SLIDER -->
+<div class="slider" id="heroSlider">
+
+  <!-- SLIDE 1 — Knitwear -->
+  <div class="slide active" data-slide="0">
+    <div class="slide-bg" style="background-image:url('IMG_COM_202606271706445131.webp')"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-badge">
+      <div class="badge-item live">● EU EXPORT READY</div>
+      <div class="badge-item">BSCI AUDITED</div>
+      <div class="badge-item">EST. 1998</div>
+    </div>
+    <div class="slide-tag">
+      <span data-lang="en">Bangladesh Apparel Manufacturer · EU & US Export Partner</span>
+      <span data-lang="nl">Bangladesh Kledingfabrikant · EU & VS Exportpartner</span>
+      <span data-lang="de">Bangladeschischer Bekleidungshersteller · EU & US Exportpartner</span>
+      <span data-lang="bn">বাংলাদেশ পোশাক প্রস্তুতকারক · EU ও US রপ্তানি অংশীদার</span>
+      <span data-lang="ja">バングラデシュのアパレルメーカー · EU・US輸出パートナー</span>
+    </div>
+    <div class="slide-headline">
+      <span data-lang="en">PREMIUM<br><span class="acc">APPAREL.</span><br><span class="dim">BUILT IN</span><br>BANGLADESH.</span>
+      <span data-lang="nl">PREMIUM<br><span class="acc">KLEDING.</span><br><span class="dim">GEMAAKT IN</span><br>BANGLADESH.</span>
+      <span data-lang="de">PREMIUM<br><span class="acc">BEKLEIDUNG.</span><br><span class="dim">HERGESTELLT IN</span><br>BANGLADESCH.</span>
+      <span data-lang="bn">প্রিমিয়াম<br><span class="acc">পোশাক।</span><br><span class="dim">তৈরি হয়</span><br>বাংলাদেশে।</span>
+      <span data-lang="ja">プレミアム<br><span class="acc">アパレル。</span><br><span class="dim">バングラデシュ</span><br>製造。</span>
+    </div>
+    <div class="slide-sub">
+      <span data-lang="en">Knitwear, Woven, Activewear & Lingerie. BSCI-audited factory. MOQ 200 pcs. FOB Chittagong.</span>
+      <span data-lang="nl">Gebreide stoffen, geweven, sportkleding en lingerie. BSCI-gecertificeerde fabriek. MOQ 200 stuks.</span>
+      <span data-lang="de">Strickwaren, Webwaren, Aktivbekleidung & Lingerie. BSCI-geprüfte Fabrik. MOQ 200 Stück.</span>
+      <span data-lang="bn">নিটওয়্যার, ওভেন, অ্যাক্টিভওয়্যার ও লিনজেরি। BSCI অডিটেড ফ্যাক্টরি। MOQ ২০০ পিস।</span>
+      <span data-lang="ja">ニットウェア、織物、アクティブウェア、ランジェリー。BSCI認定工場。MOQ 200枚。</span>
+    </div>
+    <div class="slide-actions">
+      <a href="#rfq" class="btn-primary">
+        <span data-lang="en">Request Free Sample</span>
+        <span data-lang="nl">Gratis Monster</span>
+        <span data-lang="de">Kostenloses Muster</span>
+        <span data-lang="bn">বিনামূল্যে নমুনা</span>
+        <span data-lang="ja">無料サンプル依頼</span>
+      </a>
+      <a href="#products" class="btn-ghost">
+        <span data-lang="en">View Catalogue</span>
+        <span data-lang="nl">Catalogus</span>
+        <span data-lang="de">Katalog</span>
+        <span data-lang="bn">ক্যাটালগ দেখুন</span>
+        <span data-lang="ja">カタログ</span>
+      </a>
+    </div>
+    <div class="slide-cat-label">KNITWEAR COLLECTION</div>
+  </div>
+
+  <!-- SLIDE 2 — Activewear -->
+  <div class="slide" data-slide="1">
+    <div class="slide-bg" style="background-image:url('IMG_COM_202606271706446916.webp')"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-tag">
+      <span data-lang="en">Activewear Collection · AI Avatar Series</span>
+      <span data-lang="nl">Sportkleding Collectie · AI Avatar Serie</span>
+      <span data-lang="de">Aktivbekleidung Kollektion · KI Avatar Serie</span>
+      <span data-lang="bn">অ্যাক্টিভওয়্যার কালেকশন · AI অ্যাভাটার সিরিজ</span>
+      <span data-lang="ja">アクティブウェアコレクション · AIアバターシリーズ</span>
+    </div>
+    <div class="slide-headline">
+      <span data-lang="en">ENGINEERED<br><span class="acc">ACTIVEWEAR.</span><br><span class="dim">PRECISION</span><br>BUILT.</span>
+      <span data-lang="nl">TECHNISCH<br><span class="acc">SPORTKLEDING.</span><br><span class="dim">PRECISIE</span><br>GEBOUWD.</span>
+      <span data-lang="de">TECHNISCHE<br><span class="acc">AKTIVKLEIDUNG.</span><br><span class="dim">PRÄZISIONS</span><br>FERTIGUNG.</span>
+      <span data-lang="bn">উন্নত<br><span class="acc">অ্যাক্টিভওয়্যার।</span><br><span class="dim">নির্ভুল</span><br>নির্মাণ।</span>
+      <span data-lang="ja">エンジニアード<br><span class="acc">アクティブウェア。</span><br><span class="dim">精密</span><br>製造。</span>
+    </div>
+    <div class="slide-sub">
+      <span data-lang="en">Compression leggings, sports bras, performance tees. Custom specs, private label, 200 pcs MOQ.</span>
+      <span data-lang="nl">Compressieleggings, sportbh's, prestatieshirts. Eigen specificaties, private label, 200 stuks MOQ.</span>
+      <span data-lang="de">Kompressionsleggings, Sport-BHs, Performance-Shirts. Eigene Specs, Private Label, 200 Stück MOQ.</span>
+      <span data-lang="bn">কম্প্রেশন লেগিংস, স্পোর্টস ব্রা, পারফরম্যান্স টি। কাস্টম স্পেক, প্রাইভেট লেবেল, ২০০ পিস MOQ।</span>
+      <span data-lang="ja">コンプレッションレギンス、スポーツブラ、パフォーマンスTシャツ。カスタム仕様、PB対応、MOQ 200枚。</span>
+    </div>
+    <div class="slide-actions">
+      <a href="#products" class="btn-primary">
+        <span data-lang="en">View Activewear</span>
+        <span data-lang="nl">Sportkleding Bekijken</span>
+        <span data-lang="de">Aktivkleidung</span>
+        <span data-lang="bn">অ্যাক্টিভওয়্যার দেখুন</span>
+        <span data-lang="ja">アクティブウェアを見る</span>
+      </a>
+      <a href="#rfq" class="btn-ghost">
+        <span data-lang="en">Get Sample</span>
+        <span data-lang="nl">Monster Aanvragen</span>
+        <span data-lang="de">Muster Anfragen</span>
+        <span data-lang="bn">নমুনা নিন</span>
+        <span data-lang="ja">サンプル依頼</span>
+      </a>
+    </div>
+    <div class="slide-cat-label">ACTIVEWEAR COLLECTION</div>
+  </div>
+
+  <!-- SLIDE 3 — Woven/Cargo -->
+  <div class="slide" data-slide="2">
+    <div class="slide-bg" style="background-image:url('IMG_COM_202606271706444130.webp')"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-tag">
+      <span data-lang="en">Woven Collection · Technical & Utility</span>
+      <span data-lang="nl">Geweven Collectie · Technisch & Functioneel</span>
+      <span data-lang="de">Webwaren Kollektion · Technisch & Utility</span>
+      <span data-lang="bn">ওভেন কালেকশন · টেকনিক্যাল ও ইউটিলিটি</span>
+      <span data-lang="ja">ウーブンコレクション · テクニカル & ユーティリティ</span>
+    </div>
+    <div class="slide-headline">
+      <span data-lang="en">WOVEN<br><span class="acc">PRECISION.</span><br><span class="dim">CARGO TO</span><br>FORMAL.</span>
+      <span data-lang="nl">GEWEVEN<br><span class="acc">PRECISIE.</span><br><span class="dim">CARGO TOT</span><br>FORMEEL.</span>
+      <span data-lang="de">GEWEBTE<br><span class="acc">PRÄZISION.</span><br><span class="dim">CARGO BIS</span><br>FORMAL.</span>
+      <span data-lang="bn">ওভেন<br><span class="acc">নির্ভুলতা।</span><br><span class="dim">কার্গো থেকে</span><br>ফর্মাল।</span>
+      <span data-lang="ja">ウーブン<br><span class="acc">精密。</span><br><span class="dim">カーゴから</span><br>フォーマルまで。</span>
+    </div>
+    <div class="slide-sub">
+      <span data-lang="en">Cargo trousers, formal shirts, casual wovens. 100% cotton, twill, linen blends. EU REACH compliant.</span>
+      <span data-lang="nl">Cargobroeken, formele overhemden, casual geweven stoffen. 100% katoen, twill, linnenmengsels. EU REACH.</span>
+      <span data-lang="de">Cargohosen, formelle Hemden, lässige Webwaren. 100% Baumwolle, Twill, Leinenmischungen. EU REACH.</span>
+      <span data-lang="bn">কার্গো ট্রাউজার, ফর্মাল শার্ট, ক্যাজুয়াল ওভেন। ১০০% কটন, টুইল, লিনেন ব্লেন্ড।</span>
+      <span data-lang="ja">カーゴパンツ、フォーマルシャツ、カジュアルウーブン。100%コットン、ツイル、リネン混紡。EU REACH準拠。</span>
+    </div>
+    <div class="slide-actions">
+      <a href="#products" class="btn-primary">
+        <span data-lang="en">View Woven</span>
+        <span data-lang="nl">Geweven Bekijken</span>
+        <span data-lang="de">Webwaren</span>
+        <span data-lang="bn">ওভেন দেখুন</span>
+        <span data-lang="ja">ウーブンを見る</span>
+      </a>
+      <a href="#rfq" class="btn-ghost">
+        <span data-lang="en">Request Quote</span>
+        <span data-lang="nl">Offerte Aanvragen</span>
+        <span data-lang="de">Angebot Anfragen</span>
+        <span data-lang="bn">মূল্য জানুন</span>
+        <span data-lang="ja">見積もり依頼</span>
+      </a>
+    </div>
+    <div class="slide-cat-label">WOVEN COLLECTION</div>
+  </div>
+
+  <!-- SLIDE 4 — Lingerie -->
+  <div class="slide" data-slide="3">
+    <div class="slide-bg" style="background-image:url('IMG_COM_202606271706447267.webp')"></div>
+    <div class="slide-overlay"></div>
+    <div class="slide-tag">
+      <span data-lang="en">Lingerie & Intimate Collection</span>
+      <span data-lang="nl">Lingerie & Intieme Collectie</span>
+      <span data-lang="de">Lingerie & Intim Kollektion</span>
+      <span data-lang="bn">লিনজেরি ও ইন্টিমেট কালেকশন</span>
+      <span data-lang="ja">ランジェリー & インティメートコレクション</span>
+    </div>
+    <div class="slide-headline">
+      <span data-lang="en">LINGERIE<br><span class="acc">PRECISION.</span><br><span class="dim">ESSENTIALS TO</span><br>INTIMATE.</span>
+      <span data-lang="nl">LINGERIE<br><span class="acc">PRECISIE.</span><br><span class="dim">BASIS TOT</span><br>INTIEM.</span>
+      <span data-lang="de">LINGERIE<br><span class="acc">PRÄZISION.</span><br><span class="dim">BASICS BIS</span><br>INTIM.</span>
+      <span data-lang="bn">লিনজেরি<br><span class="acc">নির্ভুলতা।</span><br><span class="dim">বেসিক থেকে</span><br>ইন্টিমেট।</span>
+      <span data-lang="ja">ランジェリー<br><span class="acc">精密。</span><br><span class="dim">エッセンシャルから</span><br>インティメートまで。</span>
+    </div>
+    <div class="slide-sub">
+      <span data-lang="en">Essentials, fancy lace, intimate sets, swimwear bikinis. Custom sizing, branding, packaging available.</span>
+      <span data-lang="nl">Basics, kant, intieme sets, zwemkleding. Aangepaste maten, branding en verpakking beschikbaar.</span>
+      <span data-lang="de">Basics, Spitze, Intim-Sets, Bademode. Individuelle Größen, Branding und Verpackung verfügbar.</span>
+      <span data-lang="bn">এসেনশিয়াল, ফ্যান্সি লেস, ইন্টিমেট সেট, সুইমওয়্যার। কাস্টম সাইজ, ব্র্যান্ডিং, প্যাকেজিং।</span>
+      <span data-lang="ja">エッセンシャル、ファンシーレース、インティメートセット、水着。カスタムサイズ、ブランディング対応。</span>
+    </div>
+    <div class="slide-actions">
+      <a href="#products" class="btn-primary">
+        <span data-lang="en">View Lingerie</span>
+        <span data-lang="nl">Lingerie Bekijken</span>
+        <span data-lang="de">Lingerie</span>
+        <span data-lang="bn">লিনজেরি দেখুন</span>
+        <span data-lang="ja">ランジェリーを見る</span>
+      </a>
+      <a href="#rfq" class="btn-ghost">
+        <span data-lang="en">Get Sample</span>
+        <span data-lang="nl">Monster Aanvragen</span>
+        <span data-lang="de">Muster Anfragen</span>
+        <span data-lang="bn">নমুনা নিন</span>
+        <span data-lang="ja">サンプル依頼</span>
+      </a>
+    </div>
+    <div class="slide-cat-label">LINGERIE COLLECTION</div>
+  </div>
+
+  <!-- Slider Controls -->
+  <button class="slider-arrow prev" onclick="slideMove(-1)">&#8592;</button>
+  <button class="slider-arrow next" onclick="slideMove(1)">&#8594;</button>
+  <div class="slider-dots" id="sliderDots">
+    <div class="dot active" onclick="goToSlide(0)"></div>
+    <div class="dot" onclick="goToSlide(1)"></div>
+    <div class="dot" onclick="goToSlide(2)"></div>
+    <div class="dot" onclick="goToSlide(3)"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar reveal">
+  <div class="stat-item">
+    <div class="stat-num">26<span class="unit">+</span></div>
+    <div class="stat-label">
+      <span data-lang="en">Years of Manufacturing</span>
+      <span data-lang="nl">Jaar Productie</span>
+      <span data-lang="de">Jahre Produktion</span>
+      <span data-lang="bn">বছরের উৎপাদন</span>
+      <span data-lang="ja">年の製造実績</span>
+    </div>
+    <div class="stat-sub">Est. 1998 · Dhaka, Bangladesh</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">200<span class="unit">+</span></div>
+    <div class="stat-label">
+      <span data-lang="en">MOQ Per Style</span>
+      <span data-lang="nl">MOQ Per Stijl</span>
+      <span data-lang="de">MOQ Pro Stil</span>
+      <span data-lang="bn">প্রতি স্টাইলে MOQ</span>
+      <span data-lang="ja">スタイル毎MOQ</span>
+    </div>
+    <div class="stat-sub">Knitwear · Woven · Activewear · Lingerie</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">30<span class="unit">d</span></div>
+    <div class="stat-label">
+      <span data-lang="en">Standard Lead Time</span>
+      <span data-lang="nl">Standaard Levertijd</span>
+      <span data-lang="de">Standard Lieferzeit</span>
+      <span data-lang="bn">স্ট্যান্ডার্ড লিড টাইম</span>
+      <span data-lang="ja">標準リードタイム</span>
+    </div>
+    <div class="stat-sub">Sample in 10 days · DHL/FedEx</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">24<span class="unit">h</span></div>
+    <div class="stat-label">
+      <span data-lang="en">Response Time</span>
+      <span data-lang="nl">Reactietijd</span>
+      <span data-lang="de">Antwortzeit</span>
+      <span data-lang="bn">সাড়া দেওয়ার সময়</span>
+      <span data-lang="ja">応答時間</span>
+    </div>
+    <div class="stat-sub">WhatsApp · Email · Video call</div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="section" id="products">
+  <div class="section-eyebrow">Product Catalogue</div>
+  <div class="section-title reveal">
+    <span data-lang="en">OUR <span class="acc">APPAREL</span><br>CATEGORIES</span>
+    <span data-lang="nl">ONZE <span class="acc">KLEDING</span><br>CATEGORIEËN</span>
+    <span data-lang="de">UNSERE <span class="acc">BEKLEIDUNGS</span><br>KATEGORIEN</span>
+    <span data-lang="bn">আমাদের <span class="acc">পোশাক</span><br>বিভাগসমূহ</span>
+    <span data-lang="ja">アパレル<span class="acc">カテゴリー</span></span>
+  </div>
+  <div class="section-sub reveal">
+    <span data-lang="en">All products OEM/private label ready. Custom dimensions, branding, packaging. White-label from 200 pcs per style. Swatches and samples available in 10 days.</span>
+    <span data-lang="nl">Alle producten OEM/private label gereed. Aangepaste afmetingen, branding, verpakking. Wit-label vanaf 200 stuks per stijl.</span>
+    <span data-lang="de">Alle Produkte OEM/Private Label bereit. Individuelle Abmessungen, Branding, Verpackung. White-Label ab 200 Stück pro Stil.</span>
+    <span data-lang="bn">সমস্ত পণ্য OEM/প্রাইভেট লেবেল প্রস্তুত। কাস্টম ডিজাইন, ব্র্যান্ডিং, প্যাকেজিং। ২০০ পিস থেকে।</span>
+    <span data-lang="ja">全製品OEM/プライベートブランド対応。カスタム仕様、ブランディング、パッケージング。200枚から。</span>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="cat-tabs reveal">
+    <button class="cat-tab active" onclick="filterCat('all',this)">
+      <span data-lang="en">All</span><span data-lang="nl">Alle</span><span data-lang="de">Alle</span><span data-lang="bn">সব</span><span data-lang="ja">全て</span>
+    </button>
+    <button class="cat-tab" onclick="filterCat('knit',this)">
+      <span data-lang="en">Knitwear</span><span data-lang="nl">Breigoed</span><span data-lang="de">Strickwaren</span><span data-lang="bn">নিটওয়্যার</span><span data-lang="ja">ニット</span>
+    </button>
+    <button class="cat-tab" onclick="filterCat('woven',this)">
+      <span data-lang="en">Woven</span><span data-lang="nl">Geweven</span><span data-lang="de">Webwaren</span><span data-lang="bn">ওভেন</span><span data-lang="ja">ウーブン</span>
+    </button>
+    <button class="cat-tab" onclick="filterCat('active',this)">
+      <span data-lang="en">Activewear</span><span data-lang="nl">Sportkleding</span><span data-lang="de">Aktivwear</span><span data-lang="bn">অ্যাক্টিভওয়্যার</span><span data-lang="ja">アクティブ</span>
+    </button>
+    <button class="cat-tab" onclick="filterCat('lingerie',this)">
+      <span data-lang="en">Lingerie</span><span data-lang="nl">Lingerie</span><span data-lang="de">Lingerie</span><span data-lang="bn">লিনজেরি</span><span data-lang="ja">ランジェリー</span>
+    </button>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="product-grid reveal" id="productGrid">
+
+    <!-- KNITWEAR -->
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Drop-Shoulder T-Shirt')">
+      <img src="IMG_COM_2026062717064487811.webp" alt="Drop Shoulder T-Shirt" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear</div>
+        <div class="p-name">DROP-SHOULDER TEE</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">280gsm Cotton</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Oversized · Boxy</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Basic T-Shirt')">
+      <img src="IMG_COM_202606271706445131.webp" alt="Basic T-Shirt Factory" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear</div>
+        <div class="p-name">BASIC TEE</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">180–220gsm Cotton</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Crew · V-neck</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">25–35 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Sports Performance T-Shirt')">
+      <img src="IMG_COM_202606271706445783.webp" alt="Sports Performance Tee" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear · Sports</div>
+        <div class="p-name">SPORTS TEE</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Dry-fit Polyester</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Raglan · Performance</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Polo Shirt')">
+      <img src="IMG_COM_2026062717064490612.webp" alt="Polo Shirt" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear</div>
+        <div class="p-name">POLO SHIRT</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Piqué · Dry-fit</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Basic · Raglan</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Sweatpants')">
+      <img src="IMG_COM_2026062717064492913.webp" alt="Sweatpants" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear</div>
+        <div class="p-name">SWEATPANTS</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">320gsm Fleece</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Tapered · Relaxed</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">35–45 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Hoodie / Sweatshirt')">
+      <img src="IMG_COM_2026062810401767712.webp" alt="Tactical Hoodie" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear</div>
+        <div class="p-name">HOODIE / SWEATSHIRT</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">360gsm Fleece</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Pullover · Zip-up</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">35–45 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="knit" onclick="openRFQ('Boxers and Panties')">
+      <img src="IMG_COM_202606281040172000.webp" alt="Boxers and Panties" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Knitwear · Underwear</div>
+        <div class="p-name">BOXERS / PANTIES</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">95% Cotton Jersey</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Brief · Trunk · Bikini</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">300 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">25–35 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WOVEN -->
+    <div class="product-card visible" data-cat="woven" onclick="openRFQ('Cargo Trousers')">
+      <img src="IMG_COM_202606271706444130.webp" alt="Cargo Trousers" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Woven</div>
+        <div class="p-name">CARGO TROUSERS</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Twill · Canvas · Ripstop</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Tactical · Utility</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">35–45 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="woven" onclick="openRFQ('Casual Shirt')">
+      <img src="IMG_COM_2026062717064505115.webp" alt="Casual Shirt" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Woven</div>
+        <div class="p-name">CASUAL SHIRT</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Cotton-Linen · Chambray</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Raw edge · Garment wash</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="woven" onclick="openRFQ('Formal Shirt')">
+      <img src="IMG_COM_202606271706445482.webp" alt="Formal Shirt" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Woven</div>
+        <div class="p-name">FORMAL SHIRT</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Poplin · Oxford · Twill</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Slim · Regular · Spread collar</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="woven" onclick="openRFQ('Shorts')">
+      <img src="IMG_COM_202606271706448109.webp" alt="Technical Shorts" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Woven</div>
+        <div class="p-name">SHORTS</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">DWR · Nylon · Twill</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Men · Women</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVEWEAR -->
+    <div class="product-card visible" data-cat="active" onclick="openRFQ('Compression Leggings')">
+      <img src="IMG_COM_2026062717064507616.webp" alt="Compression Leggings" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Activewear</div>
+        <div class="p-name">LEGGINGS</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Nylon · Spandex 4-way</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Compression · High-waist</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="active" onclick="openRFQ('Sports Bra')">
+      <img src="IMG_COM_202606281040172000.webp" alt="Sports Bra" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Activewear</div>
+        <div class="p-name">SPORTS BRA</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Nylon · Spandex</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Low · Medium · High impact</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="active" onclick="openRFQ('Activewear Shorts')">
+      <img src="IMG_COM_2026062717064484810.webp" alt="Activewear Shorts" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Activewear</div>
+        <div class="p-name">ACTIVE SHORTS</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Ribbed Knit · Spandex</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Bike · Run · Training</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 pcs/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">25–35 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINGERIE -->
+    <div class="product-card visible" data-cat="lingerie" onclick="openRFQ('Lingerie Essentials Set')">
+      <img src="IMG_COM_2026062717064521220.webp" alt="Lingerie Essentials" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Lingerie · Essentials</div>
+        <div class="p-name">ESSENTIALS SET</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">Seamless Microfiber</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Bra + Brief set</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">300 sets/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="lingerie" onclick="openRFQ('Fancy Lace Lingerie Set')">
+      <img src="IMG_COM_2026062717064500614.webp" alt="Fancy Lace Lingerie" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Lingerie   · Fancy</div>
+        <div class="p-name">LACE BRALETTE SET</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">French Lace · Mesh</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Bralette + High-waist brief</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 sets/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">35–45 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card visible" data-cat="lingerie" onclick="openRFQ('Swimwear Bikini')">
+      <img src="IMG_COM_202606271706447267.webp" alt="Swimwear" class="p-img">
+      <div class="p-overlay"><div class="p-overlay-btn">Request Quote</div></div>
+      <div class="p-info">
+        <div class="p-cat">Lingerie · Swimwear</div>
+        <div class="p-name">BIKINI / SWIMWEAR</div>
+        <div class="p-specs">
+          <div class="spec-row"><span class="spec-k">Fabric</span><span class="spec-v">80% Nylon 20% Spandex</span></div>
+          <div class="spec-row"><span class="spec-k">Style</span><span class="spec-v">Triangle · High-cut · Thong</span></div>
+          <div class="spec-row"><span class="spec-k">MOQ</span><span class="spec-v">200 sets/style</span></div>
+          <div class="spec-row"><span class="spec-k">Lead Time</span><span class="spec-v">30–40 days</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section" id="why">
+  <div class="section-eyebrow">Why HANDS & HEAD</div>
+  <div class="section-title reveal">
+    <span data-lang="en">YOUR TRUSTED<br><span class="acc">SOURCING</span> PARTNER</span>
+    <span data-lang="nl">UW BETROUWBARE<br><span class="acc">INKOOPPARTNER</span></span>
+    <span data-lang="de">IHR ZUVERLÄSSIGER<br><span class="acc">SOURCING PARTNER</span></span>
+    <span data-lang="bn">আপনার বিশ্বস্ত<br><span class="acc">সোর্সিং পার্টনার</span></span>
+    <span data-lang="ja">信頼できる<br><span class="acc">ソーシングパートナー</span></span>
+  </div>
+  <div class="why-grid reveal">
+    <div class="why-card">
+      <div class="why-num">01</div>
+      <span class="why-icon">🏭</span>
+      <div class="why-title">FACTORY DIRECT</div>
+      <div class="why-desc">No middlemen. Family-owned factory since 1998. Full in-house cutting, sewing, finishing, QC. You deal with the manufacturer, not a trading company.</div>
+      <div class="why-hl">→ Lower cost · Direct communication</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">02</div>
+      <span class="why-icon">📋</span>
+      <div class="why-title">COMPLIANCE FIRST</div>
+      <div class="why-desc">BSCI audited. OEKO-TEX ready. GOTS facility in progress. All documentation provided upfront: audit reports, test certificates, compliance declarations.</div>
+      <div class="why-hl">→ Zero compliance headaches</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">03</div>
+      <span class="why-icon">💰</span>
+      <div class="why-title">PRICE ADVANTAGE</div>
+      <div class="why-desc">Bangladesh manufacturing 30–40% below China at comparable quality. Tier-1 ready with sub-Tier-1 pricing. Real cost savings on every order across all categories.</div>
+      <div class="why-hl">→ Avg. 35% below China pricing</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">04</div>
+      <span class="why-icon">🎨</span>
+      <div class="why-title">FULL OEM / WHITE LABEL</div>
+      <div class="why-desc">Your brand, our production. Custom woven labels, hang tags, packaging, polybag printing. Tech pack development. Pantone color matching. From 200 pcs.</div>
+      <div class="why-hl">→ Complete brand-ready output</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">05</div>
+      <span class="why-icon">📦</span>
+      <div class="why-title">REAL-TIME TRACKING</div>
+      <div class="why-desc">Every buyer gets access to our NexOS production portal. Photo and video updates at cutting, sewing, finishing, QC. Zero guesswork on your order status.</div>
+      <div class="why-hl">→ Full production visibility</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">06</div>
+      <span class="why-icon">🌍</span>
+      <div class="why-title">EU & US EXPERTISE</div>
+      <div class="why-desc">26+ years exporting to EU and global markets. Deep understanding of import compliance, incoterms, documentation, buyer requirements. English-speaking management.</div>
+      <div class="why-hl">→ No communication barriers</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section class="section" id="markets">
+  <div class="section-eyebrow">Target Markets</div>
+  <div class="section-title reveal">
+    <span data-lang="en">SERVING <span class="acc">GLOBAL</span><br>BUYERS</span>
+    <span data-lang="nl">VOOR <span class="acc">WERELDWIJDE</span><br>INKOPERS</span>
+    <span data-lang="de">FÜR <span class="acc">GLOBALE</span><br>EINKÄUFER</span>
+    <span data-lang="bn"><span class="acc">বৈশ্বিক</span><br>ক্রেতাদের সেবায়</span>
+    <span data-lang="ja"><span class="acc">グローバル</span><br>バイヤーへ</span>
+  </div>
+  <div class="markets-grid reveal">
+    <div class="mkt-card">
+      <div class="mkt-flag">🇳🇱</div>
+      <div class="mkt-name">NETHERLANDS</div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><strong>Rotterdam</strong> — EU logistics gateway</div>
+        <div class="mkt-stat"><strong>47%</strong> imports from developing countries</div>
+        <div class="mkt-stat"><strong>Gateway</strong> to full EU distribution</div>
+      </div>
+      <div class="mkt-tag">● Primary Target</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-flag">🇩🇪</div>
+      <div class="mkt-name">GERMANY</div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><strong>€39.1B</strong> apparel import market</div>
+        <div class="mkt-stat"><strong>BSCI</strong> standard preferred</div>
+        <div class="mkt-stat"><strong>Europe's</strong> largest apparel importer</div>
+      </div>
+      <div class="mkt-tag">● Primary Target</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-flag">🇬🇧</div>
+      <div class="mkt-name">UK</div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><strong>Post-Brexit</strong> sourcing shift</div>
+        <div class="mkt-stat"><strong>Bangladesh</strong> top 2 UK supplier</div>
+        <div class="mkt-stat"><strong>London · Manchester</strong> buyer base</div>
+      </div>
+      <div class="mkt-tag">● Active Market</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-flag">🇺🇸</div>
+      <div class="mkt-name">UNITED STATES</div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><strong>$100B+</strong> apparel import market</div>
+        <div class="mkt-stat"><strong>China shift</strong> accelerating</div>
+        <div class="mkt-stat"><strong>WRAP · CTPAT</strong> compliance available</div>
+      </div>
+      <div class="mkt-tag">● Growing Fast</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-flag">🇪🇸</div>
+      <div class="mkt-name">SPAIN</div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><strong>5th largest</strong> EU apparel importer</div>
+        <div class="mkt-stat"><strong>China alternative</strong> actively sought</div>
+        <div class="mkt-stat"><strong>Barcelona · Madrid</strong> buyer clusters</div>
+      </div>
+      <div class="mkt-tag">● Growing Market</div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-flag">🇯🇵</div>
+      <div class="mkt-name">JAPAN</div>
+      <div class="mkt-stats">
+        <div class="mkt-stat"><strong>Quality-first</strong> sourcing culture</div>
+        <div class="mkt-stat"><strong>¥2.3T</strong> apparel import market</div>
+        <div class="mkt-stat"><strong>Long-term</strong> partnership preferred</div>
+      </div>
+      <div class="mkt-tag">● Established Partner</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPLIANCE -->
+<section class="section" id="compliance">
+  <div class="section-eyebrow">Compliance & Certifications</div>
+  <div class="section-title reveal">
+    <span data-lang="en">EU & US READY<br><span class="acc">COMPLIANCE</span></span>
+    <span data-lang="nl">EU & VS KLARE<br><span class="acc">COMPLIANCE</span></span>
+    <span data-lang="de">EU & US BEREITE<br><span class="acc">COMPLIANCE</span></span>
+    <span data-lang="bn">EU ও US<br><span class="acc">সম্মতি প্রস্তুত</span></span>
+    <span data-lang="ja">EU & US対応<br><span class="acc">コンプライアンス</span></span>
+  </div>
+  <div class="comp-grid reveal">
+    <div class="comp-card">
+      <div class="comp-badge">BSCI</div>
+      <div class="comp-name">Business Social Compliance</div>
+      <div class="comp-desc">Factory audited against BSCI standards. Labor rights, health & safety, environmental management and business ethics. Full report on request.</div>
+      <div class="comp-status">Available on Request</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-badge">SEDEX</div>
+      <div class="comp-name">Supply Chain Ethics</div>
+      <div class="comp-desc">SMETA audit-ready. Four pillars: labor, health & safety, environment, and business integrity across our full supply chain.</div>
+      <div class="comp-status">Audit Ready</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-badge">OEKO</div>
+      <div class="comp-name">OEKO-TEX Standard 100</div>
+      <div class="comp-desc">Fabric and accessories tested for harmful substances. OEKO-TEX certified inputs available. Test reports per shipment on request.</div>
+      <div class="comp-status">Certified Inputs</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-badge">REACH</div>
+      <div class="comp-name">EU Chemical Compliance</div>
+      <div class="comp-desc">All garments tested for EU REACH chemical restrictions. Azo dye free. Test certificates from accredited labs per shipment.</div>
+      <div class="comp-status">Fully Compliant</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-badge">GOTS</div>
+      <div class="comp-name">Global Organic Textile Standard</div>
+      <div class="comp-desc">GOTS-certified organic cotton available. Traceable from farm to finished garment for buyers requiring organic credentials.</div>
+      <div class="comp-status">Certified Cotton Available</div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-badge">QC</div>
+      <div class="comp-name">Quality Control Protocol</div>
+      <div class="comp-desc">In-line and final AQL inspection. SGS / Bureau Veritas / Intertek 3rd party inspection at buyer's request. Photo + video at every stage.</div>
+      <div class="comp-status">Standard Process</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" id="process">
+  <div class="section-eyebrow">How It Works</div>
+  <div class="section-title reveal">
+    <span data-lang="en">FROM <span class="acc">INQUIRY</span><br>TO DELIVERY</span>
+    <span data-lang="nl">VAN <span class="acc">AANVRAAG</span><br>TOT LEVERING</span>
+    <span data-lang="de">VON <span class="acc">ANFRAGE</span><br>BIS LIEFERUNG</span>
+    <span data-lang="bn"><span class="acc">অনুরোধ</span> থেকে<br>ডেলিভারি পর্যন্ত</span>
+    <span data-lang="ja"><span class="acc">問い合わせ</span>から<br>納品まで</span>
+  </div>
+  <div class="process-steps reveal" style="margin-top:3rem">
+    <div class="process-step">
+      <img src="IMG_COM_2026062717064505115.webp" alt="QA Inspection" class="step-img">
+      <div class="step-num">01</div>
+      <div class="step-title">RFQ</div>
+      <div class="step-desc">Submit your requirements: product type, fabric, quantity, target price, delivery date. Form, WhatsApp, or email — your choice.</div>
+      <div class="step-time">→ Response: 24 hours</div>
+    </div>
+    <div class="process-step">
+      <img src="IMG_COM_202606271706447798.webp" alt="Formal Shirt QA" class="step-img">
+      <div class="step-num">02</div>
+      <div class="step-title">QUOTE</div>
+      <div class="step-desc">Detailed FOB quotation: fabric specs, trims, packaging, lead time. Itemised. No hidden costs. Compliance docs status included.</div>
+      <div class="step-time">→ Timeline: 1–2 days</div>
+    </div>
+    <div class="process-step">
+      <img src="IMG_COM_2026062717064490612.webp" alt="Sample Tee" class="step-img">
+      <div class="step-num">03</div>
+      <div class="step-title">SAMPLE</div>
+      <div class="step-desc">Pre-production sample made and shipped DHL/FedEx express. Sample fee credited on first bulk order. Fit approval requested before bulk.</div>
+      <div class="step-time">→ Sample: 10–14 days</div>
+    </div>
+    <div class="process-step">
+      <img src="IMG_COM_202606271706445482.webp" alt="Order Confirmed" class="step-img">
+      <div class="step-num">04</div>
+      <div class="step-title">ORDER</div>
+      <div class="step-desc">Proforma Invoice issued. 30% deposit starts production. All compliance documents prepared. Lab tests booked if required.</div>
+      <div class="step-time">→ PI: 24 hours</div>
+    </div>
+    <div class="process-step">
+      <img src="IMG_COM_202606271706445783.webp" alt="Factory Production" class="step-img">
+      <div class="step-num">05</div>
+      <div class="step-title">PRODUCTION</div>
+      <div class="step-desc">NexOS portal access. Photo + video at cutting, sewing, finishing, QC. AQL inspection. Deviations flagged immediately. Zero surprises.</div>
+      <div class="step-time">→ 30–45 days</div>
+    </div>
+    <div class="process-step">
+      <img src="IMG_COM_202606271706445131.webp" alt="NexOS Shipping" class="step-img">
+      <div class="step-num">06</div>
+      <div class="step-title">SHIPMENT</div>
+      <div class="step-desc">FOB Chittagong. Full docs: BL, packing list, invoice, CO, test reports. 70% balance before release. Freight forwarding assistance available.</div>
+      <div class="step-time">→ 20–28 days to EU/US</div>
+    </div>
+  </div>
+</section>
+
+<!-- CRAFT GALLERY -->
+<section class="section" id="craft" style="padding-bottom:0">
+  <div class="section-eyebrow">Manufacturing Process</div>
+  <div class="section-title reveal">MADE WITH <span class="acc">PRECISION</span><br>NOT PROMISES</div>
+  <div class="section-sub reveal">Every garment documented from raw fabric to finished product. This is what Bangladesh RMG manufacturing looks like at its best.</div>
+  <div class="gallery-strip reveal">
+    <div class="gi wide"><img src="IMG_COM_202606271706444130.webp" alt="Activewear AI avatar"><div class="gi-cap">Activewear — AI Model Series</div></div>
+    <div class="gi"><img src="IMG_COM_202606271706445783.webp" alt="Sports tee tech grid"><div class="gi-cap">Sports Tee — Data Scan</div></div>
+    <div class="gi"><img src="IMG_COM_202606271706448109.webp" alt="Shorts loom machine"><div class="gi-cap">Woven Shorts — Heritage Mill</div></div>
+    <div class="gi"><img src="IMG_COM_2026062810401767712.webp" alt="Hoodie spotlight"><div class="gi-cap">Hoodie — Precision Spotlight</div></div>
+    <div class="gi"><img src="IMG_COM_202606271706446084.webp" alt="AI wireframe woman"><div class="gi-cap">Activewear — AI Construction</div></div>
+    <div class="gi"><img src="IMG_COM_202606271706447267.webp" alt="Casual shirt concrete"><div class="gi-cap">Woven Shirt — Raw Edge</div></div>
+    <div class="gi wide"><img src="IMG_COM_202606271706445131.webp" alt="NexOS shipping containers"><div class="gi-cap">NexOS Zero-Deviation Shipment</div></div>
+    <div class="gi"><img src="IMG_COM_2026062717064500614.webp" alt="Active shorts plinth"><div class="gi-cap">Active Shorts — Studio</div></div>
+    <div class="gi"><img src="IMG_COM_2026062717064521220.webp" alt="Essentials lightbox"><div class="gi-cap">Essentials — QA Lightbox</div></div>
+    <div class="gi"><img src="IMG_COM_2026062717064507616.webp" alt="Sweatpants cube"><div class="gi-cap">Sweatpants — Concrete</div></div>
+  </div>
+</section>
+
+<!-- ORDER TRACKER -->
+<section class="section" id="tracker">
+  <div class="section-eyebrow">Live Production Portal</div>
+  <div class="section-title reveal">
+    <span data-lang="en">REAL-TIME <span class="acc">ORDER</span> TRACKING</span>
+    <span data-lang="nl">REALTIME <span class="acc">ORDER</span> TRACKING</span>
+    <span data-lang="de">ECHTZEIT <span class="acc">AUFTRAGS</span>VERFOLGUNG</span>
+    <span data-lang="bn">রিয়েল-টাইম <span class="acc">অর্ডার</span> ট্র্যাকিং</span>
+    <span data-lang="ja">リアルタイム <span class="acc">注文</span>追跡</span>
+  </div>
+  <div class="section-sub reveal">
+    <span data-lang="en">Every buyer receives NexOS portal access. Track from raw fabric to FOB — full visibility, zero guesswork.</span>
+    <span data-lang="nl">Elke koper ontvangt NexOS portaaltoegang. Volg van ruw materiaal tot FOB — volledige zichtbaarheid.</span>
+    <span data-lang="de">Jeder Käufer erhält NexOS Portalzugang. Von Rohstoff bis FOB verfolgen — volle Transparenz.</span>
+    <span data-lang="bn">প্রতিটি ক্রেতা NexOS পোর্টাল অ্যাক্সেস পান। কাঁচামাল থেকে FOB পর্যন্ত ট্র্যাক করুন।</span>
+    <span data-lang="ja">全バイヤーがNexOSポータルにアクセス。原材料からFOBまで追跡。</span>
+  </div>
+  <div class="tracker-wrap reveal">
+    <div class="tracker-header">
+      <div class="tracker-title">NEXOS PRODUCTION PORTAL — DEMO VIEW</div>
+      <div class="tracker-live">LIVE SYSTEM</div>
+    </div>
+    <div class="tracker-order">
+      <div class="order-field"><div class="order-key">Order ID</div><div class="order-val">ORD-2026-NL-112</div></div>
+      <div class="order-field"><div class="order-key">Product</div><div class="order-val">Drop-Shoulder Tee</div></div>
+      <div class="order-field"><div class="order-key">Quantity</div><div class="order-val gold">800 pcs</div></div>
+      <div class="order-field"><div class="order-key">Buyer</div><div class="order-val">NL Fashion B.V.</div></div>
+      <div class="order-field"><div class="order-key">Status</div><div class="order-val green">IN PRODUCTION</div></div>
+      <div class="order-field"><div class="order-key">ETA FOB</div><div class="order-val">18 Jul 2026</div></div>
+    </div>
+    <div class="tracker-stages">
+      <div class="stage-row"><div class="stage-dot done"></div><div class="stage-info"><div class="stage-name">Fabric Received & Tested</div><div class="stage-date">2026-06-02 — 280gsm cotton, OEKO-TEX batch confirmed</div></div><div class="stage-pct">100%</div></div>
+      <div class="stage-row"><div class="stage-dot done"></div><div class="stage-info"><div class="stage-name">Cutting Complete</div><div class="stage-date">2026-06-08 — All panels cut, 2% shrink allowance applied</div></div><div class="stage-pct">100%</div></div>
+      <div class="stage-row"><div class="stage-dot active"></div><div class="stage-info"><div class="stage-name">Sewing & Assembly</div><div class="stage-date">2026-06-12 — 560/800 pcs completed</div></div><div class="stage-pct" style="color:var(--green)">70%</div></div>
+      <div class="stage-row"><div class="stage-dot"></div><div class="stage-info"><div class="stage-name muted">Finishing & Labeling</div><div class="stage-date">Scheduled: 2026-06-22</div></div><div class="stage-pct muted">—</div></div>
+      <div class="stage-row"><div class="stage-dot"></div><div class="stage-info"><div class="stage-name muted">Final QC & Packing</div><div class="stage-date">Scheduled: 2026-06-28</div></div><div class="stage-pct muted">—</div></div>
+      <div class="stage-row"><div class="stage-dot"></div><div class="stage-info"><div class="stage-name muted">FOB Chittagong — Shipped</div><div class="stage-date">Target: 2026-07-05</div></div><div class="stage-pct muted">—</div></div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-label"><span>Overall Production Progress</span><span style="color:var(--gold)">70%</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div>
+    </div>
+  </div>
+  <p style="font-family:var(--ff-mono);font-size:10px;color:var(--muted2);letter-spacing:.08em;margin-top:1rem;text-align:center;">↑ DEMO VIEW — All active buyers receive private portal access with photo/video updates at every stage</p>
+</section>
+
+<!-- RFQ -->
+<section class="section" id="rfq" style="background:var(--bg2)">
+  <div class="section-eyebrow">Request For Quotation</div>
+  <div class="section-title reveal">
+    <span data-lang="en">START YOUR <span class="acc">SOURCING</span> TODAY</span>
+    <span data-lang="nl">BEGIN VANDAAG MET <span class="acc">INKOPEN</span></span>
+    <span data-lang="de">STARTEN SIE HEUTE MIT DEM <span class="acc">SOURCING</span></span>
+    <span data-lang="bn">আজই <span class="acc">সোর্সিং</span> শুরু করুন</span>
+    <span data-lang="ja">今日から<span class="acc">ソーシング</span>を始めよう</span>
+  </div>
+  <div class="rfq-grid reveal">
+    <div>
+      <div class="section-sub" style="margin-bottom:0">
+        <span data-lang="en">Fill in the form and we respond within 24 hours with a detailed quotation. No spam. No obligation. Just business.</span>
+        <span data-lang="nl">Vul het formulier in en wij reageren binnen 24 uur. Geen spam. Geen verplichting. Gewoon zaken doen.</span>
+        <span data-lang="de">Füllen Sie das Formular aus und wir antworten innerhalb von 24 Stunden. Kein Spam. Keine Verpflichtung.</span>
+        <span data-lang="bn">ফর্মটি পূরণ করুন এবং আমরা ২৪ ঘণ্টার মধ্যে বিস্তারিত কোটেশন পাঠাব।</span>
+        <span data-lang="ja">フォームにご記入いただければ、24時間以内に詳細な見積もりをお送りします。</span>
+      </div>
+      <div class="rfq-pts">
+        <div class="rfq-pt"><div class="rfq-pt-icon">⚡</div><div class="rfq-pt-txt"><strong>24-Hour Response</strong>Personal response from our team. Real quotation, not a bot.</div></div>
+        <div class="rfq-pt"><div class="rfq-pt-icon">📦</div><div class="rfq-pt-txt"><strong>Sample in 10 Days</strong>DHL/FedEx express. Sample fee credited on first order.</div></div>
+        <div class="rfq-pt"><div class="rfq-pt-icon">💬</div><div class="rfq-pt-txt"><strong>WhatsApp Direct</strong>Video call available. Factory tour via WhatsApp video.</div></div>
+        <div class="rfq-pt"><div class="rfq-pt-icon">🔒</div><div class="rfq-pt-txt"><strong>NDA Available</strong>Design confidentiality before sharing tech packs.</div></div>
+        <div class="rfq-pt"><div class="rfq-pt-icon">🌐</div><div class="rfq-pt-txt"><strong>5 Languages</strong>EN · NL · DE · Bengali · Japanese. No language barrier.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="rfq-form" id="rfqForm">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name *</label><input type="text" class="form-input" id="firstName" placeholder="Jan"></div>
+          <div class="form-group"><label class="form-label">Last Name *</label><input type="text" class="form-input" id="lastName" placeholder="van der Berg"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Company Name *</label><input type="text" class="form-input" id="company" placeholder="Your Company B.V."></div>
+        <div class="form-group"><label class="form-label">Business Email *</label><input type="email" class="form-input" id="email" placeholder="jan@company.nl"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Country *</label>
+            <select class="form-select" id="country">
+              <option value="">Select Country</option>
+              <option value="NL">Netherlands 🇳🇱</option>
+              <option value="DE">Germany 🇩🇪</option>
+              <option value="UK">United Kingdom 🇬🇧</option>
+              <option value="US">United States 🇺🇸</option>
+              <option value="ES">Spain 🇪🇸</option>
+              <option value="JP">Japan 🇯🇵</option>
+              <option value="FR">France 🇫🇷</option>
+              <option value="BE">Belgium 🇧🇪</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select class="form-select" id="productCat">
+              <option value="">Select Category</option>
+              <option value="Knitwear — Drop-Shoulder Tee">Drop-Shoulder Tee</option>
+              <option value="Knitwear — Basic Tee">Basic T-Shirt</option>
+              <option value="Knitwear — Sports Tee">Sports Performance Tee</option>
+              <option value="Knitwear — Polo Shirt">Polo Shirt</option>
+              <option value="Knitwear — Sweatpants">Sweatpants</option>
+              <option value="Knitwear — Hoodie">Hoodie / Sweatshirt</option>
+              <option value="Knitwear — Boxers/Panties">Boxers / Panties</option>
+              <option value="Woven — Cargo Trousers">Cargo Trousers</option>
+              <option value="Woven — Casual Shirt">Casual Shirt</option>
+              <option value="Woven — Formal Shirt">Formal Shirt</option>
+              <option value="Woven — Shorts">Shorts (Men/Women)</option>
+              <option value="Activewear — Leggings">Compression Leggings</option>
+              <option value="Activewear — Sports Bra">Sports Bra</option>
+              <option value="Activewear — Shorts">Active Shorts</option>
+              <option value="Lingerie — Essentials">Lingerie Essentials Set</option>
+              <option value="Lingerie — Lace">Fancy Lace Set</option>
+              <option value="Lingerie — Swimwear">Bikini / Swimwear</option>
+              <option value="Multiple">Multiple Categories</option>
+              <option value="Custom">Custom / Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <select class="form-select" id="quantity">
+              <option value="">Select Range</option>
+              <option>200–500 pcs</option>
+              <option>500–1,000 pcs</option>
+              <option>1,000–3,000 pcs</option>
+              <option>3,000–10,000 pcs</option>
+              <option>10,000+ pcs</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fabric Preference</label>
+            <select class="form-select" id="material">
+              <option value="">Select Material</option>
+              <option>100% Cotton</option>
+              <option>Cotton Blend</option>
+              <option>Polyester / Dry-fit</option>
+              <option>Nylon / Spandex</option>
+              <option>Organic / GOTS Cotton</option>
+              <option>Linen / Cotton-Linen</option>
+              <option>Advise Me</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message / Requirements</label>
+          <textarea class="form-textarea" id="message" placeholder="Describe your product, target price, branding requirements, timeline, tech pack details..."></textarea>
+        </div>
+        <button class="form-submit" onclick="submitRFQ()">
+          <span data-lang="en">SEND REQUEST — RESPONSE IN 24H →</span>
+          <span data-lang="nl">AANVRAAG STUREN — REACTIE IN 24U →</span>
+          <span data-lang="de">ANFRAGE SENDEN — ANTWORT IN 24H →</span>
+          <span data-lang="bn">অনুরোধ পাঠান — ২৪ ঘণ্টায় উত্তর →</span>
+          <span data-lang="ja">リクエスト送信 — 24時間以内に返答 →</span>
+        </button>
+        <div class="form-note">By submitting, you agree to be contacted by HANDS & HEAD regarding your sourcing request. No spam, ever.</div>
+      </div>
+      <div class="form-success" id="formSuccess">
+        <div class="si">✅</div>
+        <h3>REQUEST RECEIVED</h3>
+        <p>We've received your RFQ and will respond within 24 hours.<br><br>For urgent inquiries: <strong>+880 1974 518600</strong> · <strong>himon@handsandhead.com</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="section-eyebrow">Contact</div>
+  <div class="section-title reveal">
+    <span data-lang="en">LET'S <span class="acc">TALK</span> BUSINESS</span>
+    <span data-lang="nl">LATEN WE <span class="acc">ZAKEN</span> DOEN</span>
+    <span data-lang="de">LASSEN SIE UNS <span class="acc">BUSINESS</span> MACHEN</span>
+    <span data-lang="bn"><span class="acc">ব্যবসার</span> কথা বলি</span>
+    <span data-lang="ja"><span class="acc">ビジネス</span>の話をしましょう</span>
+  </div>
+  <div class="contact-grid reveal">
+    <div class="contact-card">
+      <div class="contact-icon">💬</div>
+      <div class="contact-type">WhatsApp — Fastest</div>
+      <div class="contact-val">+880 1974 518600</div>
+      <div class="contact-note">Mon–Sat, 9AM–8PM Bangladesh Time (UTC+6). English speaking. Video call & factory tour available.</div>
+      <a href="https://wa.me/8801974518600?text=Hi%20HANDS%20%26%20HEAD%2C%20I%20am%20interested%20in%20sourcing%20apparel." class="contact-cta" target="_blank">Open WhatsApp →</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-type">Email</div>
+      <div class="contact-val">himon@handsandhead.com</div>
+      <div class="contact-note">Send RFQ, tech pack, or product reference. Replied within 24 hours on business days.</div>
+      <a href="mailto:himon@handsandhead.com" class="contact-cta">Send Email →</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🌐</div>
+      <div class="contact-type">Website</div>
+      <div class="contact-val">www.handsandhead.com</div>
+      <div class="contact-note">Main brand website. Leather goods portal at arutemika-eu. All brands under H&H Nexus group.</div>
+      <a href="https://www.handsandhead.com" class="contact-cta" target="_blank">Visit Website →</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🏭</div>
+      <div class="contact-type">Factory</div>
+      <div class="contact-val">Dhaka, Bangladesh</div>
+      <div class="contact-note">Production facility operational since 1998. Studio, office, showroom. Virtual tours via WhatsApp video.</div>
+      <a href="#rfq" class="contact-cta">Book Tour →</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🚢</div>
+      <div class="contact-type">Shipping</div>
+      <div class="contact-val">FOB Chittagong Port</div>
+      <div class="contact-note">Chittagong to Rotterdam: ~22 days. To US East Coast: ~28 days. Freight forwarding assistance available.</div>
+      <a href="#rfq" class="contact-cta">Freight Info →</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon">🔗</div>
+      <div class="contact-type">LinkedIn</div>
+      <div class="contact-val">Rakib Himon</div>
+      <div class="contact-note">Connect directly. Leather goods portal: Arutemika. All brands: H&H Nexus · HANDFILM · RAWx.</div>
+      <a href="https://linkedin.com" class="contact-cta" target="_blank">Connect →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PORTALS SECTION -->
+<section class="section" id="portals" style="background:var(--bg2)">
+  <div class="section-eyebrow">H&H Nexus Group</div>
+  <div class="section-title reveal">OUR <span class="accent">PORTALS</span></div>
+  <div class="section-sub reveal">All three platforms under one roof. Leather goods, apparel, and the main brand — Bangladesh B2B manufacturing at full scale.</div>
+  <div class="pgrid reveal">
+    <a href="https://handfilm.github.io/arutemika-eu/" target="_blank" class="pgc">
+      <div class="pgc-eye">Leather Goods · Est. 1998</div>
+      <div class="pgc-name">ARUTEMIKA</div>
+      <div class="pgc-desc">Genuine leather manufacturer. Laptop bags, tote bags, wallets, crossbody, backpacks, footwear. BSCI audited. MOQ 200 pcs. EU export partner. EN · NL · DE · বাং · 日本.</div>
+      <div class="pgc-link">Open Portal →</div>
+    </a>
+    <a # class="pgc active-portal">
+      <div class="pgc-eye">RMG Apparel · EU & US</div>
+      <div class="pgc-name">HANDS & HEAD</div>
+      <div class="pgc-desc">Bangladesh RMG manufacturer. Knitwear, Woven, Activewear, Lingerie. T-shirts to lingerie. BSCI · OEKO-TEX · GOTS ready. MOQ 200 pcs. 5 language portal.</div>
+      <div class="pgc-badge">CURRENT PORTAL</div>
+    </a>
+    <a href="https://www.handsandhead.com/" target="_blank" class="pgc">
+      <div class="pgc-eye">Parent Platform · Dhaka, BD</div>
+      <div class="pgc-name">H&H NEXUS</div>
+      <div class="pgc-desc">Main brand website. NexOS supply chain OS. HANDFILM content studio. RAWx fashion. Complete Bangladesh B2B ecosystem under one group.</div>
+      <div class="pgc-link">Visit Website →</div>
+    </a>
+  </div>
+</section>
+<section id="visual-catalogue" class="catalogue-section">
+  <div id="photo-injector" class="catalogue-grid"></div>
+</section>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">HANDS <span>&</span> HEAD</div>
+      <div class="footer-tag">Bangladesh RMG · EU & US Export Partner · Est. 1998</div>
+      <div style="font-family:var(--ff-mono);font-size:10px;color:var(--muted2);letter-spacing:.06em;margin-top:.5rem">Part of H&H Nexus · <a href="https://www.handsandhead.com" style="color:var(--gold);text-decoration:none">www.handsandhead.com</a></div>
+    </div>
+    <div>
+      <div class="footer-col-title">Products</div>
+      <ul class="footer-links">
+        <li><a href="#products">Knitwear</a></li>
+        <li><a href="#products">Woven</a></li>
+        <li><a href="#products">Activewear</a></li>
+        <li><a href="#products">Lingerie</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Information</div>
+      <ul class="footer-links">
+        <li><a href="#compliance">Compliance</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#tracker">Order Tracker</a></li>
+        <li><a href="#why">Why H&H</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Markets</div>
+      <ul class="footer-links">
+        <li><a href="#markets">🇳🇱 Netherlands</a></li>
+        <li><a href="#markets">🇩🇪 Germany</a></li>
+        <li><a href="#markets">🇬🇧 UK</a></li>
+        <li><a href="#markets">🇺🇸 United States</a></li>
+        <li><a href="#markets">🇯🇵 Japan</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Sister Brands</div>
+      <ul class="footer-links">
+        <li><a href="https://handfilm.github.io/arutemika-eu/" target="_blank">Arutemika (Leather)</a></li>
+        <li><a href="https://handfilm.github.io/NexOS/" target="_blank">NexOS Platform</a></li>
+        <li><a href="https://www.handsandhead.com" target="_blank">H&H Nexus</a></li>
+        <li><a href="https://handfilm.github.io/aural/" target="_blank">HANDFILM</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 HANDS & HEAD · Bangladesh RMG Apparel Manufacturer · All Rights Reserved</div>
+    <div class="footer-coords">23.8103°N · 90.4125°E · DHAKA, BANGLADESH</div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/8801974518600?text=Hi%20HANDS%20%26%20HEAD%2C%20I%20am%20interested%20in%20sourcing%20apparel." class="wa-float" target="_blank" title="WhatsApp">💬</a>
+
+<script>
+// LANGUAGE
+function setLang(lang,btn){
+  document.body.className='lang-'+lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// MOBILE NAV
+function toggleMobileNav(){
+  document.getElementById('mobileNav').classList.toggle('open');
+}
+
+// HERO SLIDER
+let currentSlide=0;
+let sliderTimer=null;
+const slides=document.querySelectorAll('.slide');
+const dots=document.querySelectorAll('.dot');
+
+function goToSlide(n){
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide=n;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+  // Reset dot animation
+  dots.forEach(d=>{d.classList.remove('active')});
+  dots[currentSlide].classList.add('active');
+}
+
+function slideMove(dir){
+  let next=(currentSlide+dir+slides.length)%slides.length;
+  goToSlide(next);
+  resetTimer();
+}
+
+function resetTimer(){
+  clearInterval(sliderTimer);
+  sliderTimer=setInterval(()=>slideMove(1),5000);
+}
+
+resetTimer();
+
+// PRODUCT CATEGORY FILTER
+function filterCat(cat,btn){
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product-card').forEach(card=>{
+    if(cat==='all'||card.dataset.cat===cat){
+      card.classList.add('visible');
+    } else {
+      card.classList.remove('visible');
+    }
+  });
+}
+
+// OPEN RFQ PRE-FILLED
+function openRFQ(product){
+  const sel=document.getElementById('productCat');
+  for(let o of sel.options){
+    if(o.value.includes(product.split(' ')[0])||o.text.includes(product)){
+      sel.value=o.value;break;
+    }
+  }
+  document.getElementById('rfq').scrollIntoView({behavior:'smooth'});
+}
+
+// SUBMIT RFQ
+function submitRFQ(){
+  const firstName=document.getElementById('firstName').value.trim();
+  const lastName=document.getElementById('lastName').value.trim();
+  const company=document.getElementById('company').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const country=document.getElementById('country').value;
+  const productCat=document.getElementById('productCat').value;
+  const quantity=document.getElementById('quantity').value;
+  const material=document.getElementById('material').value;
+  const message=document.getElementById('message').value;
+
+  if(!firstName||!email||!productCat){
+    alert('Please fill in Name, Email and Category at minimum.');
+    return;
+  }
+
+  const btn=document.querySelector('.form-submit');
+  btn.textContent='SENDING...';
+  btn.disabled=true;
+  btn.style.opacity='.6';
+
+  const payload={
+    firstName,lastName,company,email,country,
+    productCat,quantity,material,message,
+    timestamp:new Date().toISOString(),
+    source:'hands-head-rmg-portal'
+  };
+
+  fetch('=

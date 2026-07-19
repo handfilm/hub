@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWx // HOME TEXTILES TERMINAL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;300;400;500;700;800&display=swap');
+
+:root{
+  --black:#0a0a0a;
+  --void:#050505;
+  --paper:#ececE6;
+  --line: rgba(236,236,230,.14);
+  --line-strong: rgba(236,236,230,.28);
+  --accent:#6f82d9;
+  --accent-dim: rgba(111,130,217,.16);
+  --steel:#2a2f3d;
+  --dim: rgba(236,236,230,.48);
+  --dimmer: rgba(236,236,230,.28);
+}
+[data-mode="wholesale"]{
+  --accent:#4f5f96;
+  --accent-dim: rgba(79,95,150,.18);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--paper);
+  font-family:'JetBrains Mono',monospace;
+  font-weight:400;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ===== overlays ===== */
+#calibration-line{
+  position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background-image:
+    linear-gradient(rgba(236,236,230,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236,236,230,.035) 1px, transparent 1px);
+  background-size:48px 48px;
+  mix-blend-mode:overlay;
+}
+#grain{position:fixed;inset:0;pointer-events:none;z-index:9001;opacity:.5;mix-blend-mode:overlay;}
+
+::selection{background:var(--accent);color:var(--black);}
+a{color:inherit;text-decoration:none;}
+
+/* ===== division nav strip ===== */
+.division-strip{
+  position:sticky;top:0;z-index:500;
+  display:flex;align-items:center;
+  background:var(--void);
+  border-bottom:1px solid var(--line);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+.division-strip a{
+  padding:9px 16px;color:var(--dimmer);border-right:1px solid var(--line);
+  transition:color .2s, background .2s;flex-shrink:0;
+}
+.division-strip a:hover{color:var(--paper);background:rgba(236,236,230,.04);}
+.division-strip a.active{color:var(--black);background:var(--accent);}
+
+/* ===== header ===== */
+header{
+  position:relative;z-index:400;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 32px;border-bottom:1px solid var(--line);
+  flex-wrap:wrap;gap:16px;
+}
+.logo{
+  font-weight:800;font-size:20px;letter-spacing:.02em;
+  display:flex;align-items:baseline;gap:10px;
+}
+.logo .mark{color:var(--accent);}
+.logo .sub{font-size:9px;font-weight:400;letter-spacing:.22em;color:var(--dimmer);text-transform:uppercase;}
+
+.header-right{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+
+.lang-select{
+  position:relative;font-size:10px;letter-spacing:.1em;
+}
+.lang-select select{
+  appearance:none;background:transparent;color:var(--paper);
+  border:1px solid var(--line-strong);padding:8px 26px 8px 12px;
+  font-family:inherit;font-size:10px;letter-spacing:.1em;cursor:pointer;
+  text-transform:uppercase;
+}
+.lang-select::after{
+  content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:8px;color:var(--dim);pointer-events:none;
+}
+
+.dial{
+  display:flex;border:1px solid var(--line-strong);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+}
+.dial button{
+  background:transparent;border:none;color:var(--dim);
+  padding:9px 18px;font-family:inherit;font-size:10px;letter-spacing:.14em;
+  cursor:pointer;transition:.2s;text-transform:uppercase;
+}
+.dial button.active{background:var(--accent);color:var(--black);font-weight:700;}
+
+/* ===== buyer strip ===== */
+.buyer-strip{
+  background:rgba(111,130,217,.06);
+  border-bottom:1px solid var(--line);
+  padding:9px 32px;font-size:10px;letter-spacing:.06em;color:var(--dim);
+  display:flex;gap:28px;flex-wrap:wrap;
+}
+.buyer-strip b{color:var(--paper);}
+
+/* ===== hero ===== */
+.hero{
+  position:relative;min-height:78vh;display:flex;align-items:flex-end;
+  border-bottom:1px solid var(--line);overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center 30%;
+  filter:grayscale(.25) contrast(1.08) brightness(.55);
+}
+.hero-bg::after{content:'';}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(10,10,10,.15) 0%, rgba(10,10,10,.55) 55%, var(--black) 100%);
+  z-index:1;
+}
+.hero-content{position:relative;z-index:2;padding:48px 32px 40px;width:100%;}
+.eyebrow{
+  font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--accent);}
+h1.hero-title{
+  font-size:clamp(34px,6vw,74px);font-weight:800;letter-spacing:-.01em;line-height:1.02;
+  max-width:900px;text-transform:uppercase;
+}
+.hero-sub{
+  margin-top:18px;max-width:560px;font-size:14px;line-height:1.6;color:var(--dim);
+  font-weight:300;
+}
+
+.trust-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--line);margin-top:36px;
+}
+.trust-item{padding:16px 20px 4px 0;border-right:1px solid var(--line);}
+.trust-item:last-child{border-right:none;}
+.trust-num{font-size:22px;font-weight:800;color:var(--paper);}
+.trust-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
+
+/* ===== filter bar ===== */
+.filter-bar{
+  display:flex;gap:0;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);position:sticky;top:33px;z-index:300;
+  background:var(--black);
+}
+.filter-bar button{
+  background:transparent;border:none;border-right:1px solid var(--line);
+  color:var(--dim);font-family:inherit;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;padding:14px 20px;cursor:pointer;transition:.2s;
+}
+.filter-bar button:hover{color:var(--paper);}
+.filter-bar button.active{color:var(--black);background:var(--accent);font-weight:700;}
+.filter-count{margin-left:6px;opacity:.6;}
+
+/* ===== section label ===== */
+.section-label{
+  padding:36px 32px 20px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);display:flex;align-items:center;gap:12px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* ===== product grid ===== */
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1px;background:var(--line);padding:0 32px 60px;
+}
+.card{
+  background:var(--black);cursor:pointer;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;transition:transform .25s;
+}
+.card:hover{transform:translateY(-2px);}
+.card-img{
+  aspect-ratio:4/3;background-size:cover;background-position:center;
+  filter:grayscale(.15) contrast(1.05);position:relative;
+}
+.card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, transparent 60%, rgba(10,10,10,.85) 100%);
+}
+.card-cat{
+  position:absolute;top:10px;left:10px;font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);background:rgba(10,10,10,.7);
+  padding:4px 8px;z-index:2;border:1px solid var(--line-strong);
+}
+.card-body{padding:16px 18px 18px;border:1px solid var(--line);border-top:none;flex:1;display:flex;flex-direction:column;}
+.card-name{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.01em;line-height:1.3;}
+.card-meta{font-size:10px;color:var(--dim);margin-top:8px;line-height:1.6;}
+.card-price-row{
+  margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;
+  align-items:baseline;border-top:1px solid var(--line);margin-top:14px;
+}
+.card-price{font-size:16px;font-weight:800;color:var(--accent);}
+.card-price-label{font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;}
+
+/* ===== lightbox ===== */
+.lightbox-overlay{
+  position:fixed;inset:0;background:rgba(5,5,5,.92);z-index:8000;
+  display:none;align-items:center;justify-content:center;padding:24px;
+  backdrop-filter:blur(4px);
+}
+.lightbox-overlay.open{display:flex;}
+.lightbox{
+  background:var(--black);border:1px solid var(--line-strong);
+  max-width:980px;width:100%;max-height:90vh;overflow-y:auto;
+  display:grid;grid-template-columns:1.1fr 1fr;
+}
+.lightbox-img{
+  background-size:cover;background-position:center;min-height:340px;
+  filter:grayscale(.15) contrast(1.05);
+}
+.lightbox-body{padding:36px;position:relative;}
+.lightbox-close{
+  position:absolute;top:16px;right:16px;background:transparent;border:1px solid var(--line-strong);
+  color:var(--paper);width:32px;height:32px;cursor:pointer;font-size:16px;font-family:inherit;
+}
+.lightbox-cat{font-size:10px;color:var(--accent);letter-spacing:.16em;text-transform:uppercase;}
+.lightbox-title{font-size:26px;font-weight:800;text-transform:uppercase;margin-top:10px;line-height:1.15;}
+.lightbox-desc{font-size:13px;color:var(--dim);line-height:1.7;margin-top:16px;font-weight:300;}
+.spec-table{margin-top:24px;border-top:1px solid var(--line);}
+.spec-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:11px;}
+.spec-row span:first-child{color:var(--dim);letter-spacing:.06em;text-transform:uppercase;}
+.price-block{margin-top:24px;display:flex;gap:0;border:1px solid var(--line-strong);}
+.price-cell{flex:1;padding:16px;text-align:center;}
+.price-cell:first-child{border-right:1px solid var(--line-strong);}
+.price-cell.on{background:var(--accent-dim);}
+.price-cell-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);}
+.price-cell-val{font-size:20px;font-weight:800;margin-top:6px;}
+
+/* ===== division terminal grid ===== */
+.division-grid-section{padding:60px 32px 40px;border-top:1px solid var(--line);}
+.division-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;
+  background:var(--line);
+}
+.division-card{
+  background:var(--black);padding:24px 20px;border:1px solid var(--line);
+  transition:.2s;
+}
+.division-card:hover{background:rgba(111,130,217,.05);border-color:var(--line-strong);}
+.division-card .dname{font-size:15px;font-weight:800;text-transform:uppercase;}
+.division-card .dmeta{font-size:10px;color:var(--dim);margin-top:10px;line-height:1.8;}
+.division-card .darrow{font-size:11px;color:var(--accent);margin-top:14px;letter-spacing:.08em;}
+
+/* ===== footer ===== */
+footer{
+  border-top:1px solid var(--line);padding:26px 32px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:10px;color:var(--dimmer);letter-spacing:.06em;
+}
+
+@media (max-width:720px){
+  .trust-row{grid-template-columns:repeat(2,1fr);}
+  .lightbox{grid-template-columns:1fr;}
+  .lightbox-img{min-height:200px;}
+  .filter-bar{top:0;}
+}
+</style>
+</head>
+<body data-mode="wholesale">
+
+<svg id="grain" width="100%" height="100%">
+  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/></filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+</svg>
+<div id="calibration-line"></div>
+
+<div class="division-strip">
+  <a href="#">HOME/OS</a>
+  <a href="#">RMG</a>
+  <a href="#">LEATHER</a>
+  <a href="#">DENIM</a>
+  <a href="#">LINGERIE</a>
+  <a href="#">JUTE</a>
+  <a href="#" class="active">TEXTILES</a>
+</div>
+
+<header>
+  <div class="logo"><span class="mark">RAW</span>x<span class="sub">Home Textiles Terminal</span></div>
+  <div class="header-right">
+    <div class="lang-select">
+      <select id="langSelect">
+        <option>EN</option><option>BD</option><option>JP</option><option>NL</option><option>FR</option><option>DE</option><option>RU</option>
+      </select>
+    </div>
+    <div class="dial" id="modeDial">
+      <button data-mode="retail">Retail</button>
+      <button data-mode="wholesale" class="active">Wholesale</button>
+    </div>
+  </div>
+</header>
+
+<div class="buyer-strip">
+  <span><b>NL/DE Buyers —</b> OEKO-TEX Standard 100 &amp; GOTS organic certification available on request per SKU.</span>
+  <span>Consolidated freight ex-Dhaka, Chattogram port.</span>
+</div>
+
+<section class="hero">
+  <div class="hero-bg" style="background-image:url('assets/textiles/hero-bedsheet-toss.jpg')"></div>
+  <div class="hero-content">
+    <div class="eyebrow" id="heroEyebrow">Division 07 — Home Textiles</div>
+    <h1 class="hero-title" id="heroTitle">Woven for the long haul.</h1>
+    <p class="hero-sub" id="heroSub">Ten SKU families, factory-direct, certified where it counts. Built for buyers who move volume and homes that move fast.</p>
+    <div class="trust-row">
+      <div class="trust-item"><div class="trust-num">10</div><div class="trust-label">SKU Families</div></div>
+      <div class="trust-item"><div class="trust-num">OEKO-TEX / GOTS</div><div class="trust-label">Certification</div></div>
+      <div class="trust-item" id="leadTimeStat"><div class="trust-num">25–40d</div><div class="trust-label">Lead Time</div></div>
+      <div class="trust-item"><div class="trust-num">12</div><div class="trust-label">Active Channels</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="filter-bar" id="filterBar"></div>
+
+<div class="section-label" id="gridLabel">All SKUs</div>
+<div class="grid" id="productGrid"></div>
+
+<section class="division-grid-section">
+  <div class="section-label">Division Terminal Grid</div>
+  <div class="division-grid">
+    <div class="division-card"><div class="dname">Denim</div><div class="dmeta">MOQ 500 units / unit<br>Lead time 30–45 days</div><div class="darrow">→ Enter Terminal</div></div>
+    <div class="division-card"><div class="dname">Jute</div><div class="dmeta">MOQ 1,000 units<br>Lead time 20–35 days</div><div class="darrow">→ Enter Terminal</div></div>
+    <div class="division-card"><div class="dname">Leather</div><div class="dmeta">MOQ 250 units<br>Lead time 35–50 days</div><div class="darrow">→ Enter Terminal</div></div>
+    <div class="division-card"><div class="dname">RMG</div><div class="dmeta">MOQ 1,000 units / style<br>Lead time 40–60 days</div><div class="darrow">→ Enter Terminal</div></div>
+    <div class="division-card"><div class="dname">Lingerie</div><div class="dmeta">MOQ 500 units<br>Lead time 30–45 days</div><div class="darrow">→ Enter Terminal</div></div>
+    <div class="division-card"><div class="dname">Home / OS</div><div class="dmeta">Full division index<br>All terminals, one login</div><div class="darrow">→ Enter Terminal</div></div>
+  </div>
+</section>
+
+<footer>
+  <span>RAWx © Home Textiles Terminal — Dhaka, Bangladesh</span>
+  <span>Sourcing &amp; production by H&amp;H / Handfilm</span>
+</footer>
+
+<div class="lightbox-overlay" id="lightboxOverlay">
+  <div class="lightbox" id="lightboxContent"></div>
+</div>
+
+<script>
+const MODES = {
+  retail: {
+    eyebrow: "Home Textiles — Direct to Door",
+    title: "Woven for the long haul.",
+    sub: "Certified cotton textiles for the home — bath, bed, table and nursery — shipped direct, no minimums.",
+    leadStat: { num: "3–5d", label: "Ships In" },
+    priceKey: "retail",
+    priceLabel: "Retail Price",
+    dialLabel: "Retail"
+  },
+  wholesale: {
+    eyebrow: "Division 07 — Home Textiles",
+    title: "Ten SKU families. One terminal.",
+    sub: "Factory-direct home textile production out of Dhaka — OEKO-TEX and GOTS certified where specified, wired for volume.",
+    leadStat: { num: "25–40d", label: "Lead Time" },
+    priceKey: "wholesale",
+    priceLabel: "FOB / Unit",
+    dialLabel: "Wholesale"
+  }
+};
+
+const PRODUCTS = [
+  {
+    id:"terry-towels", name:"OEKO-TEX Terry Bath Towels", category:"Bath",
+    gsm:"500–900 GSM", composition:"100% combed cotton terry", moq:"1,000 pcs / colorway",
+    cert:"OEKO-TEX Std 100", retail:"$18", wholesale:"$3.40",
+    images:["assets/textiles/terry-towels-droplet.jpg","assets/textiles/terry-towels-stack.jpg","assets/textiles/terry-towels-portrait.jpg"],
+    desc:"Full-weight hospitality and retail bath towels, ring-spun cotton loop pile. Available across five GSM tiers for hotel, spa and D2C lines."
+  },
+  {
+    id:"waffle-towels", name:"Waffle-Weave Kitchen Towels", category:"Bath",
+    gsm:"220 GSM", composition:"Cotton waffle weave", moq:"2,000 pcs",
+    cert:"Available on request", retail:"$9", wholesale:"$1.10",
+    images:["assets/textiles/waffle-towel-single.jpg"],
+    desc:"Low-lint waffle-weave tea and kitchen towels. Fast-drying structure, clean single-fold presentation for retail hang-sell or bulk foodservice."
+  },
+  {
+    id:"jacquard-bedlinen", name:"Jacquard Sateen Bed Linen Set", category:"Bed",
+    gsm:"300TC", composition:"Cotton sateen, jacquard weave", moq:"500 sets",
+    cert:"OEKO-TEX Std 100", retail:"$85", wholesale:"$11.20",
+    images:["assets/textiles/jacquard-bedlinen-unroll.jpg","assets/textiles/jacquard-bedlinen-macro.jpg","assets/textiles/jacquard-bedlinen-flying.jpg"],
+    desc:"300 thread-count jacquard sateen sheet sets — 4:1 float weave for a soft, lustrous hand. Fitted, flat and pillowcase configurations."
+  },
+  {
+    id:"blackout-curtains", name:"Lined Blackout Curtain Panels", category:"Bed",
+    gsm:"—", composition:"Cotton-poly blend, thermal lining", moq:"800 panels",
+    cert:"Flame-retardant option available", retail:"$42", wholesale:"$6.80",
+    images:["assets/textiles/blackout-curtains-factory.jpg"],
+    desc:"Fully lined blackout panels off the same production floor as our apparel fabric lines. Standard and made-to-measure drop lengths."
+  },
+  {
+    id:"table-linen", name:"Hospitality Table Linen Set", category:"Table",
+    gsm:"—", composition:"Cotton-linen blend runners &amp; napkins", moq:"600 sets",
+    cert:"GOTS option available", retail:"$38", wholesale:"$5.40",
+    images:["assets/textiles/table-linen-folded.jpg","assets/textiles/table-linen-action.jpg"],
+    desc:"Runner and napkin sets built for hospitality turnover — pre-shrunk, stain-release finish available. Solid and jacquard-floral options."
+  },
+  {
+    id:"mattress-protectors", name:"Quilted Waterproof Mattress Protector", category:"Bed",
+    gsm:"—", composition:"Quilted cotton top, waterproof membrane", moq:"1,200 pcs",
+    cert:"OEKO-TEX Std 100", retail:"$29", wholesale:"$4.10",
+    images:["assets/textiles/mattress-protector-hands.jpg"],
+    desc:"Diamond-quilted protector with a fully waterproof, silent membrane backing. Fitted skirt in all standard bed sizes."
+  },
+  {
+    id:"kids-bedding", name:"GOTS Organic Kids Bedding", category:"Kids",
+    gsm:"180 GSM", composition:"GOTS-certified organic cotton", moq:"500 sets",
+    cert:"GOTS Organic", retail:"$54", wholesale:"$7.60",
+    images:["assets/textiles/kids-bedding-jump.jpg","assets/textiles/kids-bedding-cape.jpg"],
+    desc:"Organic cotton bedding built for nurseries and kids' rooms. Certified from fiber to finish, low-impact reactive dyes only."
+  },
+  {
+    id:"chenille-throws", name:"Chenille Throws &amp; Blankets", category:"Living",
+    gsm:"600 GSM", composition:"Cotton-poly chenille", moq:"700 pcs",
+    cert:"Available on request", retail:"$46", wholesale:"$6.20",
+    images:["assets/textiles/chenille-throw-cape.jpg"],
+    desc:"Heavyweight chenille throws with a soft, brushed hand and dense drape. Solid colorways with tonal edge binding."
+  },
+  {
+    id:"bathrobes", name:"Hotel-Grade Waffle &amp; Terry Bathrobes", category:"Bath",
+    gsm:"400–450 GSM", composition:"Cotton terry / waffle weave", moq:"800 pcs",
+    cert:"OEKO-TEX Std 100", retail:"$62", wholesale:"$8.90",
+    images:["assets/textiles/bathrobes-stacked.jpg","assets/textiles/bathrobes-shelf-fall.jpg"],
+    desc:"Shawl-collar and kimono-style robes in terry or waffle cotton. Hospitality-grade construction, reinforced belt loops and pockets."
+  },
+  {
+    id:"cushion-covers", name:"Upholstery-Weight Cushion Cover Set", category:"Living",
+    gsm:"—", composition:"Heavyweight cotton-linen upholstery cloth", moq:"1,500 pcs",
+    cert:"Available on request", retail:"$16", wholesale:"$2.30",
+    images:["assets/textiles/cushion-covers-scissors.jpg"],
+    desc:"Structured upholstery-weight covers with concealed zip closure. Cut and finished on the same lines as our jacquard yardage."
+  }
+];
+
+let currentMode = "wholesale";
+let currentFilter = "All";
+
+function applyMode(mode){
+  currentMode = mode;
+  document.body.setAttribute('data-mode', mode);
+  document.querySelectorAll('#modeDial button').forEach(b=>b.classList.toggle('active', b.dataset.mode===mode));
+  const m = MODES[mode];
+  document.getElementById('heroEyebrow').textContent = m.eyebrow;
+  document.getElementById('heroTitle').textContent = m.title;
+  document.getElementById('heroSub').textContent = m.sub;
+  document.getElementById('leadTimeStat').innerHTML = `<div class="trust-num">${m.leadStat.num}</div><div class="trust-label">${m.leadStat.label}</div>`;
+  renderGrid();
+}
+
+document.getElementById('modeDial').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  applyMode(btn.dataset.mode);
+});
+
+function buildFilterBar(){
+  const cats = ["All", ...new Set(PRODUCTS.map(p=>p.category))];
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = cats.map(c=>{
+    const count = c==="All" ? PRODUCTS.length : PRODUCTS.filter(p=>p.category===c).length;
+    return `<button data-cat="${c}" class="${c==='All'?'active':''}">${c}<span class="filter-count">${count}</span></button>`;
+  }).join('');
+}
+
+document.getElementById('filterBar').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  currentFilter = btn.dataset.cat;
+  document.querySelectorAll('#filterBar button').forEach(b=>b.classList.toggle('active', b===btn));
+  document.getElementById('gridLabel').textContent = currentFilter === "All" ? "All SKUs" : currentFilter + " SKUs";
+  renderGrid();
+});
+
+function renderGrid(){
+  const m = MODES[currentMode];
+  const list = currentFilter === "All" ? PRODUCTS : PRODUCTS.filter(p=>p.category===currentFilter);
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = list.map(p=>`
+    <div class="card" data-id="${p.id}">
+      <div class="card-img" style="background-image:url('${p.images[0]}')">
+        <div class="card-cat">${p.category}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-meta">${p.gsm !== "—" ? p.gsm + " · " : ""}${p.composition}</div>
+        <div class="card-price-row">
+          <div><div class="card-price-label">${m.priceLabel}</div><div class="card-price">${p[m.priceKey]}</div></div>
+          <div class="card-price-label">MOQ ${p.moq.split(' ')[0]}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click', ()=> openLightbox(card.dataset.id));
+  });
+}
+
+function openLightbox(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  const overlay = document.getElementById('lightboxOverlay');
+  const el = document.getElementById('lightboxContent');
+  el.innerHTML = `
+    <div class="lightbox-img" style="background-image:url('${p.images[0]}')"></div>
+    <div class="lightbox-body">
+      <button class="lightbox-close" id="lbClose">&times;</button>
+      <div class="lightbox-cat">${p.category}</div>
+      <div class="lightbox-title">${p.name}</div>
+      <div class="lightbox-desc">${p.desc}</div>
+      <div class="spec-table">
+        <div class="spec-row"><span>Weight</span><span>${p.gsm}</span></div>
+        <div class="spec-row"><span>Composition</span><span>${p.composition}</span></div>
+        <div class="spec-row"><span>MOQ</span><span>${p.moq}</span></div>
+        <div class="spec-row"><span>Certification</span><span>${p.cert}</span></div>
+      </div>
+      <div class="price-block">
+        <div class="price-cell ${currentMode==='retail'?'on':''}">
+          <div class="price-cell-label">Retail</div><div class="price-cell-val">${p.retail}</div>
+        </div>
+        <div class="price-cell ${currentMode==='wholesale'?'on':''}">
+          <div class="price-cell-label">FOB Wholesale</div><div class="price-cell-val">${p.wholesale}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  overlay.classList.add('open');
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+}
+function closeLightbox(){ document.getElementById('lightboxOverlay').classList.remove('open'); }
+document.getElementById('lightboxOverlay').addEventListener('click', e=>{
+  if(e.target.id === 'lightboxOverlay') closeLightbox();
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+
+buildFilterBar();
+applyMode('wholesale');
+</script>
+</body>
+</html>

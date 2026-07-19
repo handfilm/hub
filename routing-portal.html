@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANDS & HEAD // GATEWAY</title>
+    <style>
+        :root {
+            --bg-void: #050505;
+            --text-main: #E0E0E0;
+            --accent-red: #FF2A2A;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            margin: 0;
+            padding: 10% 5%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .matrix-container {
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #222;
+            padding: 30px;
+            background: rgba(10, 10, 10, 0.9);
+        }
+        .header {
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 2rem;
+            letter-spacing: -1px;
+            margin: 5px 0;
+            color: #FFF;
+        }
+        .grid-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .btn-link {
+            display: block;
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #333;
+            color: var(--text-main);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-link:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            background: rgba(255, 42, 42, 0.05);
+        }
+        .btn-main {
+            grid-column: span 2;
+            border: 2px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+        .btn-main:hover {
+            background: var(--accent-red);
+            color: var(--bg-void);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="matrix-container">
+        <div class="header">
+            <p>REDIRECT_PROTOCOL // API_LIVE ⚡</p>
+            <h1>HANDS & HEAD</h1>
+            <p>> GDRIVE_SPINE // HEADLESS LANDING</p>
+        </div>
+
+        <div class="grid-nav">
+            <a href="https://handfilm.myshopify.com/pages/handsandhead" class="btn-link btn-main">MAIN STORE // FULL DROP</a>
+            <a href="https://handfilm.myshopify.com/collections/all" class="btn-link">ALL COLLECTION</a>
+            <a href="https://handfilm.myshopify.com/collections/women" class="btn-link">WOMEN</a>
+            <a href="https://handfilm.myshopify.com/collections/vault" class="btn-link">THE VAULT</a>
+            <a href="https://handfilm.myshopify.com/collections/rawx" class="btn-link">RAWx</a>
+        </div>
+    </div>
+
+</body>
+</html>

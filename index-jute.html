@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWx — Jute Terminal / Dual Mode</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0a0a0a; --void:#050505;
+    --paper:#ececE6; --paper-dim:#b9b7b0;
+    --red:#ff2b00; --line:rgba(236,236,230,0.14); --line-strong:rgba(236,236,230,0.32);
+    --mono:'JetBrains Mono', monospace;
+    /* RETAIL mode (default) — warm jute gold */
+    --accent:#d69a3c;
+  }
+  body.wholesale{ --accent:#c8ff3d; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--paper);font-family:var(--mono);font-weight:300;overflow-x:hidden;transition:background .4s;}
+  a{color:inherit;text-decoration:none;}
+  img{width:100%;height:100%;object-fit:cover;display:block;}
+  ::selection{background:var(--accent);color:var(--void);}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;animation:none !important;} }
+
+  #calibration-line{
+    position:fixed;inset:0;pointer-events:none;z-index:5;
+    background-image:linear-gradient(var(--line) 1px, transparent 1px),linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;opacity:.3;mix-blend-mode:screen;
+  }
+  #grain{
+    position:fixed;inset:0;z-index:6;pointer-events:none;opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ============ CROSS-DIVISION NAV STRIP ============ */
+  .nav-strip{
+    display:flex;justify-content:center;gap:28px;padding:8px 24px;
+    background:var(--void);border-bottom:1px solid var(--line);
+    font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);
+    position:relative;z-index:20;flex-wrap:wrap;
+  }
+  .nav-strip a{display:flex;align-items:center;gap:6px;transition:color .2s;}
+  .nav-strip a:hover{color:var(--paper);}
+  .nav-strip a.active{color:var(--accent);}
+  .nav-strip .dot{width:5px;height:5px;background:var(--accent);border-radius:50%;}
+
+  /* ============ HEADER ============ */
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 32px;border-bottom:1px solid var(--line);position:relative;z-index:20;flex-wrap:wrap;gap:14px;
+  }
+  .logo{font-size:20px;font-weight:700;}
+  .logo .x{color:var(--accent);transition:color .4s;}
+  .header-right{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+
+  /* LANGUAGE SELECT */
+  .lang-select{position:relative;}
+  .lang-current{
+    background:none;border:1px solid var(--line-strong);color:var(--paper);
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    padding:9px 14px;cursor:pointer;
+  }
+  .lang-menu{
+    position:absolute;top:calc(100% + 6px);right:0;
+    background:var(--void);border:1px solid var(--line-strong);
+    display:none;flex-direction:column;min-width:160px;z-index:30;
+  }
+  .lang-select.open .lang-menu{display:flex;}
+  .lang-menu button{
+    background:none;border:none;color:var(--paper-dim);font-family:var(--mono);
+    font-size:11px;letter-spacing:.08em;padding:10px 14px;text-align:left;cursor:pointer;
+    display:flex;justify-content:space-between;gap:10px;
+  }
+  .lang-menu button:hover{color:var(--accent);}
+  .lang-menu button .native{color:var(--paper-dim);font-size:10px;}
+
+  /* MODE DIAL */
+  .dial{display:flex;align-items:center;gap:0;border:1px solid var(--line-strong);background:var(--void);padding:3px;position:relative;}
+  .dial button{
+    font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    background:transparent;border:none;color:var(--paper-dim);cursor:pointer;padding:9px 18px;position:relative;z-index:2;transition:color .3s;
+  }
+  .dial button.active{color:var(--black);}
+  .dial .thumb{position:absolute;top:3px;left:3px;bottom:3px;width:calc(50% - 3px);background:var(--accent);transition:transform .35s cubic-bezier(.2,.9,.3,1),background .4s;z-index:1;}
+  body.wholesale .dial .thumb{transform:translateX(100%);}
+
+  /* ============ HERO ============ */
+  .cat-hero{position:relative;min-height:64vh;display:flex;flex-direction:column;justify-content:flex-end;border-bottom:1px solid var(--line);overflow:hidden;}
+  .cat-hero-media{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(5,5,5,.25), rgba(5,5,5,.94)), url('assets/jute/jute-rug-rollout-warehouse.jpeg');
+    background-size:cover;background-position:center 35%;
+  }
+  .cat-hero-content{position:relative;z-index:2;padding:56px 40px 60px;max-width:900px;}
+  .hero-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;transition:color .4s;}
+  .hero-eyebrow::before{content:'';width:26px;height:1px;background:var(--accent);transition:background .4s;}
+  .cat-hero h1{font-size:clamp(36px,6.8vw,78px);font-weight:700;text-transform:uppercase;line-height:.96;letter-spacing:-.01em;}
+  .cat-hero-sub{margin-top:20px;max-width:580px;font-size:13px;line-height:1.75;color:var(--paper-dim);}
+  .hero-trust{display:flex;gap:28px;flex-wrap:wrap;margin-top:26px;font-size:10.5px;color:var(--paper-dim);letter-spacing:.06em;text-transform:uppercase;}
+  .hero-trust b{display:block;color:var(--accent);font-size:17px;letter-spacing:.02em;margin-bottom:3px;transition:color .4s;}
+
+  /* ============ SECTION LABEL / FILTERS / GRID (shared with denim system) ============ */
+  .section-label{max-width:1400px;margin:0 auto;padding:56px 40px 26px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;}
+  .section-label h2{font-size:clamp(24px,3.2vw,36px);text-transform:uppercase;font-weight:700;letter-spacing:-.01em;}
+  .section-label p{font-size:12px;color:var(--paper-dim);max-width:440px;line-height:1.7;}
+
+  .filters{max-width:1400px;margin:0 auto;padding:0 40px 34px;display:flex;gap:10px;flex-wrap:wrap;}
+  .filters button{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    background:transparent;color:var(--paper);border:1px solid var(--line-strong);padding:9px 16px;cursor:pointer;transition:all .2s;
+  }
+  .filters button:hover{border-color:var(--accent);color:var(--accent);}
+  .filters button.active{background:var(--accent);color:var(--black);border-color:var(--accent);font-weight:700;}
+
+  .grid{
+    max-width:1400px;margin:0 auto;padding:0 40px 110px;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--line);
+  }
+  .card{background:var(--black);position:relative;cursor:pointer;overflow:hidden;}
+  .card.hidden{display:none;}
+  .card-img-wrap{position:relative;aspect-ratio:3/4;overflow:hidden;background:#111;}
+  .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1);}
+  .card:hover .card-img-wrap img{transform:scale(1.06);}
+  .card-tag{position:absolute;top:12px;left:12px;font-size:9.5px;letter-spacing:.1em;padding:4px 8px;background:rgba(5,5,5,.8);border:1px solid var(--line-strong);text-transform:uppercase;z-index:2;}
+  .card-spec{padding:14px 16px 18px;border-top:1px solid var(--line);}
+  .card-spec .name{font-size:13.5px;font-weight:700;text-transform:uppercase;letter-spacing:.01em;}
+  .card-spec .code{font-size:10px;color:var(--paper-dim);margin-top:4px;letter-spacing:.06em;}
+  .card-spec .price-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;}
+  .card-spec .price{font-size:16px;font-weight:700;color:var(--accent);transition:color .4s;}
+  .card-spec .price-note{font-size:9.5px;color:var(--paper-dim);letter-spacing:.06em;text-transform:uppercase;}
+
+  /* ============ LIGHTBOX ============ */
+  .lightbox{position:fixed;inset:0;z-index:200;background:rgba(5,5,5,.97);display:none;align-items:center;justify-content:center;padding:24px;}
+  .lightbox.open{display:flex;}
+  .lb-inner{max-width:1000px;width:100%;display:grid;grid-template-columns:1fr 340px;border:1px solid var(--line-strong);background:var(--void);max-height:88vh;}
+  @media(max-width:860px){.lb-inner{grid-template-columns:1fr;max-height:92vh;overflow-y:auto;}}
+  .lb-stage{position:relative;background:var(--black);display:flex;align-items:center;justify-content:center;min-height:360px;overflow:hidden;}
+  .lb-stage img{width:100%;height:100%;object-fit:contain;max-height:88vh;}
+  .lb-info{padding:26px 22px;display:flex;flex-direction:column;border-left:1px solid var(--line);}
+  .lb-close{align-self:flex-end;background:none;border:none;color:var(--paper);font-size:20px;cursor:pointer;margin-bottom:10px;opacity:.6;}
+  .lb-close:hover{opacity:1;color:var(--accent);}
+  .lb-info .eyebrow{font-size:10px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;transition:color .4s;}
+  .lb-info h3{font-size:21px;text-transform:uppercase;margin-top:8px;line-height:1.1;font-weight:700;}
+  .lb-info .desc{font-size:12px;line-height:1.75;color:var(--paper-dim);margin-top:14px;}
+  .lb-specs{margin-top:20px;border-top:1px solid var(--line);padding-top:14px;}
+  .lb-specs .r{display:flex;justify-content:space-between;font-size:11px;padding:6px 0;color:var(--paper-dim);border-bottom:1px solid var(--line);}
+  .lb-specs .r span:last-child{color:var(--paper);}
+  .lb-price-block{margin-top:20px;border:1px solid var(--line-strong);padding:16px;}
+  .lb-price-block .big{font-size:24px;font-weight:700;color:var(--accent);transition:color .4s;}
+  .lb-price-block .note{font-size:10.5px;color:var(--paper-dim);margin-top:4px;letter-spacing:.04em;}
+  .lb-cta{margin-top:18px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--accent);color:var(--accent);padding:12px 18px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:all .2s;text-align:center;justify-content:center;}
+  .lb-cta:hover{background:var(--accent);color:var(--black);}
+
+  /* ============ NL/DE BUYER STRIP ============ */
+  .buyer-strip{
+    display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+    padding:14px 24px;background:var(--accent);color:var(--black);
+    font-size:11px;letter-spacing:.06em;font-weight:700;text-transform:uppercase;
+    transition:background .4s;
+  }
+  .buyer-strip .flag{font-size:13px;}
+
+  /* ============ DIVISION TERMINAL GRID ============ */
+  #terminals{max-width:1400px;margin:0 auto;padding:90px 40px;}
+  #terminals .section-label{padding:0 0 34px;}
+  .term-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+  .term-card{
+    background:var(--black);padding:28px 24px;display:flex;flex-direction:column;gap:14px;
+    transition:background .25s ease;min-height:170px;
+  }
+  .term-card:hover{background:var(--void);}
+  .term-card .t-id{font-size:10px;letter-spacing:.14em;color:var(--paper-dim);}
+  .term-card h4{font-size:20px;text-transform:uppercase;font-weight:700;}
+  .term-card p{font-size:11.5px;color:var(--paper-dim);line-height:1.6;flex:1;}
+  .term-card .t-cta{
+    font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);
+    display:flex;align-items:center;gap:8px;transition:gap .2s;
+  }
+  .term-card:hover .t-cta{gap:12px;}
+
+  /* ============ FOOTER ============ */
+  footer{border-top:1px solid var(--line);padding:34px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:10.5px;color:var(--paper-dim);letter-spacing:.04em;}
+  footer a{color:var(--accent);}
+
+  @media(max-width:640px){
+    .section-label{padding:44px 20px 20px;}
+    .filters{padding:0 20px 26px;}
+    .grid{padding:0 20px 80px;}
+    header{padding:18px 20px;}
+    .cat-hero-content{padding:44px 20px 44px;}
+    #terminals{padding:60px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="calibration-line"></div>
+<div id="grain"></div>
+
+<!-- ================= CROSS-DIVISION NAV STRIP ================= -->
+<nav class="nav-strip">
+  <a href="handsandhead-master-index.html"><span class="dot"></span>Home / OS</a>
+  <a href="rmg/index.html">RMG Terminal →</a>
+  <a href="arutemika-eu/index.html">Leather Terminal →</a>
+  <a href="rmg-lingerie/index.html">Lingerie Terminal →</a>
+  <a href="index-denim-livedrive.html">Denim Terminal →</a>
+  <a href="index-jute.html" class="active">Jute Terminal — Active</a>
+</nav>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="logo">RAW<span class="x">x</span> — JUTE</div>
+  <div class="header-right">
+    <div class="lang-select" id="langSelect">
+      <button class="lang-current" id="langCurrent">EN <span class="caret">▾</span></button>
+      <div class="lang-menu">
+        <button data-lang="EN">English <span class="native">EN</span></button>
+        <button data-lang="BD">বাংলা <span class="native">BD</span></button>
+        <button data-lang="JP">日本語 <span class="native">JP</span></button>
+        <button data-lang="NL">Nederlands <span class="native">NL</span></button>
+        <button data-lang="FR">Français <span class="native">FR</span></button>
+        <button data-lang="DE">Deutsch <span class="native">DE</span></button>
+        <button data-lang="RU">Русский <span class="native">RU</span></button>
+      </div>
+    </div>
+    <div class="dial" id="dial">
+      <div class="thumb"></div>
+      <button class="active" data-mode="retail">Retail</button>
+      <button data-mode="wholesale">Wholesale</button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= NL / DE BUYER STRIP ================= -->
+<div class="buyer-strip">
+  <span class="flag">🇳🇱</span> EU Buyer Channel Active — NL / DE Priority Routing <span class="flag">🇩🇪</span>
+  <span>· OEKO-TEX &amp; Biodegradable Fiber Documentation On Request</span>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="cat-hero">
+  <div class="cat-hero-media"></div>
+  <div class="cat-hero-content">
+    <div class="hero-eyebrow" id="heroEyebrow">Mode 01 / Direct-To-Consumer</div>
+    <h1 id="heroTitle">Full Jute<br>Catalogue</h1>
+    <p class="cat-hero-sub" id="heroSub">Seventeen reference SKUs across bags, rugs, matting, twine, and home textiles — factory-direct Dhaka origin, biodegradable fiber, zero plastic.</p>
+    <div class="hero-trust">
+      <div><b>17</b>REFERENCE SKUs</div>
+      <div><b>0%</b>PLASTIC CONTENT</div>
+      <div><b>NL·DE·FR·JP</b>ACTIVE CHANNELS</div>
+      <div><b>25–35D</b>LEAD TIME</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-label">
+  <h2 id="secTitle">Catalogue — <span style="color:var(--accent);">Retail</span></h2>
+  <p id="secSub">17 reference SKUs. Filter by product line.</p>
+</div>
+
+<div class="filters" id="filters"></div>
+<div class="grid" id="grid"></div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lb-inner">
+    <div class="lb-stage"><img id="lbImg" src="" alt=""></div>
+    <div class="lb-info">
+      <button class="lb-close" id="lbClose">✕</button>
+      <div class="eyebrow" id="lbEyebrow"></div>
+      <h3 id="lbTitle"></h3>
+      <p class="desc" id="lbDesc"></p>
+      <div class="lb-specs" id="lbSpecs"></div>
+      <div class="lb-price-block">
+        <div class="big" id="lbPrice"></div>
+        <div class="note" id="lbPriceNote"></div>
+      </div>
+      <a href="#rfq" class="lb-cta">Request Quote — This SKU →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DIVISION TERMINAL GRID ================= -->
+<section id="terminals">
+  <div class="section-label">
+    <h2>Other Active <span style="color:var(--accent);">Divisions</span></h2>
+    <p>Same terminal, same buyer verification flow — every division routes through one RFQ.</p>
+  </div>
+  <div class="term-grid">
+    <a class="term-card" href="rmg/index.html">
+      <span class="t-id">MOD // 01</span>
+      <h4>RMG</h4>
+      <p>General ready-made garments. MOQ 500/style, 25–30 day lead time.</p>
+      <span class="t-cta">Enter Terminal →</span>
+    </a>
+    <a class="term-card" href="arutemika-eu/index.html">
+      <span class="t-id">MOD // 02</span>
+      <h4>Arutemika Leather</h4>
+      <p>EU-standard leather goods. MOQ 200/style, 35–40 day lead time.</p>
+      <span class="t-cta">Enter Terminal →</span>
+    </a>
+    <a class="term-card" href="index-denim-livedrive.html">
+      <span class="t-id">MOD // 03</span>
+      <h4>Denim</h4>
+      <p>Engineered Indigo capsule. MOQ 500/unit, factory-direct Dhaka.</p>
+      <span class="t-cta">Enter Terminal →</span>
+    </a>
+    <a class="term-card" href="rmg-lingerie/index.html">
+      <span class="t-id">MOD // 04</span>
+      <h4>Lingerie / Activewear</h4>
+      <p>Highest-margin division. MOQ 500/style, 20–25 day lead time.</p>
+      <span class="t-cta">Enter Terminal →</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 RAWx Industries. All specifications final. <a href="handsandhead-master-index.html">← Back to OS</a></div>
+  <div>Factory Direct — Dhaka Origin · Biodegradable Fiber</div>
+</footer>
+
+<script>
+const PRODUCTS = [
+  {id:"j1", name:"Classic Jute Tote — Studio Detail", code:"JUT-BG-001 / CLASSIC-TOTE", category:"Bags",
+   img:"assets/jute/jute-tote-workshop-table.jpeg", desc:"Natural jute tote with leather-trimmed handles, shot beside raw twine skeins on the factory workbench.",
+   specs:[["Material","100% Jute, cotton-lined"],["Handle","Webbing, riveted"],["Origin","Dhaka, BD"]],
+   retail:"€24", wholesale:"€6.20 / unit · MOQ 1000"},
+  {id:"j2", name:"Tote Bag — Production Row", code:"JUT-BG-002 / HANGING-ROW", category:"Bags",
+   img:"assets/jute/jute-tote-hanging-row.jpeg", desc:"Finished totes hanging in sequence on the factory wall, awaiting QC and packing.",
+   specs:[["Stage","Pre-pack QC"],["Facility","Dhaka Production Floor"],["Lead Time","20–25 Days"]],
+   retail:"—", wholesale:"Factory tour available on request"},
+  {id:"j3", name:"Tote Bag — Lifestyle, Urban", code:"JUT-BG-003 / URBAN-CARRY", category:"Bags",
+   img:"assets/jute/jute-tote-urban-lifestyle.jpeg", desc:"Natural jute tote carried through an urban underpass at dusk — everyday-carry positioning for EU retail.",
+   specs:[["Fit","Shoulder carry"],["Capacity","18L"],["Market Fit","NL / DE retail"]],
+   retail:"€26", wholesale:"€6.80 / unit · MOQ 1000"},
+  {id:"j4", name:"Tote Bag — Studio Editorial", code:"JUT-BG-004 / STUDIO-WALK", category:"Bags",
+   img:"assets/jute/jute-tote-studio-editorial.jpeg", desc:"Dramatic studio backlight, tote carried mid-stride — campaign-ready lifestyle asset.",
+   specs:[["Use","Campaign / lookbook"],["Handle","Webbing, riveted"],["Origin","Dhaka, BD"]],
+   retail:"€26", wholesale:"€6.80 / unit · MOQ 1000"},
+  {id:"j5", name:"Natural Jute Sustainable Sack — Team Shot", code:"JUT-PK-005 / ECO-SACK", category:"Packaging",
+   img:"assets/jute/jute-team-sustainable-sack.jpeg", desc:"Branded eco-packaging sack shown alongside a rolled rug and leather-handled tote — full-range group reference.",
+   specs:[["Use","Retail / export packaging"],["Branding","Custom print available"],["MOQ","2000 units"]],
+   retail:"—", wholesale:"€0.38 / unit · MOQ 2000"},
+  {id:"j6", name:"Woven Door Mat — Geometric", code:"JUT-MT-006 / GEO-MAT", category:"Mats",
+   img:"assets/jute/jute-doormat-geometric.jpeg", desc:"Diamond-pattern woven mat shot at a weathered doorway threshold, natural low-angle light.",
+   specs:[["Size","60x90cm"],["Weave","Geometric jacquard"],["Origin","Dhaka, BD"]],
+   retail:"€38", wholesale:"€11 / unit · MOQ 800"},
+  {id:"j7", name:"Area Rug — Factory Roll-Out", code:"JUT-RG-007 / ROLL-OUT", category:"Rugs",
+   img:"assets/jute/jute-rug-rollout-warehouse.jpeg", desc:"Rug unrolled mid-motion across the warehouse floor, dust caught in a single shaft of window light.",
+   specs:[["Size","200x300cm"],["Weave","Flatweave"],["Origin","Dhaka, BD"]],
+   retail:"€142", wholesale:"€39 / unit · MOQ 300"},
+  {id:"j8", name:"Area Rug — Shoulder Carry", code:"JUT-RG-008 / SHOULDER-CARRY", category:"Rugs",
+   img:"assets/jute/jute-rug-shoulder-carry.jpeg", desc:"Rolled rug carried through the warehouse — logistics-ready lifestyle reference for freight documentation.",
+   specs:[["Size","200x300cm"],["Packing","Rolled, strapped"],["Lead Time","25–35 Days"]],
+   retail:"€142", wholesale:"€39 / unit · MOQ 300"},
+  {id:"j9", name:"Area Rug — Studio Standing Roll", code:"JUT-RG-009 / STUDIO-ROLL", category:"Rugs",
+   img:"assets/jute/jute-rug-studio-standing.jpeg", desc:"Rolled rug standing upright in studio light, fringe detail visible — clean asset for catalogue covers.",
+   specs:[["Size","Various"],["Weave","Flatweave, fringed edge"],["Origin","Dhaka, BD"]],
+   retail:"€142", wholesale:"€39 / unit · MOQ 300"},
+  {id:"j10", name:"Matting Rolls — Factory Floor", code:"JUT-MT-010 / ROLL-STOCK", category:"Mats",
+   img:"assets/jute/jute-matting-rolls-factory.jpeg", desc:"Worker moving stacked matting rolls across the production floor between looms.",
+   specs:[["Stage","In-production"],["Facility","Dhaka Production Floor"],["Lead Time","20–25 Days"]],
+   retail:"—", wholesale:"Factory tour available on request"},
+  {id:"j11", name:"Handloom Weaving — In Process", code:"JUT-FT-011 / LOOM-PROCESS", category:"Factory",
+   img:"assets/jute/jute-weaving-handloom.jpeg", desc:"Macro on the handloom shuttle mid-pass through warp threads — construction proof for buyer audits.",
+   specs:[["Process","Handloom weave"],["Verification","Buyer factory visit available"],["Origin","Dhaka, BD"]],
+   retail:"—", wholesale:"Included in supplier verification pack"},
+  {id:"j12", name:"Jute Twine — Spool Detail", code:"JUT-TW-012 / SPOOL", category:"Twine & Rope",
+   img:"assets/jute/jute-twine-spool-macro.jpeg", desc:"Macro detail of wound jute twine on the spool, natural fiber variation visible.",
+   specs:[["Diameter","2–4mm, custom"],["Use","Packaging / garden / craft"],["MOQ","500kg"]],
+   retail:"€4.20 / 100m", wholesale:"€1.10 / 100m · MOQ 500kg"},
+  {id:"j13", name:"Jute Rope — Coiled", code:"JUT-TW-013 / ROPE-COIL", category:"Twine & Rope",
+   img:"assets/jute/jute-rope-coiled.jpeg", desc:"Coiled jute rope on a wood surface, warm natural tone — durable-goods reference shot.",
+   specs:[["Diameter","6–12mm, custom"],["Use","Marine / decor / industrial"],["MOQ","500kg"]],
+   retail:"€6.80 / 10m", wholesale:"€1.90 / 10m · MOQ 500kg"},
+  {id:"j14", name:"Fiber Tensile Test — QC", code:"JUT-QC-014 / TENSILE-TEST", category:"Factory",
+   img:"assets/jute/jute-fiber-tensile-test.jpeg", desc:"High-speed capture of a fiber strand under tensile load — quality documentation for spec-driven buyers.",
+   specs:[["Test","Tensile strength"],["Standard","ISO 2062 reference"],["Documentation","Full QC report on request"]],
+   retail:"—", wholesale:"QC documentation included with every order"},
+  {id:"j15", name:"Table Runner — Lifestyle Dining", code:"JUT-HT-015 / DINING-RUNNER", category:"Home Textiles",
+   img:"assets/jute/jute-table-runner-dining.jpeg", desc:"Family dinner scene styled with a natural jute table runner and folded linen napkins.",
+   specs:[["Size","35x180cm"],["Pairing","Sold with napkin sets"],["Market Fit","NL / DE home retail"]],
+   retail:"€22", wholesale:"€6.40 / unit · MOQ 600"},
+  {id:"j16", name:"Home Bundle — Rug, Linen &amp; Throw", code:"JUT-HT-016 / HOME-BUNDLE", category:"Home Textiles",
+   img:"assets/jute/jute-home-bundle-family.jpeg", desc:"Three-generation lifestyle shot styled with a rolled rug, folded bed linen, and a soft throw blanket.",
+   specs:[["Bundle","Rug + Linen + Throw"],["Use","Cross-category campaign"],["Origin","Dhaka, BD"]],
+   retail:"From €96 (bundle)", wholesale:"From €31 / bundle · MOQ 300"},
+  {id:"j17", name:"Woven Basket — Lifestyle", code:"JUT-BS-017 / GARDEN-BASKET", category:"Baskets",
+   img:"assets/jute/jute-basket-family-garden.jpeg", desc:"Family garden scene, woven jute basket held overhead mid-celebration — seasonal/gifting positioning.",
+   specs:[["Size","30x22x18cm"],["Use","Gifting / market / storage"],["Market Fit","Seasonal retail"]],
+   retail:"€19", wholesale:"€5.10 / unit · MOQ 1000"}
+];
+
+const MODES = {
+  retail:{
+    eyebrow:"Mode 01 / Direct-To-Consumer",
+    title:"Full Jute<br>Catalogue",
+    sub:"Seventeen reference SKUs across bags, rugs, matting, twine, and home textiles — factory-direct Dhaka origin, biodegradable fiber, zero plastic.",
+    secTitle:'Catalogue — <span style="color:var(--accent);">Retail</span>',
+    secSub:"17 reference SKUs. Single-unit pricing, EU/US shipping.",
+    priceKey:"retail", priceNote:"Per unit · incl. standard shipping"
+  },
+  wholesale:{
+    eyebrow:"Mode 02 / Buying Teams",
+    title:"Wholesale<br>SKU Sheet",
+    sub:"Same 17 SKUs at factory-direct wholesale pricing — Dhaka origin, biodegradable fiber, MOQ from 300 units per SKU.",
+    secTitle:'Catalogue — <span style="color:var(--accent);">Wholesale</span>',
+    secSub:"17 reference SKUs. MOQ from 300/SKU · 20–35 day lead time.",
+    priceKey:"wholesale", priceNote:"FOB Dhaka · 20–35 day lead time"
+  }
+};
+
+let currentMode = "retail";
+
+function categoriesFor(){ return ["All", ...Array.from(new Set(PRODUCTS.map(p=>p.category)))]; }
+
+function renderHero(mode){
+  const m = MODES[mode];
+  document.getElementById('heroEyebrow').textContent = m.eyebrow;
+  document.getElementById('heroTitle').innerHTML = m.title;
+  document.getElementById('heroSub').textContent = m.sub;
+  document.getElementById('secTitle').innerHTML = m.secTitle;
+  document.getElementById('secSub').textContent = m.secSub;
+}
+
+function renderFilters(){
+  const filtersEl = document.getElementById('filters');
+  filtersEl.innerHTML = '';
+  categoriesFor().forEach((cat,i)=>{
+    const b = document.createElement('button');
+    b.textContent = cat;
+    if(i===0) b.classList.add('active');
+    b.addEventListener('click', ()=>{
+      filtersEl.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderGrid(cat);
+    });
+    filtersEl.appendChild(b);
+  });
+}
+
+function renderGrid(filter){
+  const gridEl = document.getElementById('grid');
+  gridEl.innerHTML = '';
+  const m = MODES[currentMode];
+  PRODUCTS.forEach(p=>{
+    if(filter && filter!=="All" && p.category!==filter) return;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <span class="card-tag">${p.category}</span>
+        <img src="${p.img}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="card-spec">
+        <div class="name">${p.name}</div>
+        <div class="code">${p.code}</div>
+        <div class="price-row">
+          <span class="price">${p[m.priceKey]}</span>
+          <span class="price-note">${currentMode === 'wholesale' ? 'FOB' : 'Retail'}</span>
+        </div>
+      </div>
+    `;
+    card.addEventListener('click', ()=>openLightbox(p.id));
+    gridEl.appendChild(card);
+  });
+}
+
+function switchMode(mode){
+  currentMode = mode;
+  document.body.classList.toggle('wholesale', mode==='wholesale');
+  document.querySelectorAll('.dial button').forEach(b=>b.classList.toggle('active', b.dataset.mode===mode));
+  renderHero(mode);
+  const activeFilter = document.querySelector('.filters button.active');
+  renderGrid(activeFilter ? activeFilter.textContent : "All");
+}
+
+document.querySelectorAll('.dial button').forEach(b=>{
+  b.addEventListener('click', ()=> switchMode(b.dataset.mode));
+});
+
+/* LANGUAGE DROPDOWN — display-only switch; wire to real i18n strings when ready */
+const langSelect = document.getElementById('langSelect');
+const langCurrent = document.getElementById('langCurrent');
+langCurrent.addEventListener('click', ()=> langSelect.classList.toggle('open'));
+document.querySelectorAll('.lang-menu button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    langCurrent.firstChild.textContent = btn.dataset.lang + ' ';
+    langSelect.classList.remove('open');
+  });
+});
+document.addEventListener('click', (e)=>{
+  if(!langSelect.contains(e.target)) langSelect.classList.remove('open');
+});
+
+/* LIGHTBOX */
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbEyebrow = document.getElementById('lbEyebrow');
+const lbTitle = document.getElementById('lbTitle');
+const lbDesc = document.getElementById('lbDesc');
+const lbSpecs = document.getElementById('lbSpecs');
+const lbPrice = document.getElementById('lbPrice');
+const lbPriceNote = document.getElementById('lbPriceNote');
+
+function openLightbox(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  const m = MODES[currentMode];
+  lbImg.src = p.img;
+  lbImg.alt = p.name;
+  lbEyebrow.textContent = p.category + " — " + p.code;
+  lbTitle.textContent = p.name;
+  lbDesc.textContent = p.desc;
+  lbSpecs.innerHTML = p.specs.map(s=>`<div class="r"><span>${s[0]}</span><span>${s[1]}</span></div>`).join('');
+  lbPrice.textContent = p[m.priceKey];
+  lbPriceNote.textContent = m.priceNote;
+  lightbox.classList.add('open');
+}
+document.getElementById('lbClose').addEventListener('click', ()=> lightbox.classList.remove('open'));
+lightbox.addEventListener('click', (e)=>{ if(e.target===lightbox) lightbox.classList.remove('open'); });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') lightbox.classList.remove('open'); });
+
+/* init */
+renderFilters();
+switchMode('retail');
+</script>
+</body>
+</html>

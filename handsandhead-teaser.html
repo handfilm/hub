@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HANDS &amp; HEAD — B2B Supply Chain Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#000000; --panel:#0a0a0a; --panel-2:#111111;
+    --panel-line: rgba(255,0,0,0.25);
+    --red:#ff0000; --red-bright:#ff3333; --red-dim:#800000;
+    --steel:#ffffff; --steel-dim:#888888; --white:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:var(--void); color:var(--white); font-family:'Inter',sans-serif; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+  ::selection{ background:var(--red); color:var(--white); }
+  .eyebrow{ font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--red); }
+  .display{ font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; text-transform:uppercase; line-height:0.95; }
+  .serif-em{ font-family:'Cormorant Garamond',serif; font-style:italic; font-weight:500; }
+  .mono{ font-family:'Space Mono',monospace; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; }
+  .btn{
+    font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    padding:14px 24px; border:1px solid var(--red-dim); background:transparent; color:var(--red-bright);
+    transition:all .25s ease; display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{ background:var(--red); color:var(--white); border-color:var(--red); }
+  .btn.solid{ background:var(--red); color:var(--white); }
+  .btn.solid:hover{ background:var(--red-bright); }
+  .btn.ghost{ border-color:var(--panel-line); color:var(--steel-dim); }
+  .btn.ghost:hover{ border-color:var(--red-bright); color:var(--red-bright); background:transparent; }
+
+  /* ---------- status strip ---------- */
+  .status-strip{
+    background:var(--panel); border-bottom:1px solid var(--panel-line);
+    display:flex; align-items:center; justify-content:center; gap:26px;
+    padding:9px 16px; font-family:'Space Mono'; font-size:10px; letter-spacing:0.14em; color:var(--steel-dim);
+    flex-wrap:wrap;
+  }
+  .status-strip .live{ color:var(--red-bright); display:flex; align-items:center; gap:6px; }
+  .status-strip .dot{ width:6px;height:6px;border-radius:50%; background:var(--red); box-shadow:0 0 8px var(--red); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+  .status-strip .flags{ display:flex; gap:14px; }
+
+  /* ---------- header ---------- */
+  header{ display:flex; align-items:center; justify-content:space-between; padding:22px 40px; }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo .mark{ width:30px;height:30px; border:1px solid var(--red); display:flex; align-items:center; justify-content:center; transform:rotate(45deg); }
+  .logo .mark span{ transform:rotate(-45deg); font-family:'Bebas Neue'; font-size:14px; color:var(--red-bright); }
+  .logo .name{ font-family:'Bebas Neue'; font-size:19px; letter-spacing:0.06em; }
+  .logo .name small{ display:block; font-family:'Space Mono'; font-size:9px; letter-spacing:0.2em; color:var(--steel-dim); }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:70px 40px 90px; border-bottom:1px solid var(--panel-line); position:relative; }
+  .hero::before{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image: repeating-linear-gradient(0deg, rgba(255,0,0,0.025) 0px, rgba(255,0,0,0.025) 1px, transparent 1px, transparent 3px);
+  }
+  .hero-inner{ position:relative; max-width:760px; }
+  .hero h1{ font-size:clamp(42px,7vw,88px); margin:18px 0 20px; }
+  .hero h1 em{ color:var(--red-bright); }
+  .hero p{ color:var(--steel-dim); font-size:15px; line-height:1.7; max-width:540px; margin-bottom:32px; }
+  .hero-cta{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px; }
+  .hero-trust{ display:flex; gap:32px; flex-wrap:wrap; font-family:'Space Mono'; font-size:10.5px; color:var(--steel-dim); letter-spacing:0.06em; }
+  .hero-trust b{ color:var(--red-bright); display:block; font-size:18px; margin-bottom:4px; font-family:'Bebas Neue'; letter-spacing:0.03em; }
+
+  /* ---------- section shell ---------- */
+  section{ padding:80px 40px; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:44px; gap:20px; flex-wrap:wrap; }
+  .section-head h2{ font-size:clamp(26px,3.6vw,42px); }
+  .section-head .num{ font-family:'Space Mono'; font-size:11px; color:var(--red-dim); letter-spacing:0.14em; }
+
+  /* ---------- division teaser grid ---------- */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1px; background:var(--panel-line); border:1px solid var(--panel-line); }
+  .card{ background:var(--void); padding:26px 24px; display:flex; flex-direction:column; min-height:230px; transition:background .3s ease; }
+  .card:hover{ background:var(--panel); }
+  .card .mod-id{ font-family:'Space Mono'; font-size:10px; color:var(--red-dim); letter-spacing:0.14em; }
+  .card h3{ font-family:'Bebas Neue'; font-size:28px; margin:16px 0 4px; }
+  .card .cat{ font-family:'Cormorant Garamond'; font-style:italic; color:var(--steel-dim); font-size:14px; margin-bottom:16px; }
+  .stat-readout{ margin-top:auto; display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px solid var(--panel-line); }
+  .stat-row{ display:flex; justify-content:space-between; font-family:'Space Mono'; font-size:10px; }
+  .stat-row .k{ color:var(--steel-dim); letter-spacing:0.06em; }
+  .stat-row .v{ color:var(--red-bright); }
+
+  /* ---------- how it works ---------- */
+  .flow{ display:flex; flex-wrap:wrap; gap:0; border:1px solid var(--panel-line); }
+  .flow-step{ flex:1; min-width:180px; padding:26px 22px; border-right:1px solid var(--panel-line); }
+  .flow-step:last-child{ border-right:none; }
+  .flow-step .n{ font-family:'Bebas Neue'; font-size:34px; color:var(--red-dim); }
+  .flow-step h4{ font-family:'Space Mono'; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; margin:10px 0 8px; color:var(--red-bright); }
+  .flow-step p{ font-size:12.5px; color:var(--steel-dim); line-height:1.6; }
+
+  /* ---------- RFQ form ---------- */
+  .terminal{ border:1px solid var(--panel-line); background:var(--panel); display:grid; grid-template-columns:1fr 1.1fr; }
+  .terminal .brief{ padding:44px; border-right:1px solid var(--panel-line); }
+  .terminal .brief h2{ font-size:clamp(26px,3.4vw,38px); margin-bottom:16px; }
+  .terminal .brief p{ color:var(--steel-dim); font-size:13.5px; line-height:1.7; margin-bottom:22px; }
+  .terminal .brief .checklist{ display:flex; flex-direction:column; gap:9px; }
+  .terminal .brief .checklist div{ font-family:'Space Mono'; font-size:10.5px; color:var(--steel-dim); display:flex; gap:9px; }
+  .terminal .brief .checklist div::before{ content:'▸'; color:var(--red); }
+  .terminal form{ padding:44px; display:flex; flex-direction:column; gap:16px; }
+  .field{ display:flex; flex-direction:column; gap:7px; }
+  .field label{ font-family:'Space Mono'; font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--red-dim); }
+  .field input, .field select, .field textarea{
+    background:var(--void); border:1px solid var(--panel-line); color:var(--white);
+    padding:11px 13px; font-family:'Inter'; font-size:13px; outline:none; transition:border-color .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--red); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .transmit-status{ font-family:'Space Mono'; font-size:10.5px; color:var(--red-bright); letter-spacing:0.06em; display:none; margin-top:2px; }
+  .transmit-status.show{ display:block; }
+
+  /* ---------- terminal access footer ---------- */
+  .access-band{
+    border-top:1px solid var(--panel-line); padding:50px 40px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+  }
+  .access-band .lock{ width:36px;height:36px; border:1px solid var(--red); display:flex; align-items:center; justify-content:center; transform:rotate(45deg); margin-bottom:6px; }
+  .access-band .lock span{ transform:rotate(-45deg); color:var(--red-bright); font-family:'Bebas Neue'; }
+  .access-band h3{ font-family:'Bebas Neue'; font-size:24px; }
+  .access-band p{ color:var(--steel-dim); font-size:12.5px; max-width:420px; }
+
+  footer{ border-top:1px solid var(--panel-line); padding:36px 40px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  footer .fmark{ font-family:'Bebas Neue'; font-size:15px; letter-spacing:0.05em; color:var(--steel-dim); }
+  footer .flinks{ display:flex; gap:20px; font-family:'Space Mono'; font-size:9.5px; letter-spacing:0.1em; color:var(--steel-dim); }
+  footer .flinks a:hover{ color:var(--red-bright); }
+
+  @media (max-width:900px){
+    .terminal{ grid-template-columns:1fr; }
+    .terminal .brief{ border-right:none; border-bottom:1px solid var(--panel-line); }
+    header, .hero, section{ padding-left:20px; padding-right:20px; }
+    .flow{ flex-direction:column; }
+    .flow-step{ border-right:none; border-bottom:1px solid var(--panel-line); }
+    .flow-step:last-child{ border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="status-strip">
+  <div class="live"><span class="dot"></span>EU BUYER CHANNEL ACTIVE</div>
+  <div class="flags mono">NL · DE · GB · ES</div>
+  <div class="mono">RFQ RESPONSE — UNDER 48H</div>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="mark"><span>H</span></div>
+    <div class="name">HANDS &amp; HEAD<small>B2B SUPPLY CHAIN TERMINAL</small></div>
+  </div>
+  <button class="btn ghost" onclick="location.href='/terminal'">Have a PIN? Enter Terminal →</button>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">LEATHER EXPORT DIVISION · MULTI-CATEGORY SOURCING</div>
+    <h1 class="display">Factory-direct.<br><em>Verified</em> before<br>you order.</h1>
+    <p>Five active manufacturing divisions — ready-made garments, leather, denim, lingerie &amp; activewear — routed through one terminal. Built for sourcing teams who audit before they sign, not browse before they buy.</p>
+    <div class="hero-cta">
+      <button class="btn solid" onclick="document.getElementById('rfq').scrollIntoView({behavior:'smooth'})">Request Buyer Access</button>
+      <button class="btn" onclick="document.getElementById('divisions').scrollIntoView({behavior:'smooth'})">View Divisions</button>
+    </div>
+    <div class="hero-trust">
+      <div><b>05</b>ACTIVE DIVISIONS</div>
+      <div><b>48H</b>RFQ RESPONSE TIME</div>
+      <div><b>0%</b>MIDDLEMAN MARKUP</div>
+      <div><b>EU + BD</b>DUAL ORIGIN SOURCING</div>
+    </div>
+  </div>
+</div>
+
+<section id="divisions">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">ACTIVE DIVISIONS</div>
+      <h2 class="display">What's Running</h2>
+    </div>
+    <div class="num">FULL SPECS BEHIND TERMINAL LOGIN</div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <span class="mod-id">MOD // 01</span>
+      <h3>RMG</h3>
+      <div class="cat">General ready-made garments</div>
+      <div class="stat-readout">
+        <div class="stat-row"><span class="k">MOQ</span><span class="v">500 / STYLE</span></div>
+        <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">25–30 DAYS</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="mod-id">MOD // 02</span>
+      <h3>Arutemika</h3>
+      <div class="cat">Leather goods, EU standard</div>
+      <div class="stat-readout">
+        <div class="stat-row"><span class="k">MOQ</span><span class="v">200 / STYLE</span></div>
+        <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">35–40 DAYS</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="mod-id">MOD // 03</span>
+      <h3>Denim</h3>
+      <div class="cat">RMG denim division</div>
+      <div class="stat-readout">
+        <div class="stat-row"><span class="k">MOQ</span><span class="v">300 / STYLE</span></div>
+        <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">30 DAYS</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="mod-id">MOD // 04</span>
+      <h3>Lingerie</h3>
+      <div class="cat">Lingerie &amp; activewear</div>
+      <div class="stat-readout">
+        <div class="stat-row"><span class="k">MOQ</span><span class="v">500 / STYLE</span></div>
+        <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">20–25 DAYS</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">PROCESS</div>
+      <h2 class="display">How Access Works</h2>
+    </div>
+  </div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="n">01</div>
+      <h4>Inquiry</h4>
+      <p>Submit company details and target category below. No account needed to inquire.</p>
+    </div>
+    <div class="flow-step">
+      <div class="n">02</div>
+      <h4>Verified</h4>
+      <p>We confirm the company and route you to the right division lead.</p>
+    </div>
+    <div class="flow-step">
+      <div class="n">03</div>
+      <h4>PIN Issued</h4>
+      <p>Terminal access is issued — net pricing, tech packs, sourcing sheets.</p>
+    </div>
+    <div class="flow-step">
+      <div class="n">04</div>
+      <h4>Production Queue</h4>
+      <p>Confirmed orders enter the production queue with a fixed lead time.</p>
+    </div>
+  </div>
+</section>
+
+<section id="rfq" style="padding-top:0;">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">WHOLESALE INQUIRY</div>
+      <h2 class="display">Request Buyer Access</h2>
+    </div>
+    <div class="num">NO ACCOUNT REQUIRED TO INQUIRE</div>
+  </div>
+  <div class="terminal">
+    <div class="brief">
+      <h2 class="display">One form.<br>Every division.</h2>
+      <p>Sourced through Apollo.io or found the terminal directly — this routes straight to the right division lead. No cold sales call, no generic reply.</p>
+      <div class="checklist">
+        <div>Company &amp; verified contact required</div>
+        <div>Sample requests confirmed within 48 hours</div>
+        <div>Volume pricing returned as a spec sheet, not a pitch</div>
+        <div>PIN access issued after verification</div>
+      </div>
+    </div>
+    <form id="rfqForm" onsubmit="submitRfq(event)">
+      <div class="field-row">
+        <div class="field"><label>Company</label><input required type="text" placeholder="Company name"></div>
+        <div class="field"><label>Contact Email</label><input required type="email" placeholder="you@company.com"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Division</label>
+          <select>
+            <option>RMG — General</option>
+            <option>Arutemika — Leather</option>
+            <option>RMG — Denim</option>
+            <option>RMG — Lingerie / Activewear</option>
+          </select>
+        </div>
+        <div class="field"><label>Target Volume</label><input type="text" placeholder="e.g. 1,000 units"></div>
+      </div>
+      <div class="field"><label>Message</label><textarea rows="3" placeholder="Product category, timeline, destination country..."></textarea></div>
+      <button class="btn solid" type="submit">Transmit Request</button>
+      <div class="transmit-status" id="transmitStatus">TRANSMITTING... REQUEST LOGGED. VERIFICATION &amp; PIN ISSUANCE WITHIN 48H.</div>
+    </form>
+  </div>
+</section>
+
+<div class="access-band">
+  <div class="lock"><span>H</span></div>
+  <h3 class="display">Already Verified?</h3>
+  <p>Returning buyers with an issued PIN can go straight into the terminal for net pricing, tech packs, and sourcing sheets.</p>
+  <button class="btn ghost" onclick="location.href='/terminal'">Enter Terminal →</button>
+</div>
+
+<footer>
+  <div class="fmark">HANDS &amp; HEAD — B2B SUPPLY CHAIN TERMINAL</div>
+  <div class="flinks">
+    <a href="https://handfilm.myshopify.com/handsandhead" target="_blank">Retail Shop ↗</a>
+    <a href="/terminal">Terminal Login</a>
+  </div>
+</footer>
+
+<script>
+  function submitRfq(e){
+    e.preventDefault();
+    const status = document.getElementById('transmitStatus');
+    status.classList.add('show');
+    status.textContent = 'TRANSMITTING...';
+    setTimeout(()=>{
+      status.textContent = 'REQUEST LOGGED. VERIFICATION & PIN ISSUANCE WITHIN 48H.';
+    }, 1100);
+  }
+</script>
+</body>
+</html>

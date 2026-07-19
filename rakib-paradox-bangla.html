@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>রাকিব-বিরোধাভাস | The Rakib Paradox</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;600;700&family=Noto+Sans+Bengali:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap');
+
+  :root {
+    --void:    #070708;
+    --deep:    #0d0d10;
+    --surface: #131318;
+    --ghost:   #1a1a22;
+    --wire:    #252530;
+    --dim:     #3d3d52;
+    --muted:   #6b6b88;
+    --pale:    #b0b0cc;
+    --bright:  #e2e2ee;
+    --white:   #f0f0f8;
+
+    --must:    #ff4820;
+    --want:    #8b6fff;
+    --should:  #00e0a8;
+    --raw:     #e2ff00;
+    --slash:   #ff9800;
+    --cold:    #00ccff;
+    --acid:    #a0ff3a;
+    --ghost2:  #ff6eb4;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--pale);
+    font-family: 'Noto Serif Bengali', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.95;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HEADER RAIL ── */
+  .header-rail {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: var(--void);
+    border-bottom: 1px solid var(--wire);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 46px;
+  }
+  .rail-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+  .rail-id span { color: var(--raw); }
+  .rail-links {
+    display: flex; gap: 1.4rem;
+  }
+  .rail-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .rail-links a:hover { opacity: 0.6; }
+  .rail-links a.m { color: var(--must); }
+  .rail-links a.w { color: var(--want); }
+  .rail-links a.s { color: var(--should); }
+
+  /* ── HERO ── */
+  .hero {
+    padding-top: 46px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--wire) 1px, transparent 1px),
+      linear-gradient(90deg, var(--wire) 1px, transparent 1px);
+    background-size: 52px 52px;
+    opacity: 0.28;
+    animation: gp 10s ease-in-out infinite;
+  }
+  @keyframes gp {
+    0%,100% { opacity: 0.28; }
+    50%      { opacity: 0.12; }
+  }
+  .hero::after {
+    content: '';
+    position: absolute; top: 46px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--must), var(--want), var(--should), transparent);
+    animation: scan 4s linear infinite;
+  }
+  @keyframes scan { 0% { transform:translateX(-100%); } 100% { transform:translateX(100%); } }
+
+  .hero-inner {
+    position: relative; z-index: 2;
+    padding: 5rem 2rem 4rem;
+    max-width: 1080px;
+    margin: 0 auto; width: 100%;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 28px; height: 1px; background: var(--raw);
+  }
+  .hero-eyebrow .hi { color: var(--raw); }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 15vw, 13rem);
+    line-height: 0.86;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.25em;
+  }
+  .ht-must   { color: var(--must);   display: block; }
+  .ht-want   { color: var(--want);   display: block; }
+  .ht-should { color: var(--should); display: block; }
+  .ht-plain  { color: var(--white);  display: block; }
+
+  .hero-bn-title {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    color: var(--muted);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  .hero-bn-title em { color: var(--bright); font-style: normal; font-weight: 600; }
+
+  .thesis-block {
+    max-width: 700px;
+    margin: 2.5rem 0 0;
+    padding: 1.6rem 2rem;
+    border-left: 3px solid var(--want);
+    background: rgba(139,111,255,0.05);
+    font-size: 1.05rem;
+    color: var(--bright);
+    font-style: italic;
+    line-height: 2;
+  }
+
+  /* THREE-COLUMN TRIAD */
+  .triad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--wire);
+    border: 1px solid var(--wire);
+    margin-top: 3.5rem;
+  }
+  .triad-cell {
+    background: var(--deep);
+    padding: 2rem 1.6rem;
+    position: relative;
+  }
+  .triad-cell::before {
+    content: ''; position: absolute; top:0; left:0; right:0; height:3px;
+  }
+  .tc-must::before   { background: var(--must); }
+  .tc-want::before   { background: var(--want); }
+  .tc-should::before { background: var(--should); }
+
+  .tc-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.48rem; letter-spacing: 0.28em; text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .tc-must   .tc-label { color: var(--must); }
+  .tc-want   .tc-label { color: var(--want); }
+  .tc-should .tc-label { color: var(--should); }
+
+  .tc-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.3rem; line-height: 1.3;
+  }
+  .tc-url {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    margin-bottom: 0.8rem; word-break: break-all;
+  }
+  .tc-must   .tc-url { color: var(--must); }
+  .tc-want   .tc-url { color: var(--want); }
+  .tc-should .tc-url { color: var(--should); }
+
+  .tc-desc {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.82rem; color: var(--muted); line-height: 1.8;
+  }
+
+  /* ── NODE BAR ── */
+  .node-bar {
+    display: flex; overflow-x: auto; scrollbar-width: none;
+    border-bottom: 1px solid var(--wire);
+    position: sticky; top: 46px; z-index: 100;
+    background: var(--void);
+  }
+  .node-bar::-webkit-scrollbar { display: none; }
+  .np {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.85rem 1.5rem;
+    border-right: 1px solid var(--wire);
+    white-space: nowrap; color: var(--dim);
+    flex-shrink: 0; transition: background 0.15s;
+  }
+  .np:hover { background: rgba(255,255,255,0.025); }
+  .np1 { color: var(--must); }
+  .np2 { color: var(--want); }
+  .np3 { color: var(--should); }
+  .np4 { color: var(--slash); }
+  .np5 { color: var(--cold); }
+  .np6 { color: var(--acid); }
+  .np7 { color: var(--raw); }
+  .np8 { color: var(--ghost2); }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── ARTICLE SECTION ── */
+  .art-section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--wire);
+    position: relative;
+  }
+
+  .sec-meta {
+    display: flex; align-items: center; gap: 1.2rem; margin-bottom: 2.5rem;
+  }
+  .sec-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.2em;
+    padding: 0.3rem 0.75rem; border: 1px solid currentColor; text-transform: uppercase;
+  }
+  .sb-must   { color: var(--must);   border-color: var(--must); }
+  .sb-want   { color: var(--want);   border-color: var(--want); }
+  .sb-should { color: var(--should); border-color: var(--should); }
+  .sb-slash  { color: var(--slash);  border-color: var(--slash); }
+  .sb-cold   { color: var(--cold);   border-color: var(--cold); }
+  .sb-acid   { color: var(--acid);   border-color: var(--acid); }
+  .sb-raw    { color: var(--raw);    border-color: var(--raw); }
+  .sb-ghost  { color: var(--muted);  border-color: var(--wire); }
+
+  .sec-rule { flex: 1; height: 1px; background: var(--wire); }
+  .sec-num  { font-family: 'Space Mono', monospace; font-size: 0.5rem; color: var(--dim); }
+
+  .sec-heading {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    font-weight: 700; color: var(--white);
+    line-height: 1.1; margin-bottom: 0.3rem;
+  }
+  .sec-heading-en {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.28em; color: var(--dim);
+    text-transform: uppercase; margin-bottom: 2.5rem;
+  }
+
+  /* ── BODY TEXT ── */
+  .bt {
+    font-family: 'Noto Serif Bengali', serif;
+    color: var(--pale); font-size: 1.02rem;
+    line-height: 2.05; margin-bottom: 1.6rem;
+  }
+  .bt strong { color: var(--bright); font-weight: 600; }
+  .bt em     { color: var(--muted); font-style: italic; }
+
+  /* ── AXIOM ── */
+  .axiom {
+    margin: 2.5rem 0; padding: 1.8rem 2rem;
+    background: var(--ghost); border-left: 4px solid currentColor;
+    position: relative;
+  }
+  .axiom::before {
+    content: 'HYPOTHESIS';
+    font-family: 'Space Mono', monospace;
+    font-size: 0.44rem; letter-spacing: 0.35em; text-transform: uppercase;
+    position: absolute; top: -0.55rem; left: 2rem;
+    background: var(--ghost); padding: 0 0.4rem; color: var(--dim);
+  }
+  .axiom.must   { color: var(--must);   border-color: var(--must); }
+  .axiom.want   { color: var(--want);   border-color: var(--want); }
+  .axiom.should { color: var(--should); border-color: var(--should); }
+  .axiom.slash  { color: var(--slash);  border-color: var(--slash); }
+  .axiom.cold   { color: var(--cold);   border-color: var(--cold); }
+  .axiom.acid   { color: var(--acid);   border-color: var(--acid); }
+  .axiom.raw    { color: var(--raw);    border-color: var(--raw); }
+  .axiom.ghost  { color: var(--muted);  border-color: var(--wire); }
+
+  .axiom-text {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.08rem; font-style: italic;
+    line-height: 1.9; color: var(--bright);
+  }
+
+  /* ── FORMULA ── */
+  .formula {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.76rem; color: var(--muted);
+    background: var(--deep); padding: 1.2rem 1.6rem;
+    margin: 2rem 0; border: 1px solid var(--wire);
+    letter-spacing: 0.06em; line-height: 2; overflow-x: auto;
+  }
+  .formula .eq  { color: var(--want); }
+  .formula .var { color: var(--cold); }
+  .formula .op  { color: var(--must); }
+  .formula .cmt { color: var(--dim); }
+  .formula .out { color: var(--raw); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    padding: 1rem 1.4rem; margin: 1.8rem 0;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.9rem; color: var(--muted);
+    border-left: 2px solid var(--wire); line-height: 1.85;
+  }
+  .callout strong { color: var(--pale); }
+
+  /* ── BIG PULL QUOTE ── */
+  .pull-quote {
+    margin: 3rem 0; padding: 2.5rem 0;
+    border-top: 1px solid var(--wire); border-bottom: 1px solid var(--wire);
+  }
+  .pull-quote blockquote {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+    color: var(--bright); line-height: 1.7; font-style: italic;
+    position: relative; padding-left: 2rem;
+  }
+  .pull-quote blockquote::before {
+    content: '"';
+    position: absolute; left: 0; top: -0.3rem;
+    font-size: 4rem; color: var(--dim); font-family: serif; line-height: 1;
+  }
+  .pull-quote cite {
+    display: block; font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.2em; color: var(--dim);
+    text-transform: uppercase; margin-top: 1.2rem; font-style: normal;
+  }
+
+  /* ── MATRIX TABLE ── */
+  .matrix {
+    width: 100%; border-collapse: collapse; margin: 2.5rem 0; font-size: 0.88rem;
+  }
+  .matrix th {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim);
+    padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--wire); text-align: left;
+    background: var(--deep);
+  }
+  .matrix td {
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid rgba(37,37,48,0.7);
+    color: var(--pale); vertical-align: top;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+  .matrix tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .pill {
+    display: inline-block; font-family: 'Space Mono', monospace;
+    font-size: 0.46rem; letter-spacing: 0.15em;
+    padding: 0.2rem 0.5rem; text-transform: uppercase;
+  }
+  .pill.hi  { background: rgba(255,72,32,0.12);  color: var(--must); }
+  .pill.mid { background: rgba(139,111,255,0.12); color: var(--want); }
+  .pill.lo  { background: rgba(0,224,168,0.1);   color: var(--should); }
+
+  /* ── SPLIT PANEL ── */
+  .split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--wire); margin: 2.5rem 0;
+  }
+  .sp { background: var(--deep); padding: 2rem 1.8rem; }
+  .sp-label {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .sp-label.must   { color: var(--must); }
+  .sp-label.want   { color: var(--want); }
+  .sp-label.should { color: var(--should); }
+  .sp-label.raw    { color: var(--raw); }
+  .sp h4 {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 0.7rem;
+  }
+  .sp p {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.88rem; color: var(--muted); line-height: 1.8;
+  }
+
+  /* ── STAT ROW ── */
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1px; background: var(--wire); margin: 2.5rem 0;
+  }
+  .stat-cell { background: var(--surface); padding: 1.5rem 1rem; text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; margin-bottom: 0.3rem;
+  }
+  .stat-num.must   { color: var(--must); }
+  .stat-num.want   { color: var(--want); }
+  .stat-num.should { color: var(--should); }
+  .stat-num.raw    { color: var(--raw); }
+  .stat-label {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.7rem; color: var(--dim); line-height: 1.4;
+  }
+
+  /* ── TEXT BREAK ── */
+  .text-break {
+    padding: 3.5rem 0; text-align: center;
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    color: var(--dim); line-height: 1.4;
+  }
+  .text-break span { color: var(--white); display: block; font-weight: 700; }
+
+  /* ── URL SHOWCASE ── */
+  .url-showcase {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--wire); margin: 2rem 0;
+  }
+  .url-card {
+    background: var(--ghost); padding: 2.2rem 1.8rem;
+    position: relative; overflow: hidden; transition: background 0.3s;
+    border-top: 3px solid transparent;
+  }
+  .url-card:hover { background: var(--surface); }
+  .url-card.must   { border-top-color: var(--must); }
+  .url-card.want   { border-top-color: var(--want); }
+  .url-card.should { border-top-color: var(--should); }
+  .url-card::after {
+    content: '↗'; position: absolute; bottom:1.5rem; right:1.5rem;
+    font-family: 'Space Mono', monospace; font-size: 1rem;
+    transition: transform 0.2s; color: var(--dim);
+  }
+  .url-card:hover::after { transform: translate(3px,-3px); color: var(--bright); }
+  .uc-type {
+    font-family: 'Space Mono', monospace; font-size: 0.47rem;
+    letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 0.7rem;
+  }
+  .url-card.must   .uc-type { color: var(--must); }
+  .url-card.want   .uc-type { color: var(--want); }
+  .url-card.should .uc-type { color: var(--should); }
+  .uc-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 0.3rem;
+  }
+  .uc-domain {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    margin-bottom: 1rem; word-break: break-all;
+  }
+  .url-card.must   .uc-domain { color: var(--must); }
+  .url-card.want   .uc-domain { color: var(--want); }
+  .url-card.should .uc-domain { color: var(--should); }
+  .uc-desc {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.82rem; color: var(--muted); line-height: 1.8;
+  }
+
+  /* ── CONFLICT ENGINE ── */
+  .conflict-engine {
+    padding: 5rem 2rem;
+    background: var(--deep);
+    text-align: center;
+  }
+  .engine-label {
+    font-family: 'Space Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.3em; color: var(--dim); text-transform: uppercase; margin-bottom: 3rem;
+  }
+  .engine-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--wire);
+    max-width: 680px; margin: 0 auto 3rem;
+  }
+  .eg-cell { background: var(--surface); padding: 2rem 1rem; transition: background 0.2s; }
+  .eg-cell:hover { background: var(--ghost); }
+  .eg-en {
+    font-family: 'Space Mono', monospace; font-size: 0.44rem;
+    letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 0.5rem;
+  }
+  .eg-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.2rem; font-weight: 700; display: block; margin-bottom: 0.5rem;
+  }
+  .eg-dot { width: 7px; height: 7px; border-radius: 50%; margin: 0 auto; }
+  .eg-cell.must   .eg-en  { color: var(--must); }
+  .eg-cell.must   .eg-bn  { color: var(--must); }
+  .eg-cell.must   .eg-dot { background: var(--must); }
+  .eg-cell.want   .eg-en  { color: var(--want); }
+  .eg-cell.want   .eg-bn  { color: var(--want); }
+  .eg-cell.want   .eg-dot { background: var(--want); }
+  .eg-cell.should .eg-en  { color: var(--should); }
+  .eg-cell.should .eg-bn  { color: var(--should); }
+  .eg-cell.should .eg-dot { background: var(--should); }
+  .eg-cell.center {
+    background: var(--ghost); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:0.4rem;
+    grid-column: 1 / -1; padding: 2rem;
+  }
+  .eg-symbol {
+    font-size: 2.5rem; color: var(--raw);
+    animation: rot 14s linear infinite;
+  }
+  @keyframes rot { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  .eg-center-label {
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.25em; color: var(--raw); text-transform: uppercase;
+  }
+
+  /* ── FINAL STATEMENT ── */
+  .final-statement {
+    max-width: 720px; margin: 0 auto; padding: 3rem 2rem;
+    border-top: 1px solid var(--wire);
+  }
+  .final-statement p {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    color: var(--bright); line-height: 2.1;
+    text-align: center; font-style: italic;
+  }
+  .final-statement p strong {
+    font-style: normal; color: var(--raw);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5em; letter-spacing: 0.05em;
+  }
+  .final-close {
+    display: block; font-family: 'Space Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.22em; color: var(--dim);
+    text-transform: uppercase; margin-top: 2rem; text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--wire);
+    padding: 1.8rem 2rem;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-l {
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase;
+  }
+  .footer-l span { color: var(--raw); }
+  .footer-r { display: flex; gap: 2rem; }
+  .footer-r a {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.13em; text-decoration: none; text-transform: uppercase; transition: opacity 0.2s;
+  }
+  .footer-r a:hover { opacity: 0.55; }
+  .footer-r a.m { color: var(--must); }
+  .footer-r a.w { color: var(--want); }
+  .footer-r a.s { color: var(--should); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:680px) {
+    .triad, .split, .url-showcase { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2,1fr); }
+    .engine-grid { grid-template-columns: repeat(2,1fr); }
+    .hero-title { font-size: 4rem; }
+    .rail-links { display: none; }
+    .sec-heading { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER RAIL -->
+<header class="header-rail">
+  <div class="rail-id">লেখক: <span>RAKIB_HIMON</span> // PARADOX_LOG_v1.0</div>
+  <nav class="rail-links">
+    <a href="https://handsandhead.com"          class="m">করতে হবে</a>
+    <a href="https://handfilm.myshopify.com"    class="w">করতে চাই</a>
+    <a href="https://handfilm.github.io/RAWxOS" class="s">করা উচিত</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="hi">RAKIB_HIMON</span>
+      // COGNITIVE_CONFLICT_MAP // LOADED
+    </div>
+
+    <h1 class="hero-title">
+      <span class="ht-must">HANDS</span>
+      <span class="ht-want">FILM</span>
+      <span class="ht-should">RAW</span>
+      <span class="ht-plain">PARADOX</span>
+    </h1>
+
+    <p class="hero-bn-title">
+      একজন মানুষ। তিনটি URL। <em>একই obsession-এর তিনটি ভিন্ন version।</em>
+      প্রশ্ন হলো — কোনটা বেছে নেবে তা নয়,
+      প্রশ্ন হলো এই বিভাজনটাই কি আসলে উত্তর?
+    </p>
+
+    <div class="thesis-block">
+      Hypothesis: একজন creative person যখন তিনটি আলাদা URL-এ তিনটি আলাদা পরিচয় তৈরি করে — সে আসলে পালাচ্ছে না। সে একটি নতুন architecture খুঁজে পাচ্ছে। করতে হবে, করতে চাই, করা উচিত — এই তিনটি force একটি মানুষের ভেতরে simultaneously চলে। এবং প্রতিটি অন্যটির সাথে conflict-এ থাকে।
+    </div>
+
+    <div class="triad">
+      <div class="triad-cell tc-must">
+        <div class="tc-label">OBLIGATION // বাধ্যবাধকতা</div>
+        <div class="tc-bn">করতে হবে</div>
+        <div class="tc-url">handsandhead.com</div>
+        <div class="tc-desc">যে কাজটা না করলে system collapse করবে। পেশাদার পরিচয়। দুনিয়া এই version-টাই দেখে।</div>
+      </div>
+      <div class="triad-cell tc-want">
+        <div class="tc-label">DESIRE // ইচ্ছাশক্তি</div>
+        <div class="tc-bn">করতে চাই</div>
+        <div class="tc-url">handfilm.myshopify.com</div>
+        <div class="tc-desc">যে কাজটা রাত ২টায় ঘুম থেকে উঠে করতে ইচ্ছে করে। Film। শিল্প যখন দাম পায়।</div>
+      </div>
+      <div class="triad-cell tc-should">
+        <div class="tc-label">CONVICTION // বিশ্বাস</div>
+        <div class="tc-bn">করা উচিত</div>
+        <div class="tc-url">handfilm.github.io/RAWxOS</div>
+        <div class="tc-desc">যে কাজটা না করলে নিজের কাছে বেঈমান হতে হয়। RAWxOS। Uncompressed সত্যের operating system।</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NODE BAR -->
+<div class="node-bar">
+  <div class="np np1">NODE_01 // করতে হবে</div>
+  <div class="np np2">NODE_02 // করতে চাই</div>
+  <div class="np np3">NODE_03 // করা উচিত</div>
+  <div class="np np4">NODE_04 // বিভাজন</div>
+  <div class="np np5">NODE_05 // আসক্তি</div>
+  <div class="np np6">NODE_06 // আউটপুট</div>
+  <div class="np np7">NODE_07 // RAWxOS</div>
+  <div class="np np8">NODE_08 // সংশ্লেষণ</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- SECTION 01 — MUST DO -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-must">MUST DO // 01</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_01</div>
+    </div>
+    <h2 class="sec-heading">করতে হবে</h2>
+    <div class="sec-heading-en">THE OBLIGATION LAYER // handsandhead.com</div>
+
+    <p class="bt">
+      <strong>"করতে হবে"</strong> — এই তিনটি শব্দ মানুষের সবচেয়ে ভারী বোঝা। এটা permission চায় না, approval চায় না। এটা install হয়ে যায় — সমাজ থেকে, পরিবার থেকে, নিজের survival instinct থেকে। <strong>handsandhead.com</strong> হলো সেই installation-এর সবচেয়ে visible output। Hands execute করে। Head direct করে। নামটার মধ্যেই বিভাজন আগে থেকে built-in।
+    </p>
+
+    <div class="axiom must">
+      <div class="axiom-text">
+        Hypothesis: "করতে হবে" হলো creative জীবনের সবচেয়ে ভারী শব্দ — কারণ এটা survival-এর ভার বহন করে, reputation-এর ভার বহন করে, এবং সেই infrastructure-এর ভার বহন করে যেটা ছাড়া বাকি দুটো possibility-ই collapse করে।
+      </div>
+    </div>
+
+    <p class="bt">
+      প্রতিটি serious creative মানুষ একটি double life বাঁচে। একটি কাজ আছে যেটা <strong>pay করে</strong> — structured, deliverable, client-facing, professional। আরেকটি কাজ আছে যেটা <strong>feed করে</strong> — অনিশ্চিত, ব্যক্তিগত, price করা কঠিন। handsandhead.com হলো public-facing proof যে তুমি trust করার যোগ্য। এটা সেই badge যেটা বলে: এই মানুষটা দেখায়, deliver করে, নিজের mythology-তে হারিয়ে যায় না।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// OBLIGATION CALCULUS</span><br>
+      <span class="var">MUST</span> <span class="op">=</span> survival_income <span class="op">+</span> social_contract <span class="op">+</span> proof_of_capability<br>
+      <span class="cmt">// MUST ছাড়া WANT-এর কোনো launchpad নেই</span><br>
+      <span class="cmt">// MUST ছাড়া SHOULD-এর কোনো credibility নেই</span><br>
+      <span class="out">∴ "করতে হবে" শত্রু নয় — এটাই সেই gravity যেটা orbit-কে meaning দেয়।</span>
+    </div>
+
+    <p class="bt">
+      কিন্তু এখানে একটি বিপদ আছে। "করতে হবে" একটি tendency রাখে — সে <strong>metastasize করে</strong>। যেটা শুরু হয় practical layer হিসেবে — professional site, client work, deliverable — সেটা ধীরে ধীরে identity হয়ে যায়। Hands এতটাই busy হয়ে পড়ে যে Head ভুলে যায় সে আসলে কী direct করতে চেয়েছিল। Obligation তোমাকে এক কামড়ে গিলে ফেলে না। সে করে ঘণ্টায় ঘণ্টায়, invoice-এ invoice-এ, reputation maintenance-এ।
+    </p>
+
+    <div class="callout">
+      <strong>handsandhead.com-এর paradox:</strong> যে professionalism এটাকে represent করে, সেটাই সেই rawness-কে ঢেকে দিতে পারে যেটার কারণে তুমি hire করার যোগ্য ছিলে। কাজকে বিক্রির উপযোগী করতে গিয়ে source-কেই tame করে ফেলার risk আছে।
+    </div>
+
+    <div class="pull-quote">
+      <blockquote>
+        তুমি professional brand শুরু করো freedom fund করতে।
+        তারপর brand নিজেই cage হয়ে যায়।
+      </blockquote>
+      <cite>// OBLIGATION PARADOX // NODE_01 CONFLICT REPORT</cite>
+    </div>
+  </div>
+
+  <!-- SECTION 02 — WANT TO DO -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-want">WANT TO DO // 02</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_02</div>
+    </div>
+    <h2 class="sec-heading">করতে চাই</h2>
+    <div class="sec-heading-en">THE DESIRE LAYER // handfilm.myshopify.com</div>
+
+    <p class="bt">
+      <strong>Film।</strong> শব্দটাই একটা signal। Video নয়। Content নয়। Media production নয়। <em>Film</em> — যেটার মধ্যে frame-এর ভার আছে, grain-এর texture আছে, intention আছে, সময়কে meaning-এ compress করার ক্ষমতা আছে। <strong>handfilm.myshopify.com</strong> হলো সেই জায়গা যেখানে desire আর market reality মুখোমুখি দাঁড়ায়। শিল্প এখানে commerce-কে armor হিসেবে পরে — যাতে ভেতরে survive করতে পারে।
+    </p>
+
+    <div class="axiom want">
+      <div class="axiom-text">
+        Hypothesis: "করতে চাই" হলো একজন creative person-এর সবচেয়ে honest signal। এটা সবসময় সঠিক নয় — কিন্তু এটাই একমাত্র frequency যেটা মিথ্যা বলে না। যে জিনিসে তোমার সত্যিকারের desire, সেটা তুমি রাত ২টায় বিনা কারণে করো। এটাই diagnostic।
+      </div>
+    </div>
+
+    <p class="bt">
+      Shopify একটি telling choice। Vimeo নয়। Portfolio site নয়। একটি <strong>storefront</strong>। এটা এমন একজন মানুষের সিদ্ধান্ত যে জানে — distribution ছাড়া desire শুধু একটি private obsession। handfilm হলো desire যেটা witnessed হওয়ার সিদ্ধান্ত নিয়েছে — এবং সেই witnessing-কে sustainable করার সিদ্ধান্ত নিয়েছে। Commerce layer মানে sell out নয়। মানে staying in।
+    </p>
+
+    <div class="split">
+      <div class="sp">
+        <div class="sp-label want">DESIRE WITHOUT FORM</div>
+        <h4>Pure Signal</h4>
+        <p>মাথার ভেতরে যে film, uncompromised, unsold, শুধু তুমিই দেখেছ। Perfect। কিন্তু career হিসেবে useless। এবং তুমি যা, তার সবচেয়ে সত্যিকারের version।</p>
+      </div>
+      <div class="sp">
+        <div class="sp-label must">DESIRE WITH MARKET</div>
+        <h4>Sellable Signal</h4>
+        <p>সেই একই film, packaged। একটি storefront। একটি price। Buyers যারা access করতে পারে। Compromise? হয়তো। অথবা হয়তো: Commerce-এর পোশাকে survival intelligence।</p>
+      </div>
+    </div>
+
+    <p class="bt">
+      <strong>"HAND"</strong> শব্দটা handsandhead এবং handfilm — দুটোতেই আছে। এটা কোনো branding strategy নয়। এটা একটি through-line — obsession নিজেকে reveal করছে। Hands professional কাজ করে। Hands camera ধরে। Hands হলো সেই body part যেটা practical এবং passionate-কে আলাদা করতে অস্বীকার করে।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// DESIRE MAPPING FUNCTION</span><br>
+      <span class="var">WANT</span>(x) <span class="op">=</span> intrinsic_drive(x) <span class="op">×</span> market_fit(x)<br>
+      <span class="cmt">// যখন market_fit → 0: pure art, zero reach</span><br>
+      <span class="cmt">// যখন intrinsic_drive → 0: commercial product, zero soul</span><br>
+      <span class="out">∴ handfilm.myshopify.com হলো একসাথে দুটো value ধরে রাখার attempt।</span><br>
+      <span class="cmt">// এটাই maintain করা সবচেয়ে কঠিন position।</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-num want">রাত ২টা</div>
+        <div class="stat-label">যখন desire ঘুমকে হারায়</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num must">সকাল ৯টা</div>
+        <div class="stat-label">যখন must desire-কে হারায়</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num should">∞</div>
+        <div class="stat-label">বার should defer হয়েছে</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num raw">১</div>
+        <div class="stat-label">মানুষ তিনটি navigate করছে</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 03 — SHOULD DO -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-should">SHOULD DO // 03</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_03</div>
+    </div>
+    <h2 class="sec-heading">করা উচিত</h2>
+    <div class="sec-heading-en">THE CONVICTION LAYER // handfilm.github.io/RAWxOS</div>
+
+    <p class="bt">
+      <strong>RAWxOS।</strong> নামটাই architectural। RAW: uncompressed, unedited, source data, translation-এ কোনো loss নেই। OS: operating system — যেকোনো machine-এর সবচেয়ে গভীর layer, যেটার উপর বাকি সব কিছু চলে। RAWxOS কোনো product নয়। এটা একটি <em>philosophy যেটা URL-এ compile হয়েছে</em>।
+    </p>
+
+    <div class="axiom should">
+      <div class="axiom-text">
+        Hypothesis: "করা উচিত" হলো creative জীবনের সবচেয়ে যন্ত্রণাদায়ক শব্দ। এটা বাস করে সেই gap-এ — তুমি যা আছ আর তুমি যা হতে পারতে, তার মাঝখানে। এটা সেই voice যেটা কখনো চুপ করে না — যেটা সেই কাজের দিকে point করে যেটা তোমার কাছ থেকে সবচেয়ে বেশি দাবি করবে।
+      </div>
+    </div>
+
+    <p class="bt">
+      GitHub Pages। Shopify নয়। Professional domain নয়। <strong>GitHub।</strong> — কোডের জন্য, open source-এর জন্য, সেই builders-দের জন্য যারা কাজ share করে কারণ কাজটাই point — transaction নয়। এটা সেই layer যেটা commerce-এর বাইরে, obligation-এর বাইরে এক্সিস্ট করে — কারণ কিছু কিছু জিনিস এমন একটা space-এ থাকা দরকার যেখানে টাকা পৌঁছাতে পারে না।
+    </p>
+
+    <p class="bt">
+      GitHub-এ RAWxOS বলছে: এটা সেই মানুষদের জন্য যারা এটার মানে বোঝে। এটা ইচ্ছাকৃতভাবে ভুল audience-এর কাছে unfindable। এটা একটি public URL যেটা private frequency হিসেবে কাজ করে। যদি তুমি এটা খুঁজছ — তুমি ইতিমধ্যে জানো কেন। যদি তুমি হোঁচট খেয়ে এসেছ — এটা হয় কোনো মানে রাখবে না, অথবা সব কিছু বদলে দেবে।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// RAWxOS OPERATING PRINCIPLES</span><br>
+      <span class="var">RAW</span>  <span class="op">=</span> uncompressed_truth <span class="op">+</span> zero_loss_encoding<br>
+      <span class="var">xOS</span> <span class="op">=</span> foundational_layer <span class="op">+</span> runs_everything_on_top<br>
+      <span class="cmt">// handfilm এবং handsandhead দুটোই RAWxOS-এর উপর চলে</span><br>
+      <span class="cmt">// কিন্তু বেশিরভাগ মানুষ applications দেখে, OS দেখে না</span><br>
+      <span class="out">∴ RAWxOS হলো সেই জিনিস যেটা বাকি দুটোকে coherent করে।</span><br>
+      <span class="cmt">// এটা neglect করা = corrupted OS-এ run করা</span>
+    </div>
+
+    <div class="callout">
+      <strong>"করা উচিত"-এর tragedy:</strong> এটাই আসলে সবচেয়ে বেশি matter করে — এবং এটাই সবচেয়ে বেশি defer হয়। "করতে হবে" urgency নেয়। "করতে চাই" passion নেয়। "করা উচিত" শুধু conviction নেয় — এবং conviction হলো সবচেয়ে কঠিন fuel যেটা তখনও জ্বালিয়ে রাখতে হয় যখন বাকি দুটো পুরোদমে জ্বলছে।
+    </div>
+
+    <table class="matrix">
+      <tr>
+        <th>Layer</th>
+        <th>URL</th>
+        <th>Fuel</th>
+        <th>Neglect করলে</th>
+      </tr>
+      <tr>
+        <td><strong>করতে হবে</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:0.75rem;">handsandhead.com</td>
+        <td>Obligation / Survival</td>
+        <td><span class="pill hi">COLLAPSE</span></td>
+      </tr>
+      <tr>
+        <td><strong>করতে চাই</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:0.75rem;">handfilm.myshopify.com</td>
+        <td>Desire / Passion</td>
+        <td><span class="pill mid">STAGNATION</span></td>
+      </tr>
+      <tr>
+        <td><strong>করা উচিত</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:0.75rem;">handfilm.github.io/RAWxOS</td>
+        <td>Conviction / Vision</td>
+        <td><span class="pill lo">DRIFT</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SECTION 04 — THE SPLIT -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-slash">THE SPLIT // 04</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_04</div>
+    </div>
+    <h2 class="sec-heading">বিভাজন</h2>
+    <div class="sec-heading-en">THREE IDENTITIES // ONE PERSON // ZERO RESOLUTION</div>
+
+    <p class="bt">
+      তিনটি URL। তিনটি mode। তিনটি audience। একই মানুষের তিনটি version যারা পরস্পরকে destroy না করে coexist করার চেষ্টা করছে। এটা কোনো সমাধানযোগ্য সমস্যা নয় — এটা একটি <strong>structural condition</strong>। যে কোনো serious creative মানুষ যে যথেষ্ট সময় survive করেছে, সে এই exact architecture-এ এসে পৌঁছায় — নাম দিক বা না দিক।
+    </p>
+
+    <div class="axiom slash">
+      <div class="axiom-text">
+        Creative split-এর paradox: যে জিনিসটা তোমাকে interesting করে — শুধু একটি জিনিস হতে না পারার সেই inability — সেটাই তোমাকে market করা কঠিন, follow করা কঠিন, এবং sustain করা exhausting করে তোলে। বিভাজন একই সাথে তোমার signature এবং তোমার liability।
+      </div>
+    </div>
+
+    <div class="text-break">
+      তুমি তিনজন মানুষ নও
+      <span>তুমি একজন মানুষ</span>
+      তিনটি process একসাথে চালাচ্ছ
+      <span>এটাই পার্থক্য</span>
+    </div>
+
+    <p class="bt">
+      বিপদ হলো তিনটাকে competition মনে করা। "RAWxOS-এ সময় দিলে handfilm তৈরি করতে পারব না। handfilm বানালে handsandhead neglect হবে।" এটা হলো <strong>zero-sum illusion</strong>। বাস্তবে প্রতিটি layer বাকিদুটোকে feed করে — কিন্তু শুধুমাত্র তখনই যখন current সঠিক দিকে flow করছে। RAWxOS vision দেয়। handfilm desire এবং revenue generate করে। handsandhead সেই credibility দেয় যেটার কারণে বাকি দুটো বললে মানুষ শোনে।
+    </p>
+
+    <div class="split">
+      <div class="sp">
+        <div class="sp-label must">FRAGMENTATION TRAP</div>
+        <h4>বিভাজন = দুর্বলতা</h4>
+        <p>তিনটি identity, কোনো connective tissue নেই। প্রতিটি দুর্বল কারণ বাকিরা তাকে drain করছে। তুমি সর্বত্র আছ এবং কোথাও নেই। কেউই তোমাকে পুরোটা চেনে না।</p>
+      </div>
+      <div class="sp">
+        <div class="sp-label should">MULTIPLIER EFFECT</div>
+        <h4>বিভাজন = শক্তি</h4>
+        <p>তিনটি identity একটি system হিসেবে। প্রতিটি বাকিদুটোকে strengthen করছে। handsandhead → handfilm → RAWxOS → আবার শুরু। এটা drain নয়, loop।</p>
+      </div>
+    </div>
+
+    <p class="bt">
+      Trap এবং multiplier-এর মধ্যে পার্থক্য talent বা time নয়। পার্থক্য হলো <strong>narrative coherence</strong> — সেই thread যেটা তিনটির মধ্য দিয়ে যায় এবং বোঝায় যে এগুলো obviously একই মানুষের কাজ। সেই thread, এই ক্ষেত্রে, হলো <em>"hand"</em> শব্দটা।
+    </p>
+  </div>
+
+  <!-- SECTION 05 — OBSESSION -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-cold">OBSESSION // 05</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_05</div>
+    </div>
+    <h2 class="sec-heading">আসক্তি</h2>
+    <div class="sec-heading-en">THE RECURRING MOTIF // WHY "HAND" APPEARS THREE TIMES</div>
+
+    <p class="bt">
+      আবার নামগুলো দেখো। <strong>Hands</strong>andhead। <strong>Hand</strong>film। <strong>Hand</strong>film/RAWxOS। "Hand" শব্দটা প্রতিটি URL-এ আছে। এটা branding strategy নয় — এটা obsession নিজেকে architecture-এ reveal করছে। যে obsessed সে তার recurring motif plan করে না — সে discover করে যে এটা ইতিমধ্যে সর্বত্র আছে।
+    </p>
+
+    <div class="axiom cold">
+      <div class="axiom-text">
+        হাত হলো মানুষের সবচেয়ে পুরনো interface। Screen-এর আগে। Camera-র আগে। Code-এর আগে। হাত গুহার দেয়ালে স্পর্শ করেছিল এবং প্রথম image তৈরি করেছিল। হাত হলো সেই জায়গা যেখানে thought physical হয় — যেখানে inside হয় outside। এই system-এর প্রতিটি URL, মূলত, সেই translation-এর কথা বলছে।
+      </div>
+    </div>
+
+    <p class="bt">
+      Hands think। Hands shoot। Hands code। Recurring word হলো recurring question: <em>একটি creative জীবনের primary instrument হিসেবে হাত থাকার মানে কী?</em> শুধু মন নয় — যদিও Head-এর নামও আছে। শুধু চোখ নয় — যদিও film হলো lens-এর ভেতর দিয়ে আলো। হাত। সেই জিনিস যেটা material world-কে স্পর্শ করে এবং reshape করে।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// RECURRING MOTIF ALGORITHM</span><br>
+      <span class="var">HAND</span>(professional)    <span class="op">=</span> handsandhead.com<br>
+      <span class="var">HAND</span>(commercial_art)  <span class="op">=</span> handfilm.myshopify.com<br>
+      <span class="var">HAND</span>(pure_system)     <span class="op">=</span> handfilm.github.io/RAWxOS<br>
+      <span class="cmt">// একই obsession-এর তিনটি application</span><br>
+      <span class="out">∴ Obsession হলো variable। Domain শুধু output format।</span>
+    </div>
+
+    <p class="bt">
+      Obsession কোনো সমস্যা নয় যেটা cure করতে হবে। এটা হলো <strong>একটি compass যেটা কখনো point করা বন্ধ করে না</strong>। প্রশ্ন হলো — তুমি এটাকে curse হিসেবে পড়ছ নাকি coordinate হিসেবে। Hand motif তোমাকে exactly বলে দিচ্ছে magnetic north কোথায়। যে creative decision হাতকে সম্মান করে, সে obsession-কে সম্মান করে।
+    </p>
+  </div>
+
+  <!-- SECTION 06 — OUTPUT -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-acid">OUTPUT // 06</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_06</div>
+    </div>
+    <h2 class="sec-heading">আউটপুট</h2>
+    <div class="sec-heading-en">WHAT GETS MADE // THE ONLY HONEST METRIC</div>
+
+    <p class="bt">
+      Output হলো একমাত্র প্রমাণ যে এই সব কিছু real। URL নয়। Ideas নয়। Obsession-ও নয়। <strong>যে জিনিসটা তৈরি হয়।</strong> যে page load হয়। যে film play হয়। যে system run করে। বাকি সব কিছু হলো এমন একটি ভবিষ্যতের planning document যেটা হয়তো কখনো আসবে না।
+    </p>
+
+    <div class="axiom acid">
+      <div class="axiom-text">
+        Hypothesis: যে creative person তিনটি parallel identity maintain করে এবং কোনোটা থেকেই কিছু produce করে না, সে শুধু একটি elaborate excuse architecture তৈরি করেছে। Output হলো একমাত্র honest metric। Intention নয়। Infrastructure নয়। Domain name-এর aesthetic নয়। এই সপ্তাহে কী তৈরি হয়েছে?
+      </div>
+    </div>
+
+    <p class="bt">
+      তিন-URL system তখনই justify হয় যখন এটা এমন output generate করে যেটা কোনো একটি URL একা তৈরি করতে পারত না। handsandhead.com-এর কাজ উচিত handfilm-এর জন্য সময় কেনা। handfilm-এর উচিত এমন films তৈরি করা যেটা RAWxOS-এর vision demonstrate করে। RAWxOS-এর উচিত এমন conceptual tools তৈরি করা যেটা handfilm এবং handsandhead দুটোকেই sharper করে। যদি এই loop না চলে, তাহলে system শুধু <em>নিজের জন্যই complexity</em>।
+    </p>
+
+    <div class="callout">
+      <strong>Output test:</strong> তোমার creative জীবনের যেকোনো একটা সপ্তাহ নাও। কী তৈরি হলো? যদি এক মাসের মধ্যে তিনটি node-এর কোনোটার জন্য উত্তর দিতে না পারো — তাহলে সেই node-গুলোর একটি museum exhibit হয়ে গেছে তুমি কে হতে চেয়েছিলে তার, কোনো working system নয়।
+    </div>
+
+    <div class="url-showcase">
+      <div class="url-card must">
+        <div class="uc-type">OBLIGATION // পেশাদার</div>
+        <div class="uc-bn">হাত এবং মাথা</div>
+        <div class="uc-domain">handsandhead.com</div>
+        <div class="uc-desc">Portfolio। Proof। দুনিয়া যে face দেখে সিদ্ধান্ত নেয় তুমি hire করার যোগ্য কিনা। Output: client deliverables, documented process, trust signals।</div>
+      </div>
+      <div class="url-card want">
+        <div class="uc-type">DESIRE // শিল্প + বাণিজ্য</div>
+        <div class="uc-bn">হ্যান্ড ফিল্ম</div>
+        <div class="uc-domain">handfilm.myshopify.com</div>
+        <div class="uc-desc">Store। Films। Creative products যেখানে কাজ কাজের খরচ দেয়। Output: films, prints, editions — desire যখন transactable হয়।</div>
+      </div>
+      <div class="url-card should">
+        <div class="uc-type">CONVICTION // OS layer</div>
+        <div class="uc-bn">RAWxOS</div>
+        <div class="uc-domain">handfilm.github.io/RAWxOS</div>
+        <div class="uc-desc">System। Philosophy। একটি মনের open-source layer। Output: frameworks, tools, raw thinking — এমন জিনিস যেটা অন্যদের নিজেদের version তৈরি করতে সাহায্য করে।</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 07 — RAWxOS -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-raw">RAWxOS // 07</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_07</div>
+    </div>
+    <h2 class="sec-heading">RAWxOS</h2>
+    <div class="sec-heading-en">THE OS UNDERNEATH EVERYTHING // handfilm.github.io/RAWxOS</div>
+
+    <p class="bt">
+      প্রতিটি creative person-এর একটি operating system আছে। বেশিরভাগ এর নাম দেয় না। বেশিরভাগ জানেই না যে তাদের এটা আছে। এটা background-এ চলে — determine করে কোন ideas process হবে, কোনগুলো delete হবে, কোনগুলো কাজে elevated হবে। <strong>নিজের OS-এর নাম রাখা হলো profound self-knowledge-এর একটি act।</strong> RAWxOS হলো রাকিব সেই নামটা রাখছে।
+    </p>
+
+    <div class="axiom raw">
+      <div class="axiom-text">
+        RAW: compression-এর আগের format। Encoding থেকে কোনো artifact নেই। Translation-এ কোনো quality loss নেই। জিনিসটা যেমন আসলে আছে, market যেভাবে চায় তেমন হওয়ার আগে। xOS: foundational layer। যেটা কাজ করতে হবে যাতে বাকি সব কিছু কাজ করতে পারে। RAWxOS: uncompressed truth-এর উপর তৈরি একটি operating system।
+      </div>
+    </div>
+
+    <p class="bt">
+      RAWxOS-এর "x" অনেক কাজ করছে। Cross। Multiply। Version marker। Mathematical variable। এটা raw material এবং system-এর মধ্যে connector — যেখানে uncompressed input হয় organized output। এটাই সেই জায়গা যেখানে রাকিব হিমনের thinking বাস করে — film হওয়ার আগে, product হওয়ার আগে, professional deliverable হওয়ার আগে।
+    </p>
+
+    <p class="bt">
+      GitHub as host হলো philosophy-র statement। GitHub হলো সেই জায়গা যেখানে builders এমন জিনিস রাখে যা থেকে অন্য builders শিখতে পারে। এটা inherently collaborative, inherently transparent, inherently open। GitHub-এ RAWxOS বলছে: <strong>এটা proprietary নয়</strong>। এটা কোনো intellectual property যেটা protect করতে হবে তা নয়। এটা একটি মন যেটা public-এ কাজ করছে, অন্য মনকে আমন্ত্রণ জানাচ্ছে fork করতে, modify করতে, improve করতে। এটাই একজন creative person যা করতে পারে তার মধ্যে সবচেয়ে generous এবং সবচেয়ে exposed।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// RAWxOS BOOT SEQUENCE</span><br>
+      <span class="var">INIT</span>: load(uncompressed_self)<br>
+      <span class="var">MOUNT</span>: /সৃজনশীলতা → active<br>
+      <span class="var">MOUNT</span>: /আসক্তি → persistent<br>
+      <span class="var">MOUNT</span>: /commercial_intelligence → running<br>
+      <span class="cmt">// তিনটি filesystem, একটি kernel</span><br>
+      <span class="out">STATUS: handfilm.github.io/RAWxOS → ONLINE</span><br>
+      <span class="cmt">// বাকি সব process এটার উপর dependent।</span>
+    </div>
+
+    <div class="callout">
+      <strong>RAWxOS সম্পর্কে সবচেয়ে গুরুত্বপূর্ণ বিষয়:</strong> এটাই তিনটি node-এর মধ্যে একমাত্র যেটা সম্পূর্ণ নিজের শর্তে exist করে। handsandhead.com-এর client দরকার। handfilm-এর buyer দরকার। RAWxOS-এর কিছুই দরকার নেই — মানে এটাই একমাত্র যেটা সম্পূর্ণ free যেটা হওয়া দরকার। এটাই কারণে এটা সবচেয়ে important এবং সবচেয়ে neglected।
+    </div>
+  </div>
+
+  <!-- SECTION 08 — SYNTHESIS -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-ghost">SYNTHESIS // 08</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_08</div>
+    </div>
+    <h2 class="sec-heading">সংশ্লেষণ</h2>
+    <div class="sec-heading-en">THE ANSWER // THAT IS NOT REALLY AN ANSWER</div>
+
+    <p class="bt">
+      তুমি core details-এ সব কিছু assess করতে বলেছিলে। এখানে core: তুমি ইতিমধ্যে জানো paradox-টা কী। তুমি নিজেই নাম দিয়েছিলে। <strong>করতে হবে। করতে চাই। করা উচিত।</strong> তিনটি force। সীমিত সময়, attention, এবং energy। এই document যেটা তুমি পড়ছ সেটাই প্রমাণ যে tension generative — paradox কিছু একটা produce করছে।
+    </p>
+
+    <div class="axiom ghost">
+      <div class="axiom-text">
+        তিন-node paradox-এর resolution হলো একটি বেছে নেওয়া নয়। সমানভাবে balance করাও নয়। বোঝা যে এরা আলাদা speed-এ, আলাদা season-এ চলে। কিছু মাস handsandhead মাস — survival, professional output, trust তৈরি। কিছু মাস handfilm মাস — pure desire, creative risk, যা ভালোবাসো তা তৈরি করা। কিছু মাস RAWxOS মাস — চিন্তা করা, system build করা, এমন কাজ করা যেটা কেউ চায়নি কিন্তু যেটা শেষ পর্যন্ত বাকি সব কিছু সম্ভব করে।
+      </div>
+    </div>
+
+    <p class="bt">
+      ভুল হলো তিনটিকে একসাথে full capacity-তে চালাতে চাওয়া। Consciousness parallel নয়। এটা sequential — simultaneity-র একটি convincing illusion সহ। তিন-URL system একসাথে সব করার mandate নয়। এটা একটি <strong>মানচিত্র — তুমি পূর্ণরূপে কে তার</strong> — যাতে যখন একটি node থেকে operate করছ, বাকিগুলো exist করে মনে রাখতে পারো।
+    </p>
+
+    <div class="pull-quote">
+      <blockquote>
+        যে মানুষ obligation, desire এবং conviction একসাথে ধরে রাখতে পারে — তাদের কাউকে বাকি দুটোকে মেরে ফেলতে না দিয়ে — সে balanced নয়। সে structurally unstable, সবচেয়ে productive উপায়ে।
+      </blockquote>
+      <cite>// SYNTHESIS NODE // রাকিব_PARADOX // CONCLUSION FRAGMENT</cite>
+    </div>
+
+    <p class="bt">
+      তিনটি URL। একটি operating system। URL গুলো কাজ নয় — এগুলো সেই addresses যেখানে কাজ বাস করে। কাজ হলো সেই মানুষটি হওয়ার continuous process যে তিনটিকে real করতে পারে। <strong>handsandhead.com</strong> প্রমাণ করে তুমি trust করার যোগ্য। <strong>handfilm.myshopify.com</strong> প্রমাণ করে তুমি moved হতে পারো। <strong>handfilm.github.io/RAWxOS</strong> প্রমাণ করে তোমার এমন একটি মন আছে যেটা খোলার যোগ্য। তিনটি চলছে। এটাই architecture। এটাই system। এটাই সেই paradox যেটা solve করতে অস্বীকার করে solve হয়।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// FINAL ASSESSMENT // রাকিব PARADOX</span><br>
+      <span class="var">করতে হবে</span>  : handsandhead.com       → <span class="eq">CREDIBILITY ENGINE</span><br>
+      <span class="var">করতে চাই</span>  : handfilm.myshopify.com → <span class="eq">DESIRE ENGINE</span><br>
+      <span class="var">করা উচিত</span> : handfilm.github.io/RAWxOS → <span class="eq">VISION ENGINE</span><br>
+      <br>
+      <span class="cmt">// এরা compete করে না। এরা compound করে।</span><br>
+      <span class="cmt">// Status: All nodes identified. Conflict acknowledged. Loop active.</span><br>
+      <span class="out">∴ Paradox সমস্যা নয়। Paradox-ই architecture।</span>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- CONFLICT ENGINE -->
+<div class="conflict-engine">
+  <div class="engine-label">// FINAL SYNTHESIS // THREE-NODE CONFLICT MAP // RAKIB_HIMON</div>
+
+  <div class="engine-grid">
+    <div class="eg-cell must">
+      <span class="eg-en">MUST DO</span>
+      <span class="eg-bn">করতে হবে</span>
+      <div class="eg-dot"></div>
+    </div>
+    <div class="eg-cell want">
+      <span class="eg-en">WANT TO DO</span>
+      <span class="eg-bn">করতে চাই</span>
+      <div class="eg-dot"></div>
+    </div>
+    <div class="eg-cell should">
+      <span class="eg-en">SHOULD DO</span>
+      <span class="eg-bn">করা উচিত</span>
+      <div class="eg-dot"></div>
+    </div>
+    <div class="eg-cell center">
+      <div class="eg-symbol">⊗</div>
+      <span class="eg-center-label">CONFLICT = ENGINE</span>
+    </div>
+  </div>
+
+  <div class="final-statement">
+    <p>
+      রাকিব হিমন তিনটি জিনিস তৈরি করার চেষ্টা করছে না।
+      সে চেষ্টা করছে <strong>একটি</strong> জিনিস তৈরি করতে —
+      এমন একটি creative জীবন যেটার জন্য তাকে choose করতে হবে না
+      সে professionally কে, artistically কে,
+      এবং তার thinking-এর সবচেয়ে গভীর layer-এ কে — তাদের মধ্যে।
+      Paradox হলো না যে তার অনেক বেশি URL আছে।
+      Paradox হলো তিনটিরই একই নাম আছে:
+      <strong>HAND</strong>।
+    </p>
+    <span class="final-close">
+      END OF DOCUMENT // রাকিব_PARADOX_v1.0 //
+      NODES: 3 // CONFLICTS: ∞ // RESOLUTION: অপ্রয়োজনীয়
+    </span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-l">
+    লেখক: <span>RAKIB HIMON</span> // SYSTEM: RAWxOS // STATUS: PARADOXICAL
+  </div>
+  <nav class="footer-r">
+    <a href="https://handsandhead.com"          class="m">handsandhead.com</a>
+    <a href="https://handfilm.myshopify.com"    class="w">handfilm.myshopify.com</a>
+    <a href="https://handfilm.github.io/RAWxOS" class="s">RAWxOS</a>
+  </nav>
+</footer>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>রাকিব-বিরোধাভাস | The Rakib Paradox</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@300;400;600;700&family=Noto+Sans+Bengali:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap');
+
+  :root {
+    --void:    #070708;
+    --deep:    #0d0d10;
+    --surface: #131318;
+    --ghost:   #1a1a22;
+    --wire:    #252530;
+    --dim:     #3d3d52;
+    --muted:   #6b6b88;
+    --pale:    #b0b0cc;
+    --bright:  #e2e2ee;
+    --white:   #f0f0f8;
+
+    --must:    #ff4820;
+    --want:    #8b6fff;
+    --should:  #00e0a8;
+    --raw:     #e2ff00;
+    --slash:   #ff9800;
+    --cold:    #00ccff;
+    --acid:    #a0ff3a;
+    --ghost2:  #ff6eb4;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--pale);
+    font-family: 'Noto Serif Bengali', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.95;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 3px,
+      rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HEADER RAIL ── */
+  .header-rail {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: var(--void);
+    border-bottom: 1px solid var(--wire);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 46px;
+  }
+  .rail-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    text-transform: uppercase;
+  }
+  .rail-id span { color: var(--raw); }
+  .rail-links {
+    display: flex; gap: 1.4rem;
+  }
+  .rail-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .rail-links a:hover { opacity: 0.6; }
+  .rail-links a.m { color: var(--must); }
+  .rail-links a.w { color: var(--want); }
+  .rail-links a.s { color: var(--should); }
+
+  /* ── HERO ── */
+  .hero {
+    padding-top: 46px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--wire) 1px, transparent 1px),
+      linear-gradient(90deg, var(--wire) 1px, transparent 1px);
+    background-size: 52px 52px;
+    opacity: 0.28;
+    animation: gp 10s ease-in-out infinite;
+  }
+  @keyframes gp {
+    0%,100% { opacity: 0.28; }
+    50%      { opacity: 0.12; }
+  }
+  .hero::after {
+    content: '';
+    position: absolute; top: 46px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--must), var(--want), var(--should), transparent);
+    animation: scan 4s linear infinite;
+  }
+  @keyframes scan { 0% { transform:translateX(-100%); } 100% { transform:translateX(100%); } }
+
+  .hero-inner {
+    position: relative; z-index: 2;
+    padding: 5rem 2rem 4rem;
+    max-width: 1080px;
+    margin: 0 auto; width: 100%;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.3em;
+    color: var(--dim);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 28px; height: 1px; background: var(--raw);
+  }
+  .hero-eyebrow .hi { color: var(--raw); }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4.5rem, 15vw, 13rem);
+    line-height: 0.86;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.25em;
+  }
+  .ht-must   { color: var(--must);   display: block; }
+  .ht-want   { color: var(--want);   display: block; }
+  .ht-should { color: var(--should); display: block; }
+  .ht-plain  { color: var(--white);  display: block; }
+
+  .hero-bn-title {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.4rem, 3vw, 2.4rem);
+    color: var(--muted);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+  .hero-bn-title em { color: var(--bright); font-style: normal; font-weight: 600; }
+
+  .thesis-block {
+    max-width: 700px;
+    margin: 2.5rem 0 0;
+    padding: 1.6rem 2rem;
+    border-left: 3px solid var(--want);
+    background: rgba(139,111,255,0.05);
+    font-size: 1.05rem;
+    color: var(--bright);
+    font-style: italic;
+    line-height: 2;
+  }
+
+  /* THREE-COLUMN TRIAD */
+  .triad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--wire);
+    border: 1px solid var(--wire);
+    margin-top: 3.5rem;
+  }
+  .triad-cell {
+    background: var(--deep);
+    padding: 2rem 1.6rem;
+    position: relative;
+  }
+  .triad-cell::before {
+    content: ''; position: absolute; top:0; left:0; right:0; height:3px;
+  }
+  .tc-must::before   { background: var(--must); }
+  .tc-want::before   { background: var(--want); }
+  .tc-should::before { background: var(--should); }
+
+  .tc-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.48rem; letter-spacing: 0.28em; text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .tc-must   .tc-label { color: var(--must); }
+  .tc-want   .tc-label { color: var(--want); }
+  .tc-should .tc-label { color: var(--should); }
+
+  .tc-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.3rem; line-height: 1.3;
+  }
+  .tc-url {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    margin-bottom: 0.8rem; word-break: break-all;
+  }
+  .tc-must   .tc-url { color: var(--must); }
+  .tc-want   .tc-url { color: var(--want); }
+  .tc-should .tc-url { color: var(--should); }
+
+  .tc-desc {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.82rem; color: var(--muted); line-height: 1.8;
+  }
+
+  /* ── NODE BAR ── */
+  .node-bar {
+    display: flex; overflow-x: auto; scrollbar-width: none;
+    border-bottom: 1px solid var(--wire);
+    position: sticky; top: 46px; z-index: 100;
+    background: var(--void);
+  }
+  .node-bar::-webkit-scrollbar { display: none; }
+  .np {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.85rem 1.5rem;
+    border-right: 1px solid var(--wire);
+    white-space: nowrap; color: var(--dim);
+    flex-shrink: 0; transition: background 0.15s;
+  }
+  .np:hover { background: rgba(255,255,255,0.025); }
+  .np1 { color: var(--must); }
+  .np2 { color: var(--want); }
+  .np3 { color: var(--should); }
+  .np4 { color: var(--slash); }
+  .np5 { color: var(--cold); }
+  .np6 { color: var(--acid); }
+  .np7 { color: var(--raw); }
+  .np8 { color: var(--ghost2); }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── ARTICLE SECTION ── */
+  .art-section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--wire);
+    position: relative;
+  }
+
+  .sec-meta {
+    display: flex; align-items: center; gap: 1.2rem; margin-bottom: 2.5rem;
+  }
+  .sec-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.2em;
+    padding: 0.3rem 0.75rem; border: 1px solid currentColor; text-transform: uppercase;
+  }
+  .sb-must   { color: var(--must);   border-color: var(--must); }
+  .sb-want   { color: var(--want);   border-color: var(--want); }
+  .sb-should { color: var(--should); border-color: var(--should); }
+  .sb-slash  { color: var(--slash);  border-color: var(--slash); }
+  .sb-cold   { color: var(--cold);   border-color: var(--cold); }
+  .sb-acid   { color: var(--acid);   border-color: var(--acid); }
+  .sb-raw    { color: var(--raw);    border-color: var(--raw); }
+  .sb-ghost  { color: var(--muted);  border-color: var(--wire); }
+
+  .sec-rule { flex: 1; height: 1px; background: var(--wire); }
+  .sec-num  { font-family: 'Space Mono', monospace; font-size: 0.5rem; color: var(--dim); }
+
+  .sec-heading {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    font-weight: 700; color: var(--white);
+    line-height: 1.1; margin-bottom: 0.3rem;
+  }
+  .sec-heading-en {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.28em; color: var(--dim);
+    text-transform: uppercase; margin-bottom: 2.5rem;
+  }
+
+  /* ── BODY TEXT ── */
+  .bt {
+    font-family: 'Noto Serif Bengali', serif;
+    color: var(--pale); font-size: 1.02rem;
+    line-height: 2.05; margin-bottom: 1.6rem;
+  }
+  .bt strong { color: var(--bright); font-weight: 600; }
+  .bt em     { color: var(--muted); font-style: italic; }
+
+  /* ── AXIOM ── */
+  .axiom {
+    margin: 2.5rem 0; padding: 1.8rem 2rem;
+    background: var(--ghost); border-left: 4px solid currentColor;
+    position: relative;
+  }
+  .axiom::before {
+    content: 'HYPOTHESIS';
+    font-family: 'Space Mono', monospace;
+    font-size: 0.44rem; letter-spacing: 0.35em; text-transform: uppercase;
+    position: absolute; top: -0.55rem; left: 2rem;
+    background: var(--ghost); padding: 0 0.4rem; color: var(--dim);
+  }
+  .axiom.must   { color: var(--must);   border-color: var(--must); }
+  .axiom.want   { color: var(--want);   border-color: var(--want); }
+  .axiom.should { color: var(--should); border-color: var(--should); }
+  .axiom.slash  { color: var(--slash);  border-color: var(--slash); }
+  .axiom.cold   { color: var(--cold);   border-color: var(--cold); }
+  .axiom.acid   { color: var(--acid);   border-color: var(--acid); }
+  .axiom.raw    { color: var(--raw);    border-color: var(--raw); }
+  .axiom.ghost  { color: var(--muted);  border-color: var(--wire); }
+
+  .axiom-text {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.08rem; font-style: italic;
+    line-height: 1.9; color: var(--bright);
+  }
+
+  /* ── FORMULA ── */
+  .formula {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.76rem; color: var(--muted);
+    background: var(--deep); padding: 1.2rem 1.6rem;
+    margin: 2rem 0; border: 1px solid var(--wire);
+    letter-spacing: 0.06em; line-height: 2; overflow-x: auto;
+  }
+  .formula .eq  { color: var(--want); }
+  .formula .var { color: var(--cold); }
+  .formula .op  { color: var(--must); }
+  .formula .cmt { color: var(--dim); }
+  .formula .out { color: var(--raw); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    padding: 1rem 1.4rem; margin: 1.8rem 0;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.9rem; color: var(--muted);
+    border-left: 2px solid var(--wire); line-height: 1.85;
+  }
+  .callout strong { color: var(--pale); }
+
+  /* ── BIG PULL QUOTE ── */
+  .pull-quote {
+    margin: 3rem 0; padding: 2.5rem 0;
+    border-top: 1px solid var(--wire); border-bottom: 1px solid var(--wire);
+  }
+  .pull-quote blockquote {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+    color: var(--bright); line-height: 1.7; font-style: italic;
+    position: relative; padding-left: 2rem;
+  }
+  .pull-quote blockquote::before {
+    content: '"';
+    position: absolute; left: 0; top: -0.3rem;
+    font-size: 4rem; color: var(--dim); font-family: serif; line-height: 1;
+  }
+  .pull-quote cite {
+    display: block; font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.2em; color: var(--dim);
+    text-transform: uppercase; margin-top: 1.2rem; font-style: normal;
+  }
+
+  /* ── MATRIX TABLE ── */
+  .matrix {
+    width: 100%; border-collapse: collapse; margin: 2.5rem 0; font-size: 0.88rem;
+  }
+  .matrix th {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim);
+    padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--wire); text-align: left;
+    background: var(--deep);
+  }
+  .matrix td {
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid rgba(37,37,48,0.7);
+    color: var(--pale); vertical-align: top;
+    font-family: 'Noto Sans Bengali', sans-serif;
+  }
+  .matrix tr:hover td { background: rgba(255,255,255,0.015); }
+
+  .pill {
+    display: inline-block; font-family: 'Space Mono', monospace;
+    font-size: 0.46rem; letter-spacing: 0.15em;
+    padding: 0.2rem 0.5rem; text-transform: uppercase;
+  }
+  .pill.hi  { background: rgba(255,72,32,0.12);  color: var(--must); }
+  .pill.mid { background: rgba(139,111,255,0.12); color: var(--want); }
+  .pill.lo  { background: rgba(0,224,168,0.1);   color: var(--should); }
+
+  /* ── SPLIT PANEL ── */
+  .split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--wire); margin: 2.5rem 0;
+  }
+  .sp { background: var(--deep); padding: 2rem 1.8rem; }
+  .sp-label {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .sp-label.must   { color: var(--must); }
+  .sp-label.want   { color: var(--want); }
+  .sp-label.should { color: var(--should); }
+  .sp-label.raw    { color: var(--raw); }
+  .sp h4 {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.3rem; font-weight: 700; color: var(--white); margin-bottom: 0.7rem;
+  }
+  .sp p {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.88rem; color: var(--muted); line-height: 1.8;
+  }
+
+  /* ── STAT ROW ── */
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1px; background: var(--wire); margin: 2.5rem 0;
+  }
+  .stat-cell { background: var(--surface); padding: 1.5rem 1rem; text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif; font-size: 3rem; line-height: 1; margin-bottom: 0.3rem;
+  }
+  .stat-num.must   { color: var(--must); }
+  .stat-num.want   { color: var(--want); }
+  .stat-num.should { color: var(--should); }
+  .stat-num.raw    { color: var(--raw); }
+  .stat-label {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.7rem; color: var(--dim); line-height: 1.4;
+  }
+
+  /* ── TEXT BREAK ── */
+  .text-break {
+    padding: 3.5rem 0; text-align: center;
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    color: var(--dim); line-height: 1.4;
+  }
+  .text-break span { color: var(--white); display: block; font-weight: 700; }
+
+  /* ── URL SHOWCASE ── */
+  .url-showcase {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--wire); margin: 2rem 0;
+  }
+  .url-card {
+    background: var(--ghost); padding: 2.2rem 1.8rem;
+    position: relative; overflow: hidden; transition: background 0.3s;
+    border-top: 3px solid transparent;
+  }
+  .url-card:hover { background: var(--surface); }
+  .url-card.must   { border-top-color: var(--must); }
+  .url-card.want   { border-top-color: var(--want); }
+  .url-card.should { border-top-color: var(--should); }
+  .url-card::after {
+    content: '↗'; position: absolute; bottom:1.5rem; right:1.5rem;
+    font-family: 'Space Mono', monospace; font-size: 1rem;
+    transition: transform 0.2s; color: var(--dim);
+  }
+  .url-card:hover::after { transform: translate(3px,-3px); color: var(--bright); }
+  .uc-type {
+    font-family: 'Space Mono', monospace; font-size: 0.47rem;
+    letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 0.7rem;
+  }
+  .url-card.must   .uc-type { color: var(--must); }
+  .url-card.want   .uc-type { color: var(--want); }
+  .url-card.should .uc-type { color: var(--should); }
+  .uc-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.2rem; font-weight: 700; color: var(--white); margin-bottom: 0.3rem;
+  }
+  .uc-domain {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    margin-bottom: 1rem; word-break: break-all;
+  }
+  .url-card.must   .uc-domain { color: var(--must); }
+  .url-card.want   .uc-domain { color: var(--want); }
+  .url-card.should .uc-domain { color: var(--should); }
+  .uc-desc {
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 0.82rem; color: var(--muted); line-height: 1.8;
+  }
+
+  /* ── CONFLICT ENGINE ── */
+  .conflict-engine {
+    padding: 5rem 2rem;
+    background: var(--deep);
+    text-align: center;
+  }
+  .engine-label {
+    font-family: 'Space Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.3em; color: var(--dim); text-transform: uppercase; margin-bottom: 3rem;
+  }
+  .engine-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--wire);
+    max-width: 680px; margin: 0 auto 3rem;
+  }
+  .eg-cell { background: var(--surface); padding: 2rem 1rem; transition: background 0.2s; }
+  .eg-cell:hover { background: var(--ghost); }
+  .eg-en {
+    font-family: 'Space Mono', monospace; font-size: 0.44rem;
+    letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-bottom: 0.5rem;
+  }
+  .eg-bn {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 1.2rem; font-weight: 700; display: block; margin-bottom: 0.5rem;
+  }
+  .eg-dot { width: 7px; height: 7px; border-radius: 50%; margin: 0 auto; }
+  .eg-cell.must   .eg-en  { color: var(--must); }
+  .eg-cell.must   .eg-bn  { color: var(--must); }
+  .eg-cell.must   .eg-dot { background: var(--must); }
+  .eg-cell.want   .eg-en  { color: var(--want); }
+  .eg-cell.want   .eg-bn  { color: var(--want); }
+  .eg-cell.want   .eg-dot { background: var(--want); }
+  .eg-cell.should .eg-en  { color: var(--should); }
+  .eg-cell.should .eg-bn  { color: var(--should); }
+  .eg-cell.should .eg-dot { background: var(--should); }
+  .eg-cell.center {
+    background: var(--ghost); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:0.4rem;
+    grid-column: 1 / -1; padding: 2rem;
+  }
+  .eg-symbol {
+    font-size: 2.5rem; color: var(--raw);
+    animation: rot 14s linear infinite;
+  }
+  @keyframes rot { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  .eg-center-label {
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.25em; color: var(--raw); text-transform: uppercase;
+  }
+
+  /* ── FINAL STATEMENT ── */
+  .final-statement {
+    max-width: 720px; margin: 0 auto; padding: 3rem 2rem;
+    border-top: 1px solid var(--wire);
+  }
+  .final-statement p {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    color: var(--bright); line-height: 2.1;
+    text-align: center; font-style: italic;
+  }
+  .final-statement p strong {
+    font-style: normal; color: var(--raw);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5em; letter-spacing: 0.05em;
+  }
+  .final-close {
+    display: block; font-family: 'Space Mono', monospace;
+    font-size: 0.52rem; letter-spacing: 0.22em; color: var(--dim);
+    text-transform: uppercase; margin-top: 2rem; text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--wire);
+    padding: 1.8rem 2rem;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-l {
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase;
+  }
+  .footer-l span { color: var(--raw); }
+  .footer-r { display: flex; gap: 2rem; }
+  .footer-r a {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.13em; text-decoration: none; text-transform: uppercase; transition: opacity 0.2s;
+  }
+  .footer-r a:hover { opacity: 0.55; }
+  .footer-r a.m { color: var(--must); }
+  .footer-r a.w { color: var(--want); }
+  .footer-r a.s { color: var(--should); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:680px) {
+    .triad, .split, .url-showcase { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2,1fr); }
+    .engine-grid { grid-template-columns: repeat(2,1fr); }
+    .hero-title { font-size: 4rem; }
+    .rail-links { display: none; }
+    .sec-heading { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER RAIL -->
+<header class="header-rail">
+  <div class="rail-id">লেখক: <span>RAKIB_HIMON</span> // PARADOX_LOG_v1.0</div>
+  <nav class="rail-links">
+    <a href="https://handsandhead.com"          class="m">করতে হবে</a>
+    <a href="https://handfilm.myshopify.com"    class="w">করতে চাই</a>
+    <a href="https://handfilm.github.io/RAWxOS" class="s">করা উচিত</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <span class="hi">RAKIB_HIMON</span>
+      // COGNITIVE_CONFLICT_MAP // LOADED
+    </div>
+
+    <h1 class="hero-title">
+      <span class="ht-must">HANDS</span>
+      <span class="ht-want">FILM</span>
+      <span class="ht-should">RAW</span>
+      <span class="ht-plain">PARADOX</span>
+    </h1>
+
+    <p class="hero-bn-title">
+      একজন মানুষ। তিনটি URL। <em>একই obsession-এর তিনটি ভিন্ন version।</em>
+      প্রশ্ন হলো — কোনটা বেছে নেবে তা নয়,
+      প্রশ্ন হলো এই বিভাজনটাই কি আসলে উত্তর?
+    </p>
+
+    <div class="thesis-block">
+      Hypothesis: একজন creative person যখন তিনটি আলাদা URL-এ তিনটি আলাদা পরিচয় তৈরি করে — সে আসলে পালাচ্ছে না। সে একটি নতুন architecture খুঁজে পাচ্ছে। করতে হবে, করতে চাই, করা উচিত — এই তিনটি force একটি মানুষের ভেতরে simultaneously চলে। এবং প্রতিটি অন্যটির সাথে conflict-এ থাকে।
+    </div>
+
+    <div class="triad">
+      <div class="triad-cell tc-must">
+        <div class="tc-label">OBLIGATION // বাধ্যবাধকতা</div>
+        <div class="tc-bn">করতে হবে</div>
+        <div class="tc-url">handsandhead.com</div>
+        <div class="tc-desc">যে কাজটা না করলে system collapse করবে। পেশাদার পরিচয়। দুনিয়া এই version-টাই দেখে।</div>
+      </div>
+      <div class="triad-cell tc-want">
+        <div class="tc-label">DESIRE // ইচ্ছাশক্তি</div>
+        <div class="tc-bn">করতে চাই</div>
+        <div class="tc-url">handfilm.myshopify.com</div>
+        <div class="tc-desc">যে কাজটা রাত ২টায় ঘুম থেকে উঠে করতে ইচ্ছে করে। Film। শিল্প যখন দাম পায়।</div>
+      </div>
+      <div class="triad-cell tc-should">
+        <div class="tc-label">CONVICTION // বিশ্বাস</div>
+        <div class="tc-bn">করা উচিত</div>
+        <div class="tc-url">handfilm.github.io/RAWxOS</div>
+        <div class="tc-desc">যে কাজটা না করলে নিজের কাছে বেঈমান হতে হয়। RAWxOS। Uncompressed সত্যের operating system।</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NODE BAR -->
+<div class="node-bar">
+  <div class="np np1">NODE_01 // করতে হবে</div>
+  <div class="np np2">NODE_02 // করতে চাই</div>
+  <div class="np np3">NODE_03 // করা উচিত</div>
+  <div class="np np4">NODE_04 // বিভাজন</div>
+  <div class="np np5">NODE_05 // আসক্তি</div>
+  <div class="np np6">NODE_06 // আউটপুট</div>
+  <div class="np np7">NODE_07 // RAWxOS</div>
+  <div class="np np8">NODE_08 // সংশ্লেষণ</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+  <!-- SECTION 01 — MUST DO -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-must">MUST DO // 01</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_01</div>
+    </div>
+    <h2 class="sec-heading">করতে হবে</h2>
+    <div class="sec-heading-en">THE OBLIGATION LAYER // handsandhead.com</div>
+
+    <p class="bt">
+      <strong>"করতে হবে"</strong> — এই তিনটি শব্দ মানুষের সবচেয়ে ভারী বোঝা। এটা permission চায় না, approval চায় না। এটা install হয়ে যায় — সমাজ থেকে, পরিবার থেকে, নিজের survival instinct থেকে। <strong>handsandhead.com</strong> হলো সেই installation-এর সবচেয়ে visible output। Hands execute করে। Head direct করে। নামটার মধ্যেই বিভাজন আগে থেকে built-in।
+    </p>
+
+    <div class="axiom must">
+      <div class="axiom-text">
+        Hypothesis: "করতে হবে" হলো creative জীবনের সবচেয়ে ভারী শব্দ — কারণ এটা survival-এর ভার বহন করে, reputation-এর ভার বহন করে, এবং সেই infrastructure-এর ভার বহন করে যেটা ছাড়া বাকি দুটো possibility-ই collapse করে।
+      </div>
+    </div>
+
+    <p class="bt">
+      প্রতিটি serious creative মানুষ একটি double life বাঁচে। একটি কাজ আছে যেটা <strong>pay করে</strong> — structured, deliverable, client-facing, professional। আরেকটি কাজ আছে যেটা <strong>feed করে</strong> — অনিশ্চিত, ব্যক্তিগত, price করা কঠিন। handsandhead.com হলো public-facing proof যে তুমি trust করার যোগ্য। এটা সেই badge যেটা বলে: এই মানুষটা দেখায়, deliver করে, নিজের mythology-তে হারিয়ে যায় না।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// OBLIGATION CALCULUS</span><br>
+      <span class="var">MUST</span> <span class="op">=</span> survival_income <span class="op">+</span> social_contract <span class="op">+</span> proof_of_capability<br>
+      <span class="cmt">// MUST ছাড়া WANT-এর কোনো launchpad নেই</span><br>
+      <span class="cmt">// MUST ছাড়া SHOULD-এর কোনো credibility নেই</span><br>
+      <span class="out">∴ "করতে হবে" শত্রু নয় — এটাই সেই gravity যেটা orbit-কে meaning দেয়।</span>
+    </div>
+
+    <p class="bt">
+      কিন্তু এখানে একটি বিপদ আছে। "করতে হবে" একটি tendency রাখে — সে <strong>metastasize করে</strong>। যেটা শুরু হয় practical layer হিসেবে — professional site, client work, deliverable — সেটা ধীরে ধীরে identity হয়ে যায়। Hands এতটাই busy হয়ে পড়ে যে Head ভুলে যায় সে আসলে কী direct করতে চেয়েছিল। Obligation তোমাকে এক কামড়ে গিলে ফেলে না। সে করে ঘণ্টায় ঘণ্টায়, invoice-এ invoice-এ, reputation maintenance-এ।
+    </p>
+
+    <div class="callout">
+      <strong>handsandhead.com-এর paradox:</strong> যে professionalism এটাকে represent করে, সেটাই সেই rawness-কে ঢেকে দিতে পারে যেটার কারণে তুমি hire করার যোগ্য ছিলে। কাজকে বিক্রির উপযোগী করতে গিয়ে source-কেই tame করে ফেলার risk আছে।
+    </div>
+
+    <div class="pull-quote">
+      <blockquote>
+        তুমি professional brand শুরু করো freedom fund করতে।
+        তারপর brand নিজেই cage হয়ে যায়।
+      </blockquote>
+      <cite>// OBLIGATION PARADOX // NODE_01 CONFLICT REPORT</cite>
+    </div>
+  </div>
+
+  <!-- SECTION 02 — WANT TO DO -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-want">WANT TO DO // 02</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_02</div>
+    </div>
+    <h2 class="sec-heading">করতে চাই</h2>
+    <div class="sec-heading-en">THE DESIRE LAYER // handfilm.myshopify.com</div>
+
+    <p class="bt">
+      <strong>Film।</strong> শব্দটাই একটা signal। Video নয়। Content নয়। Media production নয়। <em>Film</em> — যেটার মধ্যে frame-এর ভার আছে, grain-এর texture আছে, intention আছে, সময়কে meaning-এ compress করার ক্ষমতা আছে। <strong>handfilm.myshopify.com</strong> হলো সেই জায়গা যেখানে desire আর market reality মুখোমুখি দাঁড়ায়। শিল্প এখানে commerce-কে armor হিসেবে পরে — যাতে ভেতরে survive করতে পারে।
+    </p>
+
+    <div class="axiom want">
+      <div class="axiom-text">
+        Hypothesis: "করতে চাই" হলো একজন creative person-এর সবচেয়ে honest signal। এটা সবসময় সঠিক নয় — কিন্তু এটাই একমাত্র frequency যেটা মিথ্যা বলে না। যে জিনিসে তোমার সত্যিকারের desire, সেটা তুমি রাত ২টায় বিনা কারণে করো। এটাই diagnostic।
+      </div>
+    </div>
+
+    <p class="bt">
+      Shopify একটি telling choice। Vimeo নয়। Portfolio site নয়। একটি <strong>storefront</strong>। এটা এমন একজন মানুষের সিদ্ধান্ত যে জানে — distribution ছাড়া desire শুধু একটি private obsession। handfilm হলো desire যেটা witnessed হওয়ার সিদ্ধান্ত নিয়েছে — এবং সেই witnessing-কে sustainable করার সিদ্ধান্ত নিয়েছে। Commerce layer মানে sell out নয়। মানে staying in।
+    </p>
+
+    <div class="split">
+      <div class="sp">
+        <div class="sp-label want">DESIRE WITHOUT FORM</div>
+        <h4>Pure Signal</h4>
+        <p>মাথার ভেতরে যে film, uncompromised, unsold, শুধু তুমিই দেখেছ। Perfect। কিন্তু career হিসেবে useless। এবং তুমি যা, তার সবচেয়ে সত্যিকারের version।</p>
+      </div>
+      <div class="sp">
+        <div class="sp-label must">DESIRE WITH MARKET</div>
+        <h4>Sellable Signal</h4>
+        <p>সেই একই film, packaged। একটি storefront। একটি price। Buyers যারা access করতে পারে। Compromise? হয়তো। অথবা হয়তো: Commerce-এর পোশাকে survival intelligence।</p>
+      </div>
+    </div>
+
+    <p class="bt">
+      <strong>"HAND"</strong> শব্দটা handsandhead এবং handfilm — দুটোতেই আছে। এটা কোনো branding strategy নয়। এটা একটি through-line — obsession নিজেকে reveal করছে। Hands professional কাজ করে। Hands camera ধরে। Hands হলো সেই body part যেটা practical এবং passionate-কে আলাদা করতে অস্বীকার করে।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// DESIRE MAPPING FUNCTION</span><br>
+      <span class="var">WANT</span>(x) <span class="op">=</span> intrinsic_drive(x) <span class="op">×</span> market_fit(x)<br>
+      <span class="cmt">// যখন market_fit → 0: pure art, zero reach</span><br>
+      <span class="cmt">// যখন intrinsic_drive → 0: commercial product, zero soul</span><br>
+      <span class="out">∴ handfilm.myshopify.com হলো একসাথে দুটো value ধরে রাখার attempt।</span><br>
+      <span class="cmt">// এটাই maintain করা সবচেয়ে কঠিন position।</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="stat-num want">রাত ২টা</div>
+        <div class="stat-label">যখন desire ঘুমকে হারায়</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num must">সকাল ৯টা</div>
+        <div class="stat-label">যখন must desire-কে হারায়</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num should">∞</div>
+        <div class="stat-label">বার should defer হয়েছে</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num raw">১</div>
+        <div class="stat-label">মানুষ তিনটি navigate করছে</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 03 — SHOULD DO -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-should">SHOULD DO // 03</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_03</div>
+    </div>
+    <h2 class="sec-heading">করা উচিত</h2>
+    <div class="sec-heading-en">THE CONVICTION LAYER // handfilm.github.io/RAWxOS</div>
+
+    <p class="bt">
+      <strong>RAWxOS।</strong> নামটাই architectural। RAW: uncompressed, unedited, source data, translation-এ কোনো loss নেই। OS: operating system — যেকোনো machine-এর সবচেয়ে গভীর layer, যেটার উপর বাকি সব কিছু চলে। RAWxOS কোনো product নয়। এটা একটি <em>philosophy যেটা URL-এ compile হয়েছে</em>।
+    </p>
+
+    <div class="axiom should">
+      <div class="axiom-text">
+        Hypothesis: "করা উচিত" হলো creative জীবনের সবচেয়ে যন্ত্রণাদায়ক শব্দ। এটা বাস করে সেই gap-এ — তুমি যা আছ আর তুমি যা হতে পারতে, তার মাঝখানে। এটা সেই voice যেটা কখনো চুপ করে না — যেটা সেই কাজের দিকে point করে যেটা তোমার কাছ থেকে সবচেয়ে বেশি দাবি করবে।
+      </div>
+    </div>
+
+    <p class="bt">
+      GitHub Pages। Shopify নয়। Professional domain নয়। <strong>GitHub।</strong> — কোডের জন্য, open source-এর জন্য, সেই builders-দের জন্য যারা কাজ share করে কারণ কাজটাই point — transaction নয়। এটা সেই layer যেটা commerce-এর বাইরে, obligation-এর বাইরে এক্সিস্ট করে — কারণ কিছু কিছু জিনিস এমন একটা space-এ থাকা দরকার যেখানে টাকা পৌঁছাতে পারে না।
+    </p>
+
+    <p class="bt">
+      GitHub-এ RAWxOS বলছে: এটা সেই মানুষদের জন্য যারা এটার মানে বোঝে। এটা ইচ্ছাকৃতভাবে ভুল audience-এর কাছে unfindable। এটা একটি public URL যেটা private frequency হিসেবে কাজ করে। যদি তুমি এটা খুঁজছ — তুমি ইতিমধ্যে জানো কেন। যদি তুমি হোঁচট খেয়ে এসেছ — এটা হয় কোনো মানে রাখবে না, অথবা সব কিছু বদলে দেবে।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// RAWxOS OPERATING PRINCIPLES</span><br>
+      <span class="var">RAW</span>  <span class="op">=</span> uncompressed_truth <span class="op">+</span> zero_loss_encoding<br>
+      <span class="var">xOS</span> <span class="op">=</span> foundational_layer <span class="op">+</span> runs_everything_on_top<br>
+      <span class="cmt">// handfilm এবং handsandhead দুটোই RAWxOS-এর উপর চলে</span><br>
+      <span class="cmt">// কিন্তু বেশিরভাগ মানুষ applications দেখে, OS দেখে না</span><br>
+      <span class="out">∴ RAWxOS হলো সেই জিনিস যেটা বাকি দুটোকে coherent করে।</span><br>
+      <span class="cmt">// এটা neglect করা = corrupted OS-এ run করা</span>
+    </div>
+
+    <div class="callout">
+      <strong>"করা উচিত"-এর tragedy:</strong> এটাই আসলে সবচেয়ে বেশি matter করে — এবং এটাই সবচেয়ে বেশি defer হয়। "করতে হবে" urgency নেয়। "করতে চাই" passion নেয়। "করা উচিত" শুধু conviction নেয় — এবং conviction হলো সবচেয়ে কঠিন fuel যেটা তখনও জ্বালিয়ে রাখতে হয় যখন বাকি দুটো পুরোদমে জ্বলছে।
+    </div>
+
+    <table class="matrix">
+      <tr>
+        <th>Layer</th>
+        <th>URL</th>
+        <th>Fuel</th>
+        <th>Neglect করলে</th>
+      </tr>
+      <tr>
+        <td><strong>করতে হবে</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:0.75rem;">handsandhead.com</td>
+        <td>Obligation / Survival</td>
+        <td><span class="pill hi">COLLAPSE</span></td>
+      </tr>
+      <tr>
+        <td><strong>করতে চাই</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:0.75rem;">handfilm.myshopify.com</td>
+        <td>Desire / Passion</td>
+        <td><span class="pill mid">STAGNATION</span></td>
+      </tr>
+      <tr>
+        <td><strong>করা উচিত</strong></td>
+        <td style="font-family:'Space Mono',monospace;font-size:0.75rem;">handfilm.github.io/RAWxOS</td>
+        <td>Conviction / Vision</td>
+        <td><span class="pill lo">DRIFT</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SECTION 04 — THE SPLIT -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-slash">THE SPLIT // 04</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_04</div>
+    </div>
+    <h2 class="sec-heading">বিভাজন</h2>
+    <div class="sec-heading-en">THREE IDENTITIES // ONE PERSON // ZERO RESOLUTION</div>
+
+    <p class="bt">
+      তিনটি URL। তিনটি mode। তিনটি audience। একই মানুষের তিনটি version যারা পরস্পরকে destroy না করে coexist করার চেষ্টা করছে। এটা কোনো সমাধানযোগ্য সমস্যা নয় — এটা একটি <strong>structural condition</strong>। যে কোনো serious creative মানুষ যে যথেষ্ট সময় survive করেছে, সে এই exact architecture-এ এসে পৌঁছায় — নাম দিক বা না দিক।
+    </p>
+
+    <div class="axiom slash">
+      <div class="axiom-text">
+        Creative split-এর paradox: যে জিনিসটা তোমাকে interesting করে — শুধু একটি জিনিস হতে না পারার সেই inability — সেটাই তোমাকে market করা কঠিন, follow করা কঠিন, এবং sustain করা exhausting করে তোলে। বিভাজন একই সাথে তোমার signature এবং তোমার liability।
+      </div>
+    </div>
+
+    <div class="text-break">
+      তুমি তিনজন মানুষ নও
+      <span>তুমি একজন মানুষ</span>
+      তিনটি process একসাথে চালাচ্ছ
+      <span>এটাই পার্থক্য</span>
+    </div>
+
+    <p class="bt">
+      বিপদ হলো তিনটাকে competition মনে করা। "RAWxOS-এ সময় দিলে handfilm তৈরি করতে পারব না। handfilm বানালে handsandhead neglect হবে।" এটা হলো <strong>zero-sum illusion</strong>। বাস্তবে প্রতিটি layer বাকিদুটোকে feed করে — কিন্তু শুধুমাত্র তখনই যখন current সঠিক দিকে flow করছে। RAWxOS vision দেয়। handfilm desire এবং revenue generate করে। handsandhead সেই credibility দেয় যেটার কারণে বাকি দুটো বললে মানুষ শোনে।
+    </p>
+
+    <div class="split">
+      <div class="sp">
+        <div class="sp-label must">FRAGMENTATION TRAP</div>
+        <h4>বিভাজন = দুর্বলতা</h4>
+        <p>তিনটি identity, কোনো connective tissue নেই। প্রতিটি দুর্বল কারণ বাকিরা তাকে drain করছে। তুমি সর্বত্র আছ এবং কোথাও নেই। কেউই তোমাকে পুরোটা চেনে না।</p>
+      </div>
+      <div class="sp">
+        <div class="sp-label should">MULTIPLIER EFFECT</div>
+        <h4>বিভাজন = শক্তি</h4>
+        <p>তিনটি identity একটি system হিসেবে। প্রতিটি বাকিদুটোকে strengthen করছে। handsandhead → handfilm → RAWxOS → আবার শুরু। এটা drain নয়, loop।</p>
+      </div>
+    </div>
+
+    <p class="bt">
+      Trap এবং multiplier-এর মধ্যে পার্থক্য talent বা time নয়। পার্থক্য হলো <strong>narrative coherence</strong> — সেই thread যেটা তিনটির মধ্য দিয়ে যায় এবং বোঝায় যে এগুলো obviously একই মানুষের কাজ। সেই thread, এই ক্ষেত্রে, হলো <em>"hand"</em> শব্দটা।
+    </p>
+  </div>
+
+  <!-- SECTION 05 — OBSESSION -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-cold">OBSESSION // 05</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_05</div>
+    </div>
+    <h2 class="sec-heading">আসক্তি</h2>
+    <div class="sec-heading-en">THE RECURRING MOTIF // WHY "HAND" APPEARS THREE TIMES</div>
+
+    <p class="bt">
+      আবার নামগুলো দেখো। <strong>Hands</strong>andhead। <strong>Hand</strong>film। <strong>Hand</strong>film/RAWxOS। "Hand" শব্দটা প্রতিটি URL-এ আছে। এটা branding strategy নয় — এটা obsession নিজেকে architecture-এ reveal করছে। যে obsessed সে তার recurring motif plan করে না — সে discover করে যে এটা ইতিমধ্যে সর্বত্র আছে।
+    </p>
+
+    <div class="axiom cold">
+      <div class="axiom-text">
+        হাত হলো মানুষের সবচেয়ে পুরনো interface। Screen-এর আগে। Camera-র আগে। Code-এর আগে। হাত গুহার দেয়ালে স্পর্শ করেছিল এবং প্রথম image তৈরি করেছিল। হাত হলো সেই জায়গা যেখানে thought physical হয় — যেখানে inside হয় outside। এই system-এর প্রতিটি URL, মূলত, সেই translation-এর কথা বলছে।
+      </div>
+    </div>
+
+    <p class="bt">
+      Hands think। Hands shoot। Hands code। Recurring word হলো recurring question: <em>একটি creative জীবনের primary instrument হিসেবে হাত থাকার মানে কী?</em> শুধু মন নয় — যদিও Head-এর নামও আছে। শুধু চোখ নয় — যদিও film হলো lens-এর ভেতর দিয়ে আলো। হাত। সেই জিনিস যেটা material world-কে স্পর্শ করে এবং reshape করে।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// RECURRING MOTIF ALGORITHM</span><br>
+      <span class="var">HAND</span>(professional)    <span class="op">=</span> handsandhead.com<br>
+      <span class="var">HAND</span>(commercial_art)  <span class="op">=</span> handfilm.myshopify.com<br>
+      <span class="var">HAND</span>(pure_system)     <span class="op">=</span> handfilm.github.io/RAWxOS<br>
+      <span class="cmt">// একই obsession-এর তিনটি application</span><br>
+      <span class="out">∴ Obsession হলো variable। Domain শুধু output format।</span>
+    </div>
+
+    <p class="bt">
+      Obsession কোনো সমস্যা নয় যেটা cure করতে হবে। এটা হলো <strong>একটি compass যেটা কখনো point করা বন্ধ করে না</strong>। প্রশ্ন হলো — তুমি এটাকে curse হিসেবে পড়ছ নাকি coordinate হিসেবে। Hand motif তোমাকে exactly বলে দিচ্ছে magnetic north কোথায়। যে creative decision হাতকে সম্মান করে, সে obsession-কে সম্মান করে।
+    </p>
+  </div>
+
+  <!-- SECTION 06 — OUTPUT -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-acid">OUTPUT // 06</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_06</div>
+    </div>
+    <h2 class="sec-heading">আউটপুট</h2>
+    <div class="sec-heading-en">WHAT GETS MADE // THE ONLY HONEST METRIC</div>
+
+    <p class="bt">
+      Output হলো একমাত্র প্রমাণ যে এই সব কিছু real। URL নয়। Ideas নয়। Obsession-ও নয়। <strong>যে জিনিসটা তৈরি হয়।</strong> যে page load হয়। যে film play হয়। যে system run করে। বাকি সব কিছু হলো এমন একটি ভবিষ্যতের planning document যেটা হয়তো কখনো আসবে না।
+    </p>
+
+    <div class="axiom acid">
+      <div class="axiom-text">
+        Hypothesis: যে creative person তিনটি parallel identity maintain করে এবং কোনোটা থেকেই কিছু produce করে না, সে শুধু একটি elaborate excuse architecture তৈরি করেছে। Output হলো একমাত্র honest metric। Intention নয়। Infrastructure নয়। Domain name-এর aesthetic নয়। এই সপ্তাহে কী তৈরি হয়েছে?
+      </div>
+    </div>
+
+    <p class="bt">
+      তিন-URL system তখনই justify হয় যখন এটা এমন output generate করে যেটা কোনো একটি URL একা তৈরি করতে পারত না। handsandhead.com-এর কাজ উচিত handfilm-এর জন্য সময় কেনা। handfilm-এর উচিত এমন films তৈরি করা যেটা RAWxOS-এর vision demonstrate করে। RAWxOS-এর উচিত এমন conceptual tools তৈরি করা যেটা handfilm এবং handsandhead দুটোকেই sharper করে। যদি এই loop না চলে, তাহলে system শুধু <em>নিজের জন্যই complexity</em>।
+    </p>
+
+    <div class="callout">
+      <strong>Output test:</strong> তোমার creative জীবনের যেকোনো একটা সপ্তাহ নাও। কী তৈরি হলো? যদি এক মাসের মধ্যে তিনটি node-এর কোনোটার জন্য উত্তর দিতে না পারো — তাহলে সেই node-গুলোর একটি museum exhibit হয়ে গেছে তুমি কে হতে চেয়েছিলে তার, কোনো working system নয়।
+    </div>
+
+    <div class="url-showcase">
+      <div class="url-card must">
+        <div class="uc-type">OBLIGATION // পেশাদার</div>
+        <div class="uc-bn">হাত এবং মাথা</div>
+        <div class="uc-domain">handsandhead.com</div>
+        <div class="uc-desc">Portfolio। Proof। দুনিয়া যে face দেখে সিদ্ধান্ত নেয় তুমি hire করার যোগ্য কিনা। Output: client deliverables, documented process, trust signals।</div>
+      </div>
+      <div class="url-card want">
+        <div class="uc-type">DESIRE // শিল্প + বাণিজ্য</div>
+        <div class="uc-bn">হ্যান্ড ফিল্ম</div>
+        <div class="uc-domain">handfilm.myshopify.com</div>
+        <div class="uc-desc">Store। Films। Creative products যেখানে কাজ কাজের খরচ দেয়। Output: films, prints, editions — desire যখন transactable হয়।</div>
+      </div>
+      <div class="url-card should">
+        <div class="uc-type">CONVICTION // OS layer</div>
+        <div class="uc-bn">RAWxOS</div>
+        <div class="uc-domain">handfilm.github.io/RAWxOS</div>
+        <div class="uc-desc">System। Philosophy। একটি মনের open-source layer। Output: frameworks, tools, raw thinking — এমন জিনিস যেটা অন্যদের নিজেদের version তৈরি করতে সাহায্য করে।</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 07 — RAWxOS -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-raw">RAWxOS // 07</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_07</div>
+    </div>
+    <h2 class="sec-heading">RAWxOS</h2>
+    <div class="sec-heading-en">THE OS UNDERNEATH EVERYTHING // handfilm.github.io/RAWxOS</div>
+
+    <p class="bt">
+      প্রতিটি creative person-এর একটি operating system আছে। বেশিরভাগ এর নাম দেয় না। বেশিরভাগ জানেই না যে তাদের এটা আছে। এটা background-এ চলে — determine করে কোন ideas process হবে, কোনগুলো delete হবে, কোনগুলো কাজে elevated হবে। <strong>নিজের OS-এর নাম রাখা হলো profound self-knowledge-এর একটি act।</strong> RAWxOS হলো রাকিব সেই নামটা রাখছে।
+    </p>
+
+    <div class="axiom raw">
+      <div class="axiom-text">
+        RAW: compression-এর আগের format। Encoding থেকে কোনো artifact নেই। Translation-এ কোনো quality loss নেই। জিনিসটা যেমন আসলে আছে, market যেভাবে চায় তেমন হওয়ার আগে। xOS: foundational layer। যেটা কাজ করতে হবে যাতে বাকি সব কিছু কাজ করতে পারে। RAWxOS: uncompressed truth-এর উপর তৈরি একটি operating system।
+      </div>
+    </div>
+
+    <p class="bt">
+      RAWxOS-এর "x" অনেক কাজ করছে। Cross। Multiply। Version marker। Mathematical variable। এটা raw material এবং system-এর মধ্যে connector — যেখানে uncompressed input হয় organized output। এটাই সেই জায়গা যেখানে রাকিব হিমনের thinking বাস করে — film হওয়ার আগে, product হওয়ার আগে, professional deliverable হওয়ার আগে।
+    </p>
+
+    <p class="bt">
+      GitHub as host হলো philosophy-র statement। GitHub হলো সেই জায়গা যেখানে builders এমন জিনিস রাখে যা থেকে অন্য builders শিখতে পারে। এটা inherently collaborative, inherently transparent, inherently open। GitHub-এ RAWxOS বলছে: <strong>এটা proprietary নয়</strong>। এটা কোনো intellectual property যেটা protect করতে হবে তা নয়। এটা একটি মন যেটা public-এ কাজ করছে, অন্য মনকে আমন্ত্রণ জানাচ্ছে fork করতে, modify করতে, improve করতে। এটাই একজন creative person যা করতে পারে তার মধ্যে সবচেয়ে generous এবং সবচেয়ে exposed।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// RAWxOS BOOT SEQUENCE</span><br>
+      <span class="var">INIT</span>: load(uncompressed_self)<br>
+      <span class="var">MOUNT</span>: /সৃজনশীলতা → active<br>
+      <span class="var">MOUNT</span>: /আসক্তি → persistent<br>
+      <span class="var">MOUNT</span>: /commercial_intelligence → running<br>
+      <span class="cmt">// তিনটি filesystem, একটি kernel</span><br>
+      <span class="out">STATUS: handfilm.github.io/RAWxOS → ONLINE</span><br>
+      <span class="cmt">// বাকি সব process এটার উপর dependent।</span>
+    </div>
+
+    <div class="callout">
+      <strong>RAWxOS সম্পর্কে সবচেয়ে গুরুত্বপূর্ণ বিষয়:</strong> এটাই তিনটি node-এর মধ্যে একমাত্র যেটা সম্পূর্ণ নিজের শর্তে exist করে। handsandhead.com-এর client দরকার। handfilm-এর buyer দরকার। RAWxOS-এর কিছুই দরকার নেই — মানে এটাই একমাত্র যেটা সম্পূর্ণ free যেটা হওয়া দরকার। এটাই কারণে এটা সবচেয়ে important এবং সবচেয়ে neglected।
+    </div>
+  </div>
+
+  <!-- SECTION 08 — SYNTHESIS -->
+  <div class="art-section">
+    <div class="sec-meta">
+      <div class="sec-badge sb-ghost">SYNTHESIS // 08</div>
+      <div class="sec-rule"></div>
+      <div class="sec-num">NODE_08</div>
+    </div>
+    <h2 class="sec-heading">সংশ্লেষণ</h2>
+    <div class="sec-heading-en">THE ANSWER // THAT IS NOT REALLY AN ANSWER</div>
+
+    <p class="bt">
+      তুমি core details-এ সব কিছু assess করতে বলেছিলে। এখানে core: তুমি ইতিমধ্যে জানো paradox-টা কী। তুমি নিজেই নাম দিয়েছিলে। <strong>করতে হবে। করতে চাই। করা উচিত।</strong> তিনটি force। সীমিত সময়, attention, এবং energy। এই document যেটা তুমি পড়ছ সেটাই প্রমাণ যে tension generative — paradox কিছু একটা produce করছে।
+    </p>
+
+    <div class="axiom ghost">
+      <div class="axiom-text">
+        তিন-node paradox-এর resolution হলো একটি বেছে নেওয়া নয়। সমানভাবে balance করাও নয়। বোঝা যে এরা আলাদা speed-এ, আলাদা season-এ চলে। কিছু মাস handsandhead মাস — survival, professional output, trust তৈরি। কিছু মাস handfilm মাস — pure desire, creative risk, যা ভালোবাসো তা তৈরি করা। কিছু মাস RAWxOS মাস — চিন্তা করা, system build করা, এমন কাজ করা যেটা কেউ চায়নি কিন্তু যেটা শেষ পর্যন্ত বাকি সব কিছু সম্ভব করে।
+      </div>
+    </div>
+
+    <p class="bt">
+      ভুল হলো তিনটিকে একসাথে full capacity-তে চালাতে চাওয়া। Consciousness parallel নয়। এটা sequential — simultaneity-র একটি convincing illusion সহ। তিন-URL system একসাথে সব করার mandate নয়। এটা একটি <strong>মানচিত্র — তুমি পূর্ণরূপে কে তার</strong> — যাতে যখন একটি node থেকে operate করছ, বাকিগুলো exist করে মনে রাখতে পারো।
+    </p>
+
+    <div class="pull-quote">
+      <blockquote>
+        যে মানুষ obligation, desire এবং conviction একসাথে ধরে রাখতে পারে — তাদের কাউকে বাকি দুটোকে মেরে ফেলতে না দিয়ে — সে balanced নয়। সে structurally unstable, সবচেয়ে productive উপায়ে।
+      </blockquote>
+      <cite>// SYNTHESIS NODE // রাকিব_PARADOX // CONCLUSION FRAGMENT</cite>
+    </div>
+
+    <p class="bt">
+      তিনটি URL। একটি operating system। URL গুলো কাজ নয় — এগুলো সেই addresses যেখানে কাজ বাস করে। কাজ হলো সেই মানুষটি হওয়ার continuous process যে তিনটিকে real করতে পারে। <strong>handsandhead.com</strong> প্রমাণ করে তুমি trust করার যোগ্য। <strong>handfilm.myshopify.com</strong> প্রমাণ করে তুমি moved হতে পারো। <strong>handfilm.github.io/RAWxOS</strong> প্রমাণ করে তোমার এমন একটি মন আছে যেটা খোলার যোগ্য। তিনটি চলছে। এটাই architecture। এটাই system। এটাই সেই paradox যেটা solve করতে অস্বীকার করে solve হয়।
+    </p>
+
+    <div class="formula">
+      <span class="cmt">// FINAL ASSESSMENT // রাকিব PARADOX</span><br>
+      <span class="var">করতে হবে</span>  : handsandhead.com       → <span class="eq">CREDIBILITY ENGINE</span><br>
+      <span class="var">করতে চাই</span>  : handfilm.myshopify.com → <span class="eq">DESIRE ENGINE</span><br>
+      <span class="var">করা উচিত</span> : handfilm.github.io/RAWxOS → <span class="eq">VISION ENGINE</span><br>
+      <br>
+      <span class="cmt">// এরা compete করে না। এরা compound করে।</span><br>
+      <span class="cmt">// Status: All nodes identified. Conflict acknowledged. Loop active.</span><br>
+      <span class="out">∴ Paradox সমস্যা নয়। Paradox-ই architecture।</span>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- CONFLICT ENGINE -->
+<div class="conflict-engine">
+  <div class="engine-label">// FINAL SYNTHESIS // THREE-NODE CONFLICT MAP // RAKIB_HIMON</div>
+
+  <div class="engine-grid">
+    <div class="eg-cell must">
+      <span class="eg-en">MUST DO</span>
+      <span class="eg-bn">করতে হবে</span>
+      <div class="eg-dot"></div>
+    </div>
+    <div class="eg-cell want">
+      <span class="eg-en">WANT TO DO</span>
+      <span class="eg-bn">করতে চাই</span>
+      <div class="eg-dot"></div>
+    </div>
+    <div class="eg-cell should">
+      <span class="eg-en">SHOULD DO</span>
+      <span class="eg-bn">করা উচিত</span>
+      <div class="eg-dot"></div>
+    </div>
+    <div class="eg-cell center">
+      <div class="eg-symbol">⊗</div>
+      <span class="eg-center-label">CONFLICT = ENGINE</span>
+    </div>
+  </div>
+
+  <div class="final-statement">
+    <p>
+      রাকিব হিমন তিনটি জিনিস তৈরি করার চেষ্টা করছে না।
+      সে চেষ্টা করছে <strong>একটি</strong> জিনিস তৈরি করতে —
+      এমন একটি creative জীবন যেটার জন্য তাকে choose করতে হবে না
+      সে professionally কে, artistically কে,
+      এবং তার thinking-এর সবচেয়ে গভীর layer-এ কে — তাদের মধ্যে।
+      Paradox হলো না যে তার অনেক বেশি URL আছে।
+      Paradox হলো তিনটিরই একই নাম আছে:
+      <strong>HAND</strong>।
+    </p>
+    <span class="final-close">
+      END OF DOCUMENT // রাকিব_PARADOX_v1.0 //
+      NODES: 3 // CONFLICTS: ∞ // RESOLUTION: অপ্রয়োজনীয়
+    </span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-l">
+    লেখক: <span>RAKIB HIMON</span> // SYSTEM: RAWxOS // STATUS: PARADOXICAL
+  </div>
+  <nav class="footer-r">
+    <a href="https://handsandhead.com"          class="m">handsandhead.com</a>
+    <a href="https://handfilm.myshopify.com"    class="w">handfilm.myshopify.com</a>
+    <a href="https://handfilm.github.io/RAWxOS" class="s">RAWxOS</a>
+  </nav>
+</footer>
+
+</body>
+</html>

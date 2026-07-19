@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWx — B2B Denim Lookbook / Engineered Indigo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0a0a0a; --void:#050505;
+    --paper:#ececE6; --paper-dim:#b9b7b0;
+    --red:#ff2b00; --line:rgba(236,236,230,0.14); --line-strong:rgba(236,236,230,0.32);
+    --mono:'JetBrains Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--paper);font-family:var(--mono);font-weight:300;overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  img{width:100%;height:100%;object-fit:cover;display:block;}
+  ::selection{background:var(--red);color:var(--black);}
+
+  #calibration-line{
+    position:fixed;inset:0;pointer-events:none;z-index:5;
+    background-image:linear-gradient(var(--line) 1px, transparent 1px),linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;opacity:.3;mix-blend-mode:screen;
+  }
+  #grain{
+    position:fixed;inset:0;z-index:6;pointer-events:none;opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .nav-strip{
+    display:flex;justify-content:center;gap:36px;padding:8px 24px;
+    background:var(--void);border-bottom:1px solid var(--line);
+    font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);
+    position:relative;z-index:20;
+  }
+  .nav-strip a{display:flex;align-items:center;gap:6px;}
+  .nav-strip a.active{color:var(--red);}
+  .nav-strip .dot{width:5px;height:5px;background:var(--red);border-radius:50%;}
+
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 32px;border-bottom:1px solid var(--line);position:relative;z-index:20;flex-wrap:wrap;gap:14px;
+  }
+  .logo{font-size:20px;font-weight:700;}
+  .logo .x{color:var(--red);}
+  .clock-block{display:flex;gap:22px;font-size:10.5px;color:var(--paper-dim);letter-spacing:.08em;text-transform:uppercase;}
+  .clock-block b{color:var(--paper);font-weight:600;}
+
+  .lookbook-hero{padding:70px 32px 40px;max-width:900px;}
+  .lookbook-hero .tag{font-size:11px;color:var(--red);letter-spacing:.16em;text-transform:uppercase;margin-bottom:16px;display:block;}
+  .lookbook-hero h1{font-size:clamp(30px,5vw,52px);font-weight:700;text-transform:uppercase;line-height:1.02;letter-spacing:-.01em;margin-bottom:18px;}
+  .lookbook-hero p{font-size:13px;color:var(--paper-dim);line-height:1.8;max-width:560px;}
+  .cost-strip{
+    display:flex;gap:0;margin-top:26px;border:1px solid var(--line-strong);width:fit-content;flex-wrap:wrap;
+  }
+  .cost-strip div{padding:10px 18px;font-size:11px;letter-spacing:.04em;border-right:1px solid var(--line-strong);}
+  .cost-strip div:last-child{border-right:none;}
+  .cost-strip b{color:var(--red);}
+
+  .lb-cta-btn{
+    display:inline-flex;align-items:center;gap:10px;margin-top:26px;
+    border:1px solid var(--red);color:var(--red);padding:13px 22px;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    transition:background .2s,color .2s;
+  }
+  .lb-cta-btn:hover{background:var(--red);color:var(--black);}
+  .filter-bar{
+    display:flex;gap:10px;flex-wrap:wrap;padding:0 32px 40px;position:relative;z-index:20;
+  }
+  .filter-btn{
+    background:none;border:1px solid var(--line-strong);color:var(--paper-dim);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    padding:9px 16px;cursor:pointer;transition:all .2s;
+  }
+  .filter-btn:hover{color:var(--paper);border-color:var(--paper-dim);}
+  .filter-btn.active{background:var(--red);border-color:var(--red);color:var(--black);font-weight:600;}
+
+  .gallery{
+    padding:0 8px 100px;
+    columns:4 220px;column-gap:8px;position:relative;z-index:20;
+  }
+  .card{
+    break-inside:avoid;margin-bottom:8px;position:relative;overflow:hidden;
+    background:#111;border:1px solid var(--line);opacity:0;transform:translateY(18px);
+    transition:opacity .6s ease,transform .6s ease;cursor:pointer;
+  }
+  .card.in{opacity:1;transform:translateY(0);}
+  .card img{transition:transform .5s ease;display:block;}
+  .card:hover img{transform:scale(1.04);}
+  .card-overlay{
+    position:absolute;left:0;bottom:0;width:100%;padding:14px 16px;
+    background:linear-gradient(0deg, rgba(0,0,0,.9), transparent);
+    opacity:0;transition:opacity .25s ease;
+  }
+  .card:hover .card-overlay{opacity:1;}
+  .card-index{font-size:9px;color:var(--red);letter-spacing:.1em;display:block;margin-bottom:4px;}
+  .card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;}
+  .card-cat{
+    position:absolute;top:10px;left:10px;font-size:8.5px;letter-spacing:.1em;
+    text-transform:uppercase;background:rgba(5,5,5,.75);border:1px solid var(--line-strong);
+    padding:4px 8px;color:var(--paper-dim);
+  }
+
+  /* Lightbox */
+  #lightbox{
+    position:fixed;inset:0;background:rgba(5,5,5,.96);z-index:100;
+    display:none;align-items:center;justify-content:center;padding:40px;
+  }
+  #lightbox.open{display:flex;}
+  .lb-inner{max-width:900px;width:100%;display:flex;flex-direction:column;gap:16px;}
+  .lb-img-wrap{width:100%;max-height:70vh;overflow:hidden;border:1px solid var(--line-strong);background:#000;}
+  .lb-img-wrap img{width:100%;height:100%;max-height:70vh;object-fit:contain;}
+  .lb-meta{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
+  .lb-title{font-size:16px;font-weight:700;text-transform:uppercase;margin-bottom:6px;}
+  .lb-desc{font-size:12px;color:var(--paper-dim);line-height:1.7;max-width:520px;}
+  .lb-close{
+    background:none;border:1px solid var(--line-strong);color:var(--paper);
+    font-family:var(--mono);font-size:11px;padding:10px 16px;cursor:pointer;letter-spacing:.1em;
+  }
+  .lb-close:hover{border-color:var(--red);color:var(--red);}
+  .lb-nav{display:flex;gap:10px;}
+  .lb-nav button{
+    background:none;border:1px solid var(--line-strong);color:var(--paper);
+    font-family:var(--mono);font-size:14px;padding:8px 14px;cursor:pointer;
+  }
+  .lb-nav button:hover{border-color:var(--red);color:var(--red);}
+
+  footer{
+    border-top:1px solid var(--line);padding:34px 32px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+    font-size:10.5px;color:var(--paper-dim);letter-spacing:.04em;position:relative;z-index:20;
+  }
+  .loc-tags{display:flex;gap:24px;flex-wrap:wrap;}
+
+  @media(max-width:640px){
+    .gallery{columns:2 150px;}
+    header{padding:18px 20px;}
+    .lookbook-hero{padding:50px 20px 30px;}
+    .filter-bar{padding:0 20px 30px;}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+
+<div id="calibration-line"></div>
+<div id="grain"></div>
+
+<nav class="nav-strip">
+  <a href="index.html"><span class="dot"></span>Home</a>
+  <a href="rawx-b2b-lookbook.html" class="active">B2B Lookbook →</a>
+  <a href="rawx-catalogue-dual-mode.html">Catalogue / Dual Mode →</a>
+</nav>
+
+<header>
+  <div class="logo">RAW<span class="x">x</span></div>
+  <div class="clock-block">
+    <span>CET / BERLIN &amp; AMSTERDAM — <b id="cetClock">--:--</b></span>
+    <span>DHAKA — <b id="bdClock">--:--</b></span>
+  </div>
+</header>
+
+<section class="lookbook-hero">
+  <span class="tag">FW26 — Engineered Indigo × Leather Hybrid</span>
+  <h1>B2B Denim Lookbook</h1>
+  <p>Fourteen reference frames from the Engineered Indigo capsule — leather-hybrid construction, factory-direct Dhaka origin. Built for buying teams in Nederland and Deutschland sourcing at 1/3rd of EU landed cost.</p>
+  <div class="cost-strip">
+    <div>Origin: <b>Dhaka, BD</b></div>
+    <div>Cost Basis: <b>1/3 EU</b></div>
+    <div>MOQ: <b>500+ / SKU</b></div>
+    <div>Lead Time: <b>25–35 Days</b></div>
+  </div>
+  <a href="rawx-catalogue-dual-mode.html" class="lb-cta-btn">View Full SKU Catalogue — Retail / Wholesale <span>→</span></a>
+</section>
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-filter="all">All (14)</button>
+  <button class="filter-btn" data-filter="detail">Construction Detail</button>
+  <button class="filter-btn" data-filter="women">Women's Fit</button>
+  <button class="filter-btn" data-filter="men">Men's Fit</button>
+  <button class="filter-btn" data-filter="factory">Factory / Origin</button>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<div id="lightbox">
+  <div class="lb-inner">
+    <div class="lb-img-wrap"><img id="lbImg" src="" alt=""></div>
+    <div class="lb-meta">
+      <div>
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-desc" id="lbDesc"></div>
+      </div>
+      <div class="lb-nav">
+        <button id="lbPrev">←</button>
+        <button id="lbNext">→</button>
+        <button class="lb-close" id="lbClose">Close ✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>© 2026 RAWx Industries. Dhaka Origin — Factory Direct. <a href="index.html" style="color:var(--red);">← Back to Home</a></div>
+  <div class="loc-tags">
+    <span>🇳🇱 Vervaardigd in Bangladesh — 1/3 van de EU-prijs</span>
+    <span>🇩🇪 Hergestellt in Bangladesch — 1/3 des EU-Preises</span>
+  </div>
+</footer>
+
+<script>
+  // ---- Image dataset ----
+  const images = [
+    { src:"assets/1000022687.jpeg", cat:"detail", title:"Spec Tag — BD Origin", desc:"Embossed leather patch with technical spec card: BD Origin, 1/3 EU cost basis." },
+    { src:"assets/1000022702.jpeg", cat:"factory", title:"Factory Floor — Folded SKU", desc:"Finished jean folded on the cutting table, leather zip-pocket detail, sewing lines running behind." },
+    { src:"assets/1000022708.jpeg", cat:"men", title:"Rear Pocket — Leather Loop", desc:"Men's fit rear pocket construction, tan leather belt-loop tab, bar-tack stitching visible." },
+    { src:"assets/1000022736.jpeg", cat:"detail", title:"SKU Comparison — Skin-Bind vs Relaxed-Fit", desc:"Side-by-side flat lay comparing hip width, thigh taper, and pocket spacing across two fits." },
+    { src:"assets/1000022699.jpeg", cat:"detail", title:"Rolled Cuff — Selvedge Edge", desc:"Raw selvedge hem rolled to show construction, RAWx leather ankle tab riveted at the seam." },
+    { src:"assets/1000022700.jpeg", cat:"men", title:"Full Fit — Denim Jacket + Jean", desc:"Men's denim jacket and jean pairing shot on the factory floor, cold daylight tone." },
+    { src:"assets/1000022691.jpeg", cat:"detail", title:"Leather Repair Patch", desc:"Brown leather patch construction detail against frayed indigo denim edge." },
+    { src:"assets/1000022707.jpeg", cat:"women", title:"Seated Fit — Torn Knee Detail", desc:"Women's fit seated on a factory stool, leather knee-patch construction, natural pose." },
+    { src:"assets/1000022697.jpeg", cat:"detail", title:"Belt Loop — Denim/Leather Seam", desc:"Cross-section macro of a riveted belt loop where denim meets leather trim." },
+    { src:"assets/1000022690.jpeg", cat:"factory", title:"Flat Lay — Full Spec Sheet", desc:"Front flat lay with tape measure and technical spec card, factory concrete backdrop." },
+    { src:"assets/1000022694.jpeg", cat:"detail", title:"Back Pocket — RAWx Leather Patch", desc:"Debossed leather flag-patch on faded indigo, back-pocket construction close-up." },
+    { src:"assets/1000022696.jpeg", cat:"factory", title:"Waistband Roll — Factory Table", desc:"Rolled waistband construction with RAWx leather patch, shot on the factory workbench." },
+    { src:"assets/1000022710.jpeg", cat:"women", title:"Rear Fit — Leather Back Pocket", desc:"Women's fit rear pocket in leather, straight-on stance, natural garment drape." },
+    { src:"assets/1000022705.jpeg", cat:"men", title:"Calf Crop — Raw-Hem Detail", desc:"Seated calf-to-ankle crop, raw-hem cutoff denim, leather boot-strap detail." }
+  ];
+
+  const gallery = document.getElementById('gallery');
+  let currentFilter = 'all';
+  let lightboxIndex = 0;
+  let visibleImages = images;
+
+  function renderGallery(filter){
+    gallery.innerHTML = '';
+    visibleImages = filter === 'all' ? images : images.filter(i => i.cat === filter);
+    visibleImages.forEach((img, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <span class="card-cat">${img.cat}</span>
+        <img src="${img.src}" alt="${img.title}" loading="lazy">
+        <div class="card-overlay">
+          <span class="card-index">${String(idx+1).padStart(2,'0')} / ${String(visibleImages.length).padStart(2,'0')}</span>
+          <span class="card-title">${img.title}</span>
+        </div>
+      `;
+      card.addEventListener('click', () => openLightbox(idx));
+      gallery.appendChild(card);
+      requestAnimationFrame(() => {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { threshold: 0.05 });
+        io.observe(card);
+      });
+    });
+  }
+  renderGallery('all');
+
+  // ---- Filters ----
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      renderGallery(currentFilter);
+    });
+  });
+
+  // ---- Lightbox ----
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTitle = document.getElementById('lbTitle');
+  const lbDesc = document.getElementById('lbDesc');
+
+  function openLightbox(idx){
+    lightboxIndex = idx;
+    updateLightbox();
+    lightbox.classList.add('open');
+  }
+  function updateLightbox(){
+    const item = visibleImages[lightboxIndex];
+    lbImg.src = item.src;
+    lbImg.alt = item.title;
+    lbTitle.textContent = item.title;
+    lbDesc.textContent = item.desc;
+  }
+  document.getElementById('lbClose').addEventListener('click', () => lightbox.classList.remove('open'));
+  document.getElementById('lbNext').addEventListener('click', () => { lightboxIndex = (lightboxIndex+1) % visibleImages.length; updateLightbox(); });
+  document.getElementById('lbPrev').addEventListener('click', () => { lightboxIndex = (lightboxIndex-1+visibleImages.length) % visibleImages.length; updateLightbox(); });
+  lightbox.addEventListener('click', (e) => { if(e.target === lightbox) lightbox.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => {
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key === 'Escape') lightbox.classList.remove('open');
+    if(e.key === 'ArrowRight') document.getElementById('lbNext').click();
+    if(e.key === 'ArrowLeft') document.getElementById('lbPrev').click();
+  });
+
+  // ---- Dual clock: CET + Dhaka (BST, UTC+6) ----
+  function updateClocks(){
+    const now = new Date();
+    const cet = new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Berlin', hour:'2-digit', minute:'2-digit' }).format(now);
+    const bd = new Intl.DateTimeFormat('en-GB', { timeZone:'Asia/Dhaka', hour:'2-digit', minute:'2-digit' }).format(now);
+    document.getElementById('cetClock').textContent = cet;
+    document.getElementById('bdClock').textContent = bd;
+  }
+  updateClocks();
+  setInterval(updateClocks, 30000);
+</script>
+</body>
+</html>

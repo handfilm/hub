@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexOS — Enterprise Modules (Drop-in)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   NEXOS — ENTERPRISE MODULE PACK
+   Tech Pack AI Parser / Glass Factory Ledger / API Gateway
+   Drop these three <section> blocks + their scoped CSS/JS into
+   the existing NexOS page. Namespaced under .nx- to avoid
+   collisions with the current stylesheet.
+   ============================================================ */
+
+:root{
+  --void:#050505;
+  --acid:#b8ff00;
+  --hazard:#ff3300;
+  --white-dim:#888888;
+  --mono:'JetBrains Mono',monospace;
+  --disp:'Barlow Condensed',sans-serif;
+  /* derived, local to this pack only */
+  --nx-panel:#0c0c0c;
+  --nx-panel2:#101010;
+  --nx-line:#1c1c1c;
+  --nx-line2:#272727;
+  --nx-white:#eaeaea;
+}
+*{box-sizing:border-box}
+body{background:var(--void);margin:0;color:var(--nx-white);font-family:var(--mono)}
+
+/* ---------- shared module scaffolding ---------- */
+.nx-module{padding:6rem 2rem;border-bottom:1px solid var(--nx-line);position:relative}
+.nx-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.25em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.nx-eyebrow::before{content:'';width:24px;height:1px;background:var(--acid)}
+.nx-title{font-family:var(--disp);font-weight:700;font-size:clamp(34px,4.6vw,58px);line-height:.96;letter-spacing:.01em;color:#fff;margin:0 0 .85rem;text-transform:uppercase}
+.nx-title em{font-style:normal;color:var(--acid)}
+.nx-sub{font-family:var(--mono);font-size:12px;color:var(--white-dim);line-height:1.8;max-width:640px;margin-bottom:3rem;letter-spacing:.02em}
+.nx-grid-wrap{max-width:1240px;margin:0 auto}
+::selection{background:var(--acid);color:#050505}
+
+/* ============================================================
+   MODULE 1 — TECH PACK AI DROPZONE
+   ============================================================ */
+.nx-tp-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:1px;background:var(--nx-line)}
+@media (max-width:880px){.nx-tp-layout{grid-template-columns:1fr}}
+
+.nx-dropzone{
+  background:var(--nx-panel);
+  border:1px dashed var(--nx-line2);
+  margin:1px;
+  min-height:420px;
+  padding:2.5rem;
+  position:relative;
+  display:flex;flex-direction:column;
+  cursor:pointer;
+  transition:border-color .25s ease, background .25s ease;
+  overflow:hidden;
+}
+.nx-dropzone:hover{border-color:#3a3a3a}
+.nx-dropzone.is-drag{border-color:var(--acid);background:#0a0d02}
+.nx-dropzone.is-scanning{border-style:solid;border-color:var(--acid)}
+.nx-dropzone.is-error{border-color:var(--hazard)}
+
+.nx-dz-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(to right, rgba(184,255,0,.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(184,255,0,.04) 1px, transparent 1px);
+  background-size:28px 28px;
+  pointer-events:none;
+  opacity:.6;
+}
+
+.nx-dz-idle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.25rem;position:relative;z-index:1}
+.nx-dz-icon{width:56px;height:56px;border:1px solid var(--nx-line2);display:flex;align-items:center;justify-content:center;color:var(--acid);font-size:22px;position:relative}
+.nx-dz-icon::after{content:'';position:absolute;inset:-8px;border:1px solid rgba(184,255,0,.2);animation:nxPulseRing 2.4s ease-out infinite}
+@keyframes nxPulseRing{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.25);opacity:0}}
+.nx-dz-headline{font-family:var(--disp);font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:#fff}
+.nx-dz-copy{font-size:11px;color:var(--white-dim);letter-spacing:.04em;max-width:320px;line-height:1.7}
+.nx-dz-formats{font-size:9px;letter-spacing:.18em;color:#555;text-transform:uppercase}
+.nx-dz-browse{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:10px 22px;background:transparent;border:1px solid var(--acid);color:var(--acid);text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.nx-dz-browse:hover{background:var(--acid);color:#050505}
+.nx-dz-input{display:none}
+
+/* scanning state */
+.nx-dz-scan{flex:1;display:none;flex-direction:column;position:relative;z-index:1}
+.nx-dropzone.is-scanning .nx-dz-idle{display:none}
+.nx-dropzone.is-scanning .nx-dz-scan{display:flex}
+
+.nx-scan-file{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--nx-line2);padding-bottom:1rem;margin-bottom:1rem}
+.nx-scan-filename{font-size:12px;color:#fff;letter-spacing:.02em;display:flex;align-items:center;gap:.6rem}
+.nx-scan-filename::before{content:'◆';color:var(--acid);font-size:9px}
+.nx-scan-status{font-size:10px;letter-spacing:.15em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
+.nx-scan-status .dot{width:6px;height:6px;border-radius:50%;background:var(--acid);animation:nxBlink 1s steps(2) infinite}
+@keyframes nxBlink{50%{opacity:.2}}
+
+.nx-progress-track{height:3px;background:var(--nx-line2);width:100%;position:relative;margin-bottom:1.25rem;overflow:hidden}
+.nx-progress-fill{height:100%;width:0%;background:var(--acid);transition:width .35s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(184,255,0,.6)}
+.nx-progress-pct{font-size:10px;color:var(--white-dim);letter-spacing:.1em;margin-bottom:1.25rem}
+.nx-progress-pct span{color:var(--acid)}
+
+.nx-terminal{
+  flex:1;background:#020202;border:1px solid var(--nx-line2);padding:1rem 1.1rem;
+  font-size:11px;line-height:1.9;overflow-y:auto;max-height:200px;
+}
+.nx-term-line{color:#555;opacity:0;transform:translateY(4px);animation:nxTermIn .35s ease forwards}
+@keyframes nxTermIn{to{opacity:1;transform:translateY(0)}}
+.nx-term-line .tag{color:var(--acid);margin-right:.6rem}
+.nx-term-line.done{color:#666}
+.nx-term-line.done .tag::before{content:'✓ '}
+.nx-term-cursor{display:inline-block;width:6px;height:11px;background:var(--acid);vertical-align:middle;animation:nxBlink .8s steps(2) infinite}
+
+/* result panel */
+.nx-result{background:var(--nx-panel2);margin:1px;min-height:420px;padding:2.5rem;display:flex;flex-direction:column}
+.nx-result-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.75rem;color:#444}
+.nx-result-empty .ico{font-size:28px;color:#333}
+.nx-result-empty p{font-size:11px;letter-spacing:.06em;max-width:260px;line-height:1.7}
+
+.nx-estimate{display:none;flex:1;flex-direction:column}
+.nx-estimate.is-visible{display:flex;animation:nxFadeUp .5s ease}
+@keyframes nxFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.nx-est-label{font-size:10px;letter-spacing:.2em;color:var(--acid);text-transform:uppercase;margin-bottom:1.75rem;display:flex;align-items:center;justify-content:space-between}
+.nx-est-conf{color:var(--white-dim);font-size:9px;letter-spacing:.1em}
+.nx-est-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--nx-line);margin-bottom:1px}
+.nx-est-cell{background:var(--nx-panel2);padding:1.5rem}
+.nx-est-cell-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase;margin-bottom:.6rem}
+.nx-est-cell-val{font-family:var(--disp);font-size:34px;color:#fff;line-height:1}
+.nx-est-cell-val .unit{font-size:16px;color:var(--acid);margin-left:4px}
+.nx-est-meta{margin-top:1.5rem;display:flex;flex-direction:column;gap:.6rem}
+.nx-est-meta-row{display:flex;justify-content:space-between;font-size:10px;color:var(--white-dim);letter-spacing:.04em;border-bottom:1px dotted var(--nx-line2);padding-bottom:.5rem}
+.nx-est-meta-row b{color:#ccc;font-weight:400}
+.nx-est-cta{margin-top:auto;padding-top:1.5rem;display:flex;gap:.75rem}
+.nx-btn-acid{flex:1;font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:12px 18px;background:var(--acid);color:#050505;border:none;text-transform:uppercase;cursor:pointer;font-weight:600;transition:filter .2s}
+.nx-btn-acid:hover{filter:brightness(1.1)}
+.nx-btn-outline{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:12px 18px;background:transparent;color:var(--white-dim);border:1px solid var(--nx-line2);text-transform:uppercase;cursor:pointer;transition:all .2s}
+.nx-btn-outline:hover{border-color:#555;color:#fff}
+
+/* ============================================================
+   MODULE 2 — THE GLASS FACTORY (VISUAL LEDGER)
+   ============================================================ */
+.nx-ledger{position:relative}
+.nx-ledger-line{position:absolute;top:0;bottom:0;left:27px;width:1px;background:repeating-linear-gradient(to bottom,var(--nx-line2) 0,var(--nx-line2) 4px,transparent 4px,transparent 9px)}
+.nx-led-item{position:relative;display:grid;grid-template-columns:56px 1fr;gap:1.75rem;padding-bottom:2.5rem}
+.nx-led-item:last-child{padding-bottom:0}
+.nx-led-node{width:56px;height:56px;border:1px solid var(--nx-line2);background:var(--void);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:20px;color:#444;position:relative;z-index:1}
+.nx-led-item.is-done .nx-led-node{border-color:var(--acid);color:var(--acid)}
+.nx-led-item.is-active .nx-led-node{border-color:var(--acid);color:var(--acid);box-shadow:0 0 0 4px rgba(184,255,0,.08)}
+.nx-led-item.is-active .nx-led-node::after{content:'';position:absolute;inset:-6px;border:1px solid var(--acid);opacity:.5;animation:nxPulseRing 1.8s ease-out infinite}
+.nx-led-item.is-pending .nx-led-node{color:#333}
+
+.nx-led-card{background:var(--nx-panel);border:1px solid var(--nx-line);padding:1.5rem 1.75rem}
+.nx-led-item.is-active .nx-led-card{border-color:#2a3500}
+.nx-led-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.85rem;flex-wrap:wrap}
+.nx-led-stage{font-family:var(--disp);font-size:21px;letter-spacing:.02em;text-transform:uppercase;color:#fff}
+.nx-led-item.is-pending .nx-led-stage{color:#555}
+.nx-led-badge{font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--nx-line2);color:var(--white-dim)}
+.nx-led-badge.live{color:var(--hazard);border-color:rgba(255,51,0,.4);display:flex;align-items:center;gap:5px}
+.nx-led-badge.live .dot{width:6px;height:6px;border-radius:50%;background:var(--hazard);animation:nxBlink 1s steps(2) infinite}
+.nx-led-badge.complete{color:var(--acid);border-color:rgba(184,255,0,.3)}
+.nx-led-desc{font-size:11px;color:var(--white-dim);line-height:1.7;margin-bottom:1.1rem;max-width:520px}
+
+.nx-led-meta{display:flex;flex-wrap:wrap;gap:1.5rem;font-size:10px;color:#555;letter-spacing:.03em;margin-bottom:1.1rem}
+.nx-led-meta b{color:#999;font-weight:400}
+.nx-led-hash{font-family:var(--mono);color:var(--acid);opacity:.85}
+
+.nx-feed{display:flex;align-items:center;gap:1rem;border-top:1px solid var(--nx-line);padding-top:1.1rem;flex-wrap:wrap}
+.nx-feed-thumb{width:84px;height:58px;background:#0a0a0a;border:1px solid var(--nx-line2);position:relative;overflow:hidden;cursor:pointer;flex-shrink:0}
+.nx-feed-thumb .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(184,255,0,.05) 0px,transparent 2px,transparent 3px);opacity:.7}
+.nx-feed-thumb .grain{position:absolute;inset:0;background:linear-gradient(135deg,#111,#060606 60%);}
+.nx-feed-thumb .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--acid);font-size:13px;opacity:.9}
+.nx-feed-thumb:hover{border-color:var(--acid)}
+.nx-feed-info{font-size:10px;color:var(--white-dim);letter-spacing:.03em;line-height:1.7}
+.nx-feed-info b{color:#ccc;display:block;font-weight:400;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.nx-led-item.is-pending .nx-feed-thumb{opacity:.25;cursor:default}
+.nx-led-item.is-pending .nx-feed-info{opacity:.35}
+
+/* feed modal */
+.nx-feed-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;padding:2rem}
+.nx-feed-modal.is-open{display:flex}
+.nx-feed-modal-inner{width:min(640px,100%);background:#020202;border:1px solid var(--nx-line2)}
+.nx-feed-modal-screen{aspect-ratio:16/9;position:relative;overflow:hidden;background:#080808}
+.nx-feed-modal-screen .scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(184,255,0,.06) 0px,transparent 2px,transparent 4px);animation:nxScanMove 6s linear infinite}
+@keyframes nxScanMove{0%{transform:translateY(0)}100%{transform:translateY(40px)}}
+.nx-feed-modal-screen .noise{position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(184,255,0,.05),transparent 60%)}
+.nx-feed-modal-screen .label{position:absolute;bottom:1rem;left:1rem;font-size:10px;letter-spacing:.15em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.nx-feed-modal-screen .label .dot{width:6px;height:6px;border-radius:50%;background:var(--hazard);animation:nxBlink 1s steps(2) infinite}
+.nx-feed-modal-bar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-top:1px solid var(--nx-line2)}
+.nx-feed-modal-bar span{font-size:10px;color:var(--white-dim);letter-spacing:.05em}
+.nx-feed-close{background:none;border:1px solid var(--nx-line2);color:#999;width:28px;height:28px;cursor:pointer;font-size:13px}
+.nx-feed-close:hover{border-color:var(--hazard);color:var(--hazard)}
+
+/* ============================================================
+   MODULE 3 — ENTERPRISE API GATEWAY
+   ============================================================ */
+.nx-gw-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--nx-line)}
+@media (max-width:920px){.nx-gw-grid{grid-template-columns:1fr}}
+.nx-gw-panel{background:var(--nx-panel);padding:2rem}
+.nx-gw-panel-title{font-size:10px;letter-spacing:.18em;color:var(--white-dim);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nx-gw-panel-title .status{color:var(--acid);display:flex;align-items:center;gap:6px}
+.nx-gw-panel-title .status .dot{width:5px;height:5px;border-radius:50%;background:var(--acid);animation:nxBlink 1.4s steps(2) infinite}
+
+/* webhook list */
+.nx-wh-row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--nx-line)}
+.nx-wh-row:last-child{border-bottom:none}
+.nx-wh-dot{width:7px;height:7px;border-radius:50%;background:var(--acid);flex-shrink:0;box-shadow:0 0 6px rgba(184,255,0,.7)}
+.nx-wh-dot.idle{background:#444;box-shadow:none}
+.nx-wh-url{font-size:11px;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.01em}
+.nx-wh-event{font-size:9px;color:var(--white-dim);letter-spacing:.1em;text-transform:uppercase}
+.nx-wh-copy{background:none;border:1px solid var(--nx-line2);color:#777;font-size:9px;letter-spacing:.1em;padding:5px 10px;cursor:pointer;text-transform:uppercase;transition:all .15s;font-family:var(--mono)}
+.nx-wh-copy:hover{border-color:var(--acid);color:var(--acid)}
+
+/* api key */
+.nx-key-box{background:#020202;border:1px solid var(--nx-line2);padding:1.1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.nx-key-val{font-size:12px;letter-spacing:.05em;color:var(--acid);overflow:hidden}
+.nx-key-val.is-glitching{animation:nxGlitch .25s steps(2) infinite}
+@keyframes nxGlitch{
+  0%{transform:translate(0,0);opacity:1}
+  20%{transform:translate(-2px,1px);opacity:.7}
+  40%{transform:translate(2px,-1px);opacity:.9}
+  60%{transform:translate(-1px,0);opacity:.6}
+  80%{transform:translate(1px,1px);opacity:.85}
+  100%{transform:translate(0,0);opacity:1}
+}
+.nx-key-meta{font-size:9px;color:#555;letter-spacing:.1em;margin-top:.4rem;text-transform:uppercase}
+.nx-key-actions{display:flex;flex-direction:column;gap:.5rem;align-items:flex-end}
+.nx-btn-gen{font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:9px 16px;background:transparent;border:1px solid var(--hazard);color:var(--hazard);text-transform:uppercase;cursor:pointer;transition:all .15s;white-space:nowrap}
+.nx-btn-gen:hover{background:var(--hazard);color:#050505}
+.nx-btn-gen:disabled{opacity:.4;cursor:default;background:transparent;color:var(--hazard)}
+.nx-key-copy{font-size:9px;letter-spacing:.1em;color:#555;background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:var(--mono)}
+.nx-key-copy:hover{color:var(--acid)}
+
+/* code block */
+.nx-code{background:#020202;border:1px solid var(--nx-line2);margin-top:1.5rem;position:relative}
+.nx-code-top{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1rem;border-bottom:1px solid var(--nx-line2)}
+.nx-code-dots{display:flex;gap:6px}
+.nx-code-dots span{width:8px;height:8px;border-radius:50%;background:var(--nx-line2)}
+.nx-code-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase}
+.nx-code-copy{font-size:9px;letter-spacing:.1em;color:#777;background:none;border:1px solid var(--nx-line2);padding:4px 9px;cursor:pointer;text-transform:uppercase;font-family:var(--mono);transition:all .15s}
+.nx-code-copy:hover{border-color:var(--acid);color:var(--acid)}
+.nx-code pre{margin:0;padding:1.25rem;font-size:11.5px;line-height:1.9;overflow-x:auto;white-space:pre}
+.nx-code .c-key{color:#666}
+.nx-code .c-flag{color:var(--acid)}
+.nx-code .c-str{color:#e0c878}
+.nx-code .c-url{color:#7fb8ff}
+.nx-code .c-cmt{color:#444}
+
+.nx-gw-footnote{font-size:10px;color:#555;letter-spacing:.04em;margin-top:1.25rem;line-height:1.7;border-top:1px dotted var(--nx-line2);padding-top:1rem}
+
+/* responsive grid collapse */
+@media (max-width:640px){
+  .nx-module{padding:3.5rem 1.25rem}
+  .nx-est-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     MODULE 1 — AI-DRIVEN TECH PACK PARSER (ZERO-TOUCH RFQ)
+     ============================================================ -->
+<section class="nx-module" id="module-techpack">
+  <div class="nx-grid-wrap">
+    <div class="nx-eyebrow">Module 01 / Zero-Touch RFQ</div>
+    <h2 class="nx-title">Tech Pack <em>AI</em> Parser</h2>
+    <p class="nx-sub">Drop a tech pack. NexOS extracts construction data, computes CM, and returns a predictive FOB estimate before your buyer finishes their coffee. No forms. No back-and-forth.</p>
+
+    <div class="nx-tp-layout">
+      <!-- DROPZONE -->
+      <div class="nx-dropzone" id="nxDropzone" tabindex="0">
+        <div class="nx-dz-grid"></div>
+
+        <div class="nx-dz-idle" id="nxDzIdle">
+          <div class="nx-dz-icon">⇩</div>
+          <div class="nx-dz-headline">Drop Tech Pack Here</div>
+          <p class="nx-dz-copy">Drag a PDF spec sheet onto this zone, or browse from your device. NexOS parses construction data in real time.</p>
+          <button class="nx-dz-browse" id="nxBrowseBtn" type="button">Browse File</button>
+          <div class="nx-dz-formats">PDF · MAX 25MB · EN / BN / ZH</div>
+          <input type="file" id="nxFileInput" class="nx-dz-input" accept="application/pdf">
+        </div>
+
+        <div class="nx-dz-scan" id="nxDzScan">
+          <div class="nx-scan-file">
+            <div class="nx-scan-filename" id="nxScanFilename">TECHPACK_FW26_CARGO.pdf</div>
+            <div class="nx-scan-status" id="nxScanStatus"><span class="dot"></span> PARSING</div>
+          </div>
+          <div class="nx-progress-track"><div class="nx-progress-fill" id="nxProgFill"></div></div>
+          <div class="nx-progress-pct">PROGRESS <span id="nxProgPct">0%</span></div>
+          <div class="nx-terminal" id="nxTerminal"></div>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="nx-result">
+        <div class="nx-result-empty" id="nxResultEmpty">
+          <div class="ico">▢</div>
+          <p>Predictive estimate will render here once a tech pack is parsed.</p>
+        </div>
+
+        <div class="nx-estimate" id="nxEstimate">
+          <div class="nx-est-label">Predictive Estimate <span class="nx-est-conf" id="nxConfidence">CONFIDENCE 94.2%</span></div>
+          <div class="nx-est-row">
+            <div class="nx-est-cell">
+              <div class="nx-est-cell-label">Est. FOB Price</div>
+              <div class="nx-est-cell-val"><span id="nxFobPrice">4.85</span><span class="unit">USD/PC</span></div>
+            </div>
+            <div class="nx-est-cell">
+              <div class="nx-est-cell-label">Est. Lead Time</div>
+              <div class="nx-est-cell-val"><span id="nxLeadTime">38</span><span class="unit">DAYS</span></div>
+            </div>
+          </div>
+          <div class="nx-est-meta">
+            <div class="nx-est-meta-row"><span>GSM Detected</span><b id="nxGsm">220 GSM</b></div>
+            <div class="nx-est-meta-row"><span>Stitch / Construction</span><b id="nxStitch">Overlock + Flatlock</b></div>
+            <div class="nx-est-meta-row"><span>CM (Cut-Make) Calculated</span><b id="nxCm">$1.42</b></div>
+            <div class="nx-est-meta-row"><span>Recommended MOQ</span><b id="nxMoq">300 pcs</b></div>
+          </div>
+          <div class="nx-est-cta">
+            <button class="nx-btn-acid" id="nxConfirmRfq">Confirm RFQ →</button>
+            <button class="nx-btn-outline" id="nxResetDz">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MODULE 2 — THE GLASS FACTORY VISUAL LEDGER
+     ============================================================ -->
+<section class="nx-module" id="module-ledger">
+  <div class="nx-grid-wrap">
+    <div class="nx-eyebrow">Module 02 / Immutable Production Tracking</div>
+    <h2 class="nx-title">The Glass <em>Factory</em></h2>
+    <p class="nx-sub">Every production stage is timestamped, hashed, and paired with a live media drop from the factory floor. Nothing about your order is opaque.</p>
+
+    <div class="nx-ledger" id="nxLedger">
+      <div class="nx-ledger-line"></div>
+      <!-- populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- feed modal -->
+<div class="nx-feed-modal" id="nxFeedModal">
+  <div class="nx-feed-modal-inner">
+    <div class="nx-feed-modal-screen">
+      <div class="scan"></div>
+      <div class="noise"></div>
+      <div class="label"><span class="dot"></span> <span id="nxModalLabel">CUTTING FLOOR · CAM 03</span></div>
+    </div>
+    <div class="nx-feed-modal-bar">
+      <span id="nxModalMeta">SIMULATED FEED · 4K · 29.97FPS</span>
+      <button class="nx-feed-close" id="nxFeedClose">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODULE 3 — ENTERPRISE API GATEWAY (THE MOAT)
+     ============================================================ -->
+<section class="nx-module" id="module-gateway">
+  <div class="nx-grid-wrap">
+    <div class="nx-eyebrow">Module 03 / Client-Side ERP Integration</div>
+    <h2 class="nx-title">Enterprise <em>API</em> Gateway</h2>
+    <p class="nx-sub">Pipe live production status directly into SAP, Oracle, or your buying house's internal ERP. NexOS exposes a versioned REST surface — no scraping, no manual reporting.</p>
+
+    <div class="nx-gw-grid">
+      <!-- LEFT: endpoints + key -->
+      <div class="nx-gw-panel">
+        <div class="nx-gw-panel-title">Active Webhook Endpoints <span class="status"><span class="dot"></span> 3 LIVE</span></div>
+
+        <div class="nx-wh-row">
+          <div class="nx-wh-dot"></div>
+          <div>
+            <div class="nx-wh-url">https://erp.client-sap.com/hooks/nexos/status</div>
+            <div class="nx-wh-event">production.stage.updated</div>
+          </div>
+          <button class="nx-wh-copy" data-copy="https://erp.client-sap.com/hooks/nexos/status">COPY</button>
+        </div>
+        <div class="nx-wh-row">
+          <div class="nx-wh-dot"></div>
+          <div>
+            <div class="nx-wh-url">https://oracle-fusion.buyer-co.com/in/nexos-qc</div>
+            <div class="nx-wh-event">qc.report.generated</div>
+          </div>
+          <button class="nx-wh-copy" data-copy="https://oracle-fusion.buyer-co.com/in/nexos-qc">COPY</button>
+        </div>
+        <div class="nx-wh-row">
+          <div class="nx-wh-dot idle"></div>
+          <div>
+            <div class="nx-wh-url">https://hooks.make.com/nexos-fallback</div>
+            <div class="nx-wh-event">shipment.dispatched</div>
+          </div>
+          <button class="nx-wh-copy" data-copy="https://hooks.make.com/nexos-fallback">COPY</button>
+        </div>
+
+        <div class="nx-gw-panel-title" style="margin-top:2.25rem">API Key Management</div>
+        <div class="nx-key-box">
+          <div>
+            <div class="nx-key-val" id="nxKeyVal">nx_live_••••••••••••8f2a</div>
+            <div class="nx-key-meta">SCOPE: READ-ONLY · PRODUCTION STATUS</div>
+          </div>
+          <div class="nx-key-actions">
+            <button class="nx-btn-gen" id="nxGenKeyBtn">Generate Key</button>
+            <button class="nx-key-copy" id="nxCopyKeyBtn">copy to clipboard</button>
+          </div>
+        </div>
+        <div class="nx-gw-footnote">Keys are scoped per-buyer and rotate every 90 days. Revoking a key invalidates all open webhook sessions immediately — no orphaned credentials.</div>
+      </div>
+
+      <!-- RIGHT: code block -->
+      <div class="nx-gw-panel">
+        <div class="nx-gw-panel-title">Sample Request <span class="status" style="color:var(--white-dim)">GET /v1/production-status</span></div>
+        <div class="nx-code">
+          <div class="nx-code-top">
+            <div class="nx-code-dots"><span></span><span></span><span></span></div>
+            <div class="nx-code-label">cURL · sap_integration.sh</div>
+            <button class="nx-code-copy" id="nxCodeCopyBtn">COPY</button>
+          </div>
+          <pre id="nxCodeBlock"><span class="c-cmt"># Pull live order status into SAP / Oracle ERP</span>
+curl <span class="c-flag">-X</span> GET <span class="c-url">"https://api.nexos.io/v1/orders/PO-22841/production-status"</span> \
+  <span class="c-flag">-H</span> <span class="c-key">"Authorization:</span> <span class="c-str">Bearer nx_live_7f3a9c2e8f2a"</span> \
+  <span class="c-flag">-H</span> <span class="c-key">"Accept:</span> <span class="c-str">application/json"</span> \
+  <span class="c-flag">-H</span> <span class="c-key">"X-NexOS-Client:</span> <span class="c-str">sap-erp-connector/1.4"</span>
+
+<span class="c-cmt"># 200 OK</span>
+{
+  <span class="c-key">"order_id"</span>: <span class="c-str">"PO-22841"</span>,
+  <span class="c-key">"stage"</span>: <span class="c-str">"SEWING"</span>,
+  <span class="c-key">"progress_pct"</span>: 64,
+  <span class="c-key">"last_hash"</span>: <span class="c-str">"0x7e2a9f...c41b"</span>,
+  <span class="c-key">"updated_at"</span>: <span class="c-str">"2026-07-01T09:14:02Z"</span>
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   NEXOS MODULE PACK — VANILLA JS
+   Namespaced under NX_* to avoid collisions with existing page.
+   Backend calls are stubbed for Make.com webhook routing later.
+   ============================================================ */
+
+/* ---------- small toast (used by copy buttons) ---------- */
+function nxToast(msg){
+  let t=document.getElementById('nxToastEl');
+  if(!t){
+    t=document.createElement('div');
+    t.id='nxToastEl';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#0c0c0c;border:1px solid var(--acid);color:var(--acid);font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:10px 18px;z-index:99999;opacity:0;transition:all .25s;text-transform:uppercase';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)'});
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)'},1800);
+}
+function nxCopy(text){
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>nxToast('Copied to clipboard'))}
+  else{nxToast('Copied to clipboard')}
+}
+
+/* ============================================================
+   MODULE 1 — TECH PACK AI PARSER
+   ============================================================ */
+(function(){
+  const dz=document.getElementById('nxDropzone');
+  const idle=document.getElementById('nxDzIdle');
+  const scan=document.getElementById('nxDzScan');
+  const fileInput=document.getElementById('nxFileInput');
+  const browseBtn=document.getElementById('nxBrowseBtn');
+  const filenameEl=document.getElementById('nxScanFilename');
+  const statusEl=document.getElementById('nxScanStatus');
+  const progFill=document.getElementById('nxProgFill');
+  const progPct=document.getElementById('nxProgPct');
+  const terminal=document.getElementById('nxTerminal');
+  const resultEmpty=document.getElementById('nxResultEmpty');
+  const estimate=document.getElementById('nxEstimate');
+  const resetBtn=document.getElementById('nxResetDz');
+
+  // Simulated parse log — sequenced with weighted delays for a "real" cadence
+  const LOG_SEQUENCE=[
+    {pct:8,  text:'Reading PDF structure…'},
+    {pct:18, text:'Detecting garment category…'},
+    {pct:29, text:'Extracting fabric composition…'},
+    {pct:41, text:'Parsing GSM…'},
+    {pct:53, text:'Extracting stitch count…'},
+    {pct:64, text:'Mapping construction points…'},
+    {pct:76, text:'Cross-referencing factory capacity…'},
+    {pct:87, text:'Calculating CM (cut-make)…'},
+    {pct:96, text:'Computing predictive FOB & lead time…'},
+    {pct:100,text:'Parse complete.'}
+  ];
+
+  let timers=[];
+  function clearTimers(){timers.forEach(clearTimeout);timers=[]}
+
+  function resetDropzone(){
+    clearTimers();
+    dz.classList.remove('is-scanning','is-drag','is-error');
+    idle.style.display='';
+    terminal.innerHTML='';
+    progFill.style.width='0%';
+    progPct.innerHTML='<span>0%</span>';
+    resultEmpty.style.display='';
+    estimate.classList.remove('is-visible');
+    fileInput.value='';
+  }
+
+  function appendLog(line, isLast){
+    const row=document.createElement('div');
+    row.className='nx-term-line';
+    row.innerHTML='<span class="tag">[NEXOS-AI]</span>'+line+(isLast?'':' <span class="nx-term-cursor"></span>');
+    // remove cursor from previous line
+    const prevCursor=terminal.querySelector('.nx-term-cursor');
+    if(prevCursor)prevCursor.remove();
+    const prevLast=terminal.lastElementChild;
+    if(prevLast)prevLast.classList.add('done');
+    terminal.appendChild(row);
+    terminal.scrollTop=terminal.scrollHeight;
+  }
+
+  function runScanSimulation(file){
+    dz.classList.add('is-scanning');
+    dz.classList.remove('is-drag');
+    idle.style.display='none';
+    filenameEl.textContent=(file && file.name) ? file.name : 'TECHPACK_FW26_CARGO.pdf';
+    statusEl.innerHTML='<span class="dot"></span> PARSING';
+    terminal.innerHTML='';
+    progFill.style.width='0%';
+    resultEmpty.style.display='';
+    estimate.classList.remove('is-visible');
+
+    let cumulativeDelay=0;
+    LOG_SEQUENCE.forEach((step,i)=>{
+      cumulativeDelay += 380 + Math.random()*420;
+      const t=setTimeout(()=>{
+        progFill.style.width=step.pct+'%';
+        progPct.innerHTML='<span>'+step.pct+'%</span>';
+        appendLog(step.text, i===LOG_SEQUENCE.length-1);
+        if(i===LOG_SEQUENCE.length-1){
+          statusEl.innerHTML='<span class="dot" style="background:var(--acid)"></span> COMPLETE';
+          revealEstimate();
+        }
+      },cumulativeDelay);
+      timers.push(t);
+    });
+  }
+
+  function revealEstimate(){
+    // deterministic-feeling pseudo-random estimate, seeded loosely off current time
+    const fob=(3.2 + Math.random()*4.1).toFixed(2);
+    const lead=Math.floor(28 + Math.random()*24);
+    const cm=(fob*0.29).toFixed(2);
+    const gsmOptions=[160,180,200,220,240,260,280];
+    const stitchOptions=['Overlock + Flatlock','Single Needle Lockstitch','Coverstitch + Overlock','Bartack + Flatlock'];
+    const moqOptions=[200,300,500,750];
+
+    document.getElementById('nxFobPrice').textContent=fob;
+    document.getElementById('nxLeadTime').textContent=lead;
+    document.getElementById('nxCm').textContent='$'+cm;
+    document.getElementById('nxGsm').textContent=gsmOptions[Math.floor(Math.random()*gsmOptions.length)]+' GSM';
+    document.getElementById('nxStitch').textContent=stitchOptions[Math.floor(Math.random()*stitchOptions.length)];
+    document.getElementById('nxMoq').textContent=moqOptions[Math.floor(Math.random()*moqOptions.length)]+' pcs';
+    document.getElementById('nxConfidence').textContent='CONFIDENCE '+(91+Math.random()*7).toFixed(1)+'%';
+
+    resultEmpty.style.display='none';
+    estimate.classList.add('is-visible');
+  }
+
+  // drag & drop wiring
+  ['dragenter','dragover'].forEach(evt=>{
+    dz.addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();if(!dz.classList.contains('is-scanning'))dz.classList.add('is-drag')});
+  });
+  ['dragleave','dragend'].forEach(evt=>{
+    dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.remove('is-drag')});
+  });
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();e.stopPropagation();
+    dz.classList.remove('is-drag');
+    if(dz.classList.contains('is-scanning'))return;
+    const file=e.dataTransfer.files && e.dataTransfer.files[0];
+    runScanSimulation(file);
+  });
+  dz.addEventListener('click',e=>{
+    if(dz.classList.contains('is-scanning'))return;
+    if(e.target===browseBtn)return; // browse handles its own click
+  });
+  browseBtn.addEventListener('click',e=>{e.stopPropagation();fileInput.click()});
+  fileInput.addEventListener('change',()=>{
+    if(fileInput.files && fileInput.files[0])runScanSimulation(fileInput.files[0]);
+  });
+  resetBtn.addEventListener('click',resetDropzone);
+
+  document.getElementById('nxConfirmRfq').addEventListener('click',()=>{
+    nxToast('RFQ routed to NexOS pipeline');
+    // Hook point for Make.com:
+    // fetch('YOUR_MAKE_COM_WEBHOOK_URL_HERE',{method:'POST',headers:{'Content-Type':'application/json'},
+    //   body:JSON.stringify({fob:document.getElementById('nxFobPrice').textContent, lead:document.getElementById('nxLeadTime').textContent})});
+  });
+})();
+
+/* ============================================================
+   MODULE 2 — THE GLASS FACTORY LEDGER
+   ============================================================ */
+(function(){
+  const ledgerEl=document.getElementById('nxLedger');
+  const modal=document.getElementById('nxFeedModal');
+  const modalLabel=document.getElementById('nxModalLabel');
+  const modalMeta=document.getElementById('nxModalMeta');
+  const closeBtn=document.getElementById('nxFeedClose');
+
+  // simple deterministic hash generator for display purposes (NOT cryptographic)
+  function nxFakeHash(seed){
+    let h=0;
+    for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0}
+    const hex=(h>>>0).toString(16).padStart(8,'0');
+    let tail='';
+    for(let i=0;i<4;i++)tail+=Math.floor(Math.random()*16).toString(16);
+    return '0x'+hex+'…'+tail;
+  }
+
+  function fmtTime(d){
+    return d.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})+' UTC';
+  }
+
+  const now=Date.now();
+  const STAGES=[
+    {label:'Fabric Inspection',status:'done',  mins:-5040, media:'photo', cam:'INTAKE BAY · CAM 01'},
+    {label:'Cutting',          status:'done',  mins:-2880, media:'video', cam:'CUTTING FLOOR · CAM 03'},
+    {label:'Sewing',           status:'active',mins:-180,  media:'video', cam:'LINE 04 · CAM 11'},
+    {label:'QC — In-Line',     status:'pending',mins:0,    media:'photo', cam:'QC STATION · CAM 02'},
+    {label:'Finishing & Pack', status:'pending',mins:0,    media:'photo', cam:'PACKING HALL · CAM 06'},
+    {label:'Dispatch',         status:'pending',mins:0,    media:'photo', cam:'LOADING DOCK · CAM 09'}
+  ];
+
+  function render(){
+    ledgerEl.querySelectorAll('.nx-led-item').forEach(n=>n.remove());
+    STAGES.forEach((s,i)=>{
+      const item=document.createElement('div');
+      item.className='nx-led-item is-'+s.status;
+      const ts=new Date(now + s.mins*60000);
+      const hash=s.status==='pending' ? '— pending —' : nxFakeHash(s.label+i+now);
+
+      let badge='';
+      if(s.status==='active')badge='<div class="nx-led-badge live"><span class="dot"></span> LIVE</div>';
+      else if(s.status==='done')badge='<div class="nx-led-badge complete">COMPLETE</div>';
+      else badge='<div class="nx-led-badge">QUEUED</div>';
+
+      item.innerHTML=
+        '<div class="nx-led-node">'+String(i+1).padStart(2,'0')+'</div>'+
+        '<div class="nx-led-card">'+
+          '<div class="nx-led-top"><div class="nx-led-stage">'+s.label+'</div>'+badge+'</div>'+
+          '<div class="nx-led-desc">'+stageDesc(s.label,s.status)+'</div>'+
+          '<div class="nx-led-meta">'+
+            '<span><b>'+(s.status==='pending'?'—':fmtTime(ts))+'</b></span>'+
+            '<span class="nx-led-hash">'+hash+'</span>'+
+          '</div>'+
+          '<div class="nx-feed">'+
+            '<div class="nx-feed-thumb" data-cam="'+s.cam+'" data-media="'+s.media+'">'+
+              '<div class="grain"></div><div class="scan"></div>'+
+              '<div class="play">'+(s.media==='video'?'▶':'◎')+'</div>'+
+            '</div>'+
+            '<div class="nx-feed-info"><b>'+(s.media==='video'?'Live Media Feed':'Floor Photo Drop')+'</b>'+s.cam+'</div>'+
+          '</div>'+
+        '</div>';
+      ledgerEl.appendChild(item);
+    });
+  }
+
+  function stageDesc(label,status){
+    const map={
+      'Fabric Inspection':'4-point fabric inspection logged against approved swatch reference.',
+      'Cutting':'Marker efficiency verified; bundle tickets issued to sewing line.',
+      'Sewing':'Operators logged in on Line 04. Real-time SMV tracking active.',
+      'QC — In-Line':'Awaiting in-line AQL sampling once sewing reaches 100%.',
+      'Finishing & Pack':'Awaiting handoff from QC for trim, press and poly-bagging.',
+      'Dispatch':'Awaiting carrier booking confirmation from forwarding desk.'
+    };
+    return map[label]||'';
+  }
+
+  ledgerEl.addEventListener('click',e=>{
+    const thumb=e.target.closest('.nx-feed-thumb');
+    if(!thumb)return;
+    const item=thumb.closest('.nx-led-item');
+    if(item.classList.contains('is-pending'))return;
+    modalLabel.textContent=thumb.dataset.cam;
+    modalMeta.textContent='SIMULATED FEED · '+(thumb.dataset.media==='video'?'4K · 29.97FPS':'12MP STILL · JUST NOW');
+    modal.classList.add('is-open');
+  });
+  closeBtn.addEventListener('click',()=>modal.classList.remove('is-open'));
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('is-open')});
+
+  render();
+})();
+
+/* ============================================================
+   MODULE 3 — ENTERPRISE API GATEWAY
+   ============================================================ */
+(function(){
+  const genBtn=document.getElementById('nxGenKeyBtn');
+  const keyVal=document.getElementById('nxKeyVal');
+  const copyKeyBtn=document.getElementById('nxCopyKeyBtn');
+  const codeCopyBtn=document.getElementById('nxCodeCopyBtn');
+  const codeBlock=document.getElementById('nxCodeBlock');
+
+  let currentKey='nx_live_7f3a9c2e8f2a';
+  keyVal.textContent='nx_live_••••••••••••8f2a';
+
+  function randHex(len){
+    let s='';
+    const chars='abcdef0123456789';
+    for(let i=0;i<len;i++)s+=chars[Math.floor(Math.random()*chars.length)];
+    return s;
+  }
+
+  function generateKey(){
+    genBtn.disabled=true;
+    keyVal.classList.add('is-glitching');
+    let frame=0;
+    const glitchChars='!<>-_\\/[]{}—=+*^?#0123456789ABCDEF';
+    const finalKey='nx_live_'+randHex(12);
+
+    const interval=setInterval(()=>{
+      frame++;
+      let scrambled='';
+      for(let i=0;i<20;i++)scrambled+=glitchChars[Math.floor(Math.random()*glitchChars.length)];
+      keyVal.textContent=scrambled;
+      if(frame>9){
+        clearInterval(interval);
+        keyVal.classList.remove('is-glitching');
+        keyVal.textContent=finalKey;
+        currentKey=finalKey;
+        genBtn.disabled=false;
+        nxToast('New API key generated');
+        // Hook point for Make.com:
+        // fetch('YOUR_MAKE_COM_WEBHOOK_URL_HERE',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'api_key_generated',key:finalKey})});
+      }
+    },70);
+  }
+
+  genBtn.addEventListener('click',generateKey);
+  copyKeyBtn.addEventListener('click',()=>nxCopy(currentKey));
+  codeCopyBtn.addEventListener('click',()=>nxCopy(codeBlock.innerText));
+
+  document.querySelectorAll('.nx-wh-copy').forEach(btn=>{
+    btn.addEventListener('click',()=>nxCopy(btn.dataset.copy));
+  });
+})();
+</script>
+</body>
+</html>

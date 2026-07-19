@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexOS — Digital Factory Extension</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   NEXOS — CORE B2B PORTAL MODULES
+   01 Smart Sourcing Engine · 02 Live ESG & Compliance Ledger
+   03 Digital Twin & Sample Approval Hub
+   Namespaced .nx- / #nx- throughout — safe to drop into any page.
+   ============================================================ */
+:root{
+  --void:#050505;
+  --acid:#b8ff00;
+  --hazard:#ff3300;
+  --white-dim:#888888;
+  --mono:'JetBrains Mono',monospace;
+  --disp:'Barlow Condensed',sans-serif;
+  --nx-panel:#0c0c0c;
+  --nx-panel2:#0f0f0f;
+  --nx-line:#1c1c1c;
+  --nx-line2:#272727;
+  --nx-white:#eaeaea;
+}
+*{box-sizing:border-box}
+body{background:var(--void);margin:0;color:var(--nx-white);font-family:var(--mono)}
+::selection{background:var(--acid);color:#050505}
+
+.nx-module{padding:6rem 2rem;border-bottom:1px solid var(--nx-line)}
+.nx-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.25em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.nx-eyebrow::before{content:'';width:24px;height:1px;background:var(--acid)}
+.nx-eyebrow.haz{color:var(--hazard)}.nx-eyebrow.haz::before{background:var(--hazard)}
+.nx-title{font-family:var(--disp);font-weight:700;font-size:clamp(34px,4.6vw,58px);line-height:.96;letter-spacing:.01em;color:#fff;margin:0 0 .85rem;text-transform:uppercase}
+.nx-title em{font-style:normal;color:var(--acid)}
+.nx-title em.haz{color:var(--hazard)}
+.nx-sub{font-family:var(--mono);font-size:12px;color:var(--white-dim);line-height:1.8;max-width:660px;margin-bottom:3rem;letter-spacing:.02em}
+.nx-wrap{max-width:1280px;margin:0 auto}
+.nx-btn-acid{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:12px 20px;background:var(--acid);color:#050505;border:none;text-transform:uppercase;cursor:pointer;font-weight:600;transition:filter .2s}
+.nx-btn-acid:hover{filter:brightness(1.1)}
+.nx-btn-acid:disabled{opacity:.35;cursor:not-allowed;filter:none}
+.nx-btn-outline{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:12px 20px;background:transparent;color:var(--white-dim);border:1px solid var(--nx-line2);text-transform:uppercase;cursor:pointer;transition:all .2s}
+.nx-btn-outline:hover{border-color:#555;color:#fff}
+.nx-btn-haz{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:12px 20px;background:transparent;border:1px solid var(--hazard);color:var(--hazard);text-transform:uppercase;cursor:pointer;transition:all .15s}
+.nx-btn-haz:hover{background:var(--hazard);color:#050505}
+@keyframes nxBlink{50%{opacity:.2}}
+@keyframes nxPulseRing{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.25);opacity:0}}
+@keyframes nxFadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============================================================
+   MODULE 01 — SMART SOURCING ENGINE
+   ============================================================ */
+.nx-src-layout{display:grid;grid-template-columns:1fr 1.15fr;gap:1px;background:var(--nx-line)}
+@media (max-width:960px){.nx-src-layout{grid-template-columns:1fr}}
+
+.nx-dropzone{background:var(--nx-panel);border:1px dashed var(--nx-line2);margin:1px;min-height:380px;padding:2.5rem;position:relative;display:flex;flex-direction:column;cursor:pointer;transition:border-color .25s,background .25s;overflow:hidden}
+.nx-dropzone:hover{border-color:#3a3a3a}
+.nx-dropzone.is-drag{border-color:var(--acid);background:#0a0d02}
+.nx-dropzone.is-scanning{border-style:solid;border-color:var(--acid)}
+.nx-dz-grid{position:absolute;inset:0;background-image:linear-gradient(to right,rgba(184,255,0,.04) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,255,0,.04) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;opacity:.6}
+.nx-dz-idle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.25rem;position:relative;z-index:1}
+.nx-dz-icon{width:56px;height:56px;border:1px solid var(--nx-line2);display:flex;align-items:center;justify-content:center;color:var(--acid);font-size:22px;position:relative}
+.nx-dz-icon::after{content:'';position:absolute;inset:-8px;border:1px solid rgba(184,255,0,.2);animation:nxPulseRing 2.4s ease-out infinite}
+.nx-dz-headline{font-family:var(--disp);font-size:22px;letter-spacing:.04em;text-transform:uppercase;color:#fff}
+.nx-dz-copy{font-size:11px;color:var(--white-dim);letter-spacing:.04em;max-width:300px;line-height:1.7}
+.nx-dz-formats{font-size:9px;letter-spacing:.18em;color:#555;text-transform:uppercase}
+.nx-dz-browse{font-family:var(--mono);font-size:11px;letter-spacing:.1em;padding:10px 22px;background:transparent;border:1px solid var(--acid);color:var(--acid);text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.nx-dz-browse:hover{background:var(--acid);color:#050505}
+.nx-dz-input{display:none}
+.nx-dz-scan{flex:1;display:none;flex-direction:column;position:relative;z-index:1}
+.nx-dropzone.is-scanning .nx-dz-idle{display:none}
+.nx-dropzone.is-scanning .nx-dz-scan{display:flex}
+.nx-scan-file{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--nx-line2);padding-bottom:1rem;margin-bottom:1rem}
+.nx-scan-filename{font-size:12px;color:#fff;letter-spacing:.02em;display:flex;align-items:center;gap:.6rem}
+.nx-scan-filename::before{content:'◆';color:var(--acid);font-size:9px}
+.nx-scan-status{font-size:10px;letter-spacing:.15em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:.5rem}
+.nx-scan-status .dot{width:6px;height:6px;border-radius:50%;background:var(--acid);animation:nxBlink 1s steps(2) infinite}
+.nx-progress-track{height:3px;background:var(--nx-line2);width:100%;position:relative;margin-bottom:1.1rem;overflow:hidden}
+.nx-progress-fill{height:100%;width:0%;background:var(--acid);transition:width .35s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(184,255,0,.6)}
+.nx-progress-pct{font-size:10px;color:var(--white-dim);letter-spacing:.1em;margin-bottom:1.1rem}
+.nx-progress-pct span{color:var(--acid)}
+.nx-terminal{flex:1;background:#020202;border:1px solid var(--nx-line2);padding:1rem 1.1rem;font-size:11px;line-height:1.9;overflow-y:auto;max-height:170px}
+.nx-term-line{color:#555;opacity:0;transform:translateY(4px);animation:nxTermIn .35s ease forwards}
+@keyframes nxTermIn{to{opacity:1;transform:translateY(0)}}
+.nx-term-line .tag{color:var(--acid);margin-right:.6rem}
+.nx-term-line.done{color:#666}
+.nx-term-line.done .tag::before{content:'✓ '}
+.nx-term-cursor{display:inline-block;width:6px;height:11px;background:var(--acid);vertical-align:middle;animation:nxBlink .8s steps(2) infinite}
+
+.nx-dash{background:var(--nx-panel2);margin:1px;min-height:380px;padding:2.5rem;display:flex;flex-direction:column}
+.nx-dash-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.75rem;color:#444}
+.nx-dash-empty .ico{font-size:28px;color:#333}
+.nx-dash-empty p{font-size:11px;letter-spacing:.06em;max-width:260px;line-height:1.7}
+.nx-dash-body{display:none;flex:1;flex-direction:column}
+.nx-dash-body.is-visible{display:flex;animation:nxFadeUp .5s ease}
+.nx-dash-label{font-size:10px;letter-spacing:.2em;color:var(--acid);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nx-dash-conf{color:var(--white-dim);font-size:9px;letter-spacing:.1em}
+
+.nx-fob-display{display:flex;align-items:baseline;gap:.6rem;margin-bottom:1.75rem}
+.nx-fob-num{font-family:var(--disp);font-size:48px;color:#fff;line-height:1}
+.nx-fob-unit{font-size:13px;color:var(--acid);letter-spacing:.04em}
+.nx-fob-delta{font-size:10px;color:var(--white-dim);letter-spacing:.04em;margin-left:auto;align-self:center}
+.nx-fob-delta b{color:var(--acid);font-weight:400}
+
+.nx-moq-block{margin-bottom:1.75rem}
+.nx-moq-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.65rem}
+.nx-moq-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase}
+.nx-moq-val{font-family:var(--disp);font-size:20px;color:var(--acid)}
+.nx-slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--nx-line2);outline:none;cursor:pointer}
+.nx-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;background:var(--acid);border-radius:0;cursor:pointer;box-shadow:0 0 10px rgba(184,255,0,.6)}
+.nx-slider::-moz-range-thumb{width:16px;height:16px;background:var(--acid);border:none;border-radius:0;cursor:pointer;box-shadow:0 0 10px rgba(184,255,0,.6)}
+.nx-moq-scale{display:flex;justify-content:space-between;font-size:8.5px;color:#444;letter-spacing:.08em;margin-top:.4rem}
+
+.nx-timeline-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase;margin-bottom:.9rem;display:flex;justify-content:space-between}
+.nx-timeline-label span{color:var(--acid)}
+.nx-timeline{display:flex;align-items:flex-start;margin-bottom:1.75rem}
+.nx-tl-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.nx-tl-step::before{content:'';position:absolute;top:7px;left:-50%;width:100%;height:1px;background:var(--nx-line2);z-index:0}
+.nx-tl-step:first-child::before{display:none}
+.nx-tl-dot{width:15px;height:15px;border:1px solid var(--nx-line2);background:var(--void);border-radius:50%;z-index:1;margin-bottom:.6rem}
+.nx-tl-step.filled .nx-tl-dot{border-color:var(--acid);background:var(--acid);box-shadow:0 0 8px rgba(184,255,0,.6)}
+.nx-tl-name{font-size:8.5px;letter-spacing:.08em;color:var(--white-dim);text-transform:uppercase;line-height:1.5}
+.nx-tl-days{font-size:9px;color:#444;letter-spacing:.04em}
+
+.nx-dash-cta{margin-top:auto;padding-top:1.25rem;display:flex;gap:.75rem;border-top:1px solid var(--nx-line)}
+.nx-dash-cta .nx-btn-acid,.nx-dash-cta .nx-btn-outline{flex:1}
+
+/* ============================================================
+   MODULE 02 — LIVE ESG & COMPLIANCE LEDGER
+   ============================================================ */
+.nx-esg-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--nx-line);margin-bottom:1px}
+@media (max-width:880px){.nx-esg-metrics{grid-template-columns:1fr}}
+.nx-metric{background:var(--nx-panel);padding:2rem}
+.nx-metric-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.nx-metric-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase;max-width:160px;line-height:1.6}
+.nx-metric-score{font-family:var(--disp);font-size:13px;color:var(--acid)}
+.nx-metric-val{font-family:var(--disp);font-size:40px;color:#fff;line-height:1;margin-bottom:1.1rem}
+.nx-metric-val .unit{font-size:14px;color:var(--white-dim);margin-left:6px}
+.nx-bar-track{height:5px;background:var(--nx-line2);width:100%;margin-bottom:.6rem;overflow:hidden}
+.nx-bar-fill{height:100%;width:0%;background:var(--acid);transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.nx-bar-fill.warn{background:var(--hazard)}
+.nx-metric-foot{display:flex;justify-content:space-between;font-size:9px;color:#555;letter-spacing:.04em}
+.nx-metric-foot b{color:#999;font-weight:400}
+
+.nx-cert-ledger{background:var(--nx-panel2);border:1px solid var(--nx-line)}
+.nx-cert-head{display:grid;grid-template-columns:1.3fr .9fr .9fr 1fr auto;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid var(--nx-line);font-size:9px;letter-spacing:.15em;color:#555;text-transform:uppercase}
+@media (max-width:780px){.nx-cert-head{display:none}}
+.nx-cert-row{display:grid;grid-template-columns:1.3fr .9fr .9fr 1fr auto;gap:1rem;align-items:center;padding:1.1rem 1.5rem;border-bottom:1px solid var(--nx-line)}
+.nx-cert-row:last-child{border-bottom:none}
+@media (max-width:780px){.nx-cert-row{grid-template-columns:1fr;gap:.5rem;padding:1.25rem 1.5rem}}
+.nx-cert-name{font-size:12px;color:#fff;letter-spacing:.02em;display:flex;align-items:center;gap:.6rem}
+.nx-cert-name::before{content:'◆';color:var(--acid);font-size:8px}
+.nx-cert-status{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid);display:flex;align-items:center;gap:5px}
+.nx-cert-status .dot{width:5px;height:5px;border-radius:50%;background:var(--acid);box-shadow:0 0 6px rgba(184,255,0,.7)}
+.nx-cert-date{font-size:10px;color:var(--white-dim)}
+.nx-cert-hash{font-size:9.5px;color:#555;font-family:var(--mono);letter-spacing:0}
+.nx-cert-dl{font-size:9px;letter-spacing:.1em;color:#999;background:none;border:1px solid var(--nx-line2);padding:7px 12px;cursor:pointer;text-transform:uppercase;font-family:var(--mono);transition:all .15s;white-space:nowrap}
+.nx-cert-dl:hover{border-color:var(--acid);color:var(--acid)}
+
+/* ============================================================
+   MODULE 03 — DIGITAL TWIN & SAMPLE APPROVAL HUB
+   ============================================================ */
+.nx-twin-layout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--nx-line)}
+@media (max-width:960px){.nx-twin-layout{grid-template-columns:1fr}}
+
+.nx-viewer{background:var(--nx-panel);padding:2rem;display:flex;flex-direction:column;min-height:520px}
+.nx-viewer-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.nx-viewer-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase}
+.nx-viewer-mode{display:flex;gap:0;border:1px solid var(--nx-line2)}
+.nx-mode-btn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:6px 12px;background:transparent;border:none;color:#666;cursor:pointer;text-transform:uppercase;transition:all .15s}
+.nx-mode-btn.active{background:var(--acid);color:#050505}
+
+.nx-stage{flex:1;position:relative;background:#020202;border:1px solid var(--nx-line2);display:flex;align-items:center;justify-content:center;overflow:hidden;perspective:900px}
+.nx-stage-grid{position:absolute;inset:0;background-image:linear-gradient(to right,rgba(184,255,0,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(184,255,0,.05) 1px,transparent 1px);background-size:24px 24px}
+.nx-garment{width:200px;height:280px;position:relative;transform-style:preserve-3d;animation:nxRotate 9s linear infinite;transition:filter .3s}
+.nx-stage.is-paused .nx-garment{animation-play-state:paused}
+@keyframes nxRotate{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+.nx-garment svg{width:100%;height:100%;overflow:visible}
+.nx-garment .mesh{fill:none;stroke:var(--acid);stroke-width:1;opacity:.55}
+.nx-garment .solid{fill:rgba(184,255,0,.06);stroke:var(--acid);stroke-width:1.4}
+.nx-viewer-mode[data-mode="render"] ~ .nx-stage .mesh,
+.nx-stage.mode-render .mesh{display:none}
+.nx-stage.mode-wire .solid{fill:none}
+.nx-scanbeam{position:absolute;left:0;right:0;height:60px;background:linear-gradient(to bottom,transparent,rgba(184,255,0,.12),transparent);animation:nxBeam 3.4s ease-in-out infinite}
+@keyframes nxBeam{0%{top:-60px}100%{top:100%}}
+.nx-stage-corner{position:absolute;width:18px;height:18px;border:1px solid rgba(184,255,0,.4)}
+.nx-stage-corner.tl{top:10px;left:10px;border-right:none;border-bottom:none}
+.nx-stage-corner.tr{top:10px;right:10px;border-left:none;border-bottom:none}
+.nx-stage-corner.bl{bottom:10px;left:10px;border-right:none;border-top:none}
+.nx-stage-corner.br{bottom:10px;right:10px;border-left:none;border-top:none}
+.nx-stage-tag{position:absolute;bottom:14px;left:14px;font-size:9px;letter-spacing:.12em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.nx-stage-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--acid);animation:nxBlink 1.2s steps(2) infinite}
+
+.nx-viewer-controls{display:flex;gap:.6rem;margin-top:1.1rem}
+.nx-vctl{flex:1;font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:9px;background:transparent;border:1px solid var(--nx-line2);color:#888;cursor:pointer;text-transform:uppercase;transition:all .15s}
+.nx-vctl:hover{border-color:var(--acid);color:var(--acid)}
+
+.nx-spec{background:var(--nx-panel2);padding:2rem;display:flex;flex-direction:column}
+.nx-spec-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.nx-spec-style{font-family:var(--disp);font-size:24px;color:#fff;text-transform:uppercase}
+.nx-spec-rev{font-size:9px;color:var(--white-dim);letter-spacing:.08em}
+.nx-spec-badge{font-size:9px;letter-spacing:.12em;padding:5px 10px;border:1px solid var(--nx-line2);color:var(--white-dim);text-transform:uppercase;height:fit-content}
+.nx-spec-badge.pending{color:#e0c878;border-color:rgba(224,200,120,.3)}
+.nx-spec-badge.approved{color:var(--acid);border-color:rgba(184,255,0,.4)}
+
+.nx-spec-rows{border-top:1px solid var(--nx-line);margin-bottom:1.75rem}
+.nx-spec-row{display:flex;justify-content:space-between;padding:.85rem 0;border-bottom:1px solid var(--nx-line);font-size:11px}
+.nx-spec-row span{color:var(--white-dim);letter-spacing:.03em}
+.nx-spec-row b{color:#ccc;font-weight:400;letter-spacing:.02em}
+
+.nx-spec-actions{display:flex;gap:.75rem;margin-top:auto}
+.nx-spec-actions .nx-btn-acid,.nx-spec-actions .nx-btn-outline{flex:1}
+.nx-spec-resolved{display:none;align-items:center;gap:1rem;border:1px solid var(--nx-line2);padding:1.25rem;margin-top:auto}
+.nx-spec-resolved.is-visible{display:flex;animation:nxFadeUp .4s ease}
+.nx-spec-resolved .ico{font-size:20px;color:var(--acid)}
+.nx-spec-resolved.is-physical .ico{color:#e0c878}
+.nx-spec-resolved-text{font-size:10px;color:var(--white-dim);letter-spacing:.04em;line-height:1.7}
+.nx-spec-resolved-text b{color:#fff;display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.2rem}
+
+/* approval modal */
+.nx-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.nx-modal-overlay.is-open{display:flex}
+.nx-modal{width:min(520px,100%);background:#080808;border:1px solid var(--acid);box-shadow:0 0 40px rgba(184,255,0,.08)}
+.nx-modal-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--nx-line);display:flex;justify-content:space-between;align-items:center}
+.nx-modal-head-title{font-family:var(--disp);font-size:18px;letter-spacing:.03em;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:.6rem}
+.nx-modal-head-title::before{content:'';width:7px;height:7px;background:var(--acid)}
+.nx-modal-close{background:none;border:1px solid var(--nx-line2);color:#999;width:26px;height:26px;cursor:pointer;font-size:12px}
+.nx-modal-close:hover{border-color:var(--hazard);color:var(--hazard)}
+.nx-modal-body{padding:1.5rem}
+.nx-modal-warn{font-size:10px;color:var(--white-dim);letter-spacing:.03em;line-height:1.8;margin-bottom:1.5rem;border-left:2px solid var(--acid);padding-left:.85rem}
+
+.nx-sig-label{font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase;margin-bottom:.6rem;display:flex;justify-content:space-between}
+.nx-sig-pad-wrap{border:1px solid var(--nx-line2);background:#020202;position:relative;margin-bottom:.6rem}
+.nx-sig-pad{display:block;width:100%;height:140px;cursor:crosshair;touch-action:none}
+.nx-sig-baseline{position:absolute;left:1rem;right:1rem;bottom:28px;height:1px;background:var(--nx-line2);pointer-events:none}
+.nx-sig-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:#333;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+.nx-sig-clear{font-size:9px;letter-spacing:.1em;color:#666;background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-family:var(--mono);margin-bottom:1.25rem}
+.nx-sig-clear:hover{color:var(--hazard)}
+
+.nx-field{margin-bottom:1.25rem}
+.nx-field label{display:block;font-size:9px;letter-spacing:.15em;color:var(--white-dim);text-transform:uppercase;margin-bottom:.6rem}
+.nx-field input[type="text"]{width:100%;background:#020202;border:1px solid var(--nx-line2);color:#fff;font-family:var(--mono);font-size:13px;padding:11px 13px;outline:none;transition:border-color .15s}
+.nx-field input[type="text"]:focus{border-color:var(--acid)}
+.nx-check-row{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:1.5rem;cursor:pointer}
+.nx-check-row input{margin-top:3px;accent-color:var(--acid);width:14px;height:14px;flex-shrink:0}
+.nx-check-row span{font-size:10.5px;color:var(--white-dim);line-height:1.7;letter-spacing:.02em}
+.nx-modal-actions{display:flex;gap:.75rem}
+.nx-modal-actions .nx-btn-acid,.nx-modal-actions .nx-btn-outline{flex:1}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     MODULE 01 — SMART SOURCING ENGINE
+     ============================================================ -->
+<section class="nx-module" id="module-sourcing">
+  <div class="nx-wrap">
+    <div class="nx-eyebrow">Module 01 / Zero-Friction Quoting</div>
+    <h2 class="nx-title">Smart Sourcing <em>Engine</em></h2>
+    <p class="nx-sub">Drop a tech pack. NexOS parses construction data and returns a predictive FOB, an MOQ optimizer, and a real lead-time forecast — no buyer ever waits on a manual quote.</p>
+
+    <div class="nx-src-layout">
+      <div class="nx-dropzone" id="nxDropzone">
+        <div class="nx-dz-grid"></div>
+        <div class="nx-dz-idle" id="nxDzIdle">
+          <div class="nx-dz-icon">⇩</div>
+          <div class="nx-dz-headline">Drop Tech Pack Here</div>
+          <p class="nx-dz-copy">Drag a PDF spec sheet, or browse from your device. Ingestion begins instantly.</p>
+          <button class="nx-dz-browse" id="nxBrowseBtn" type="button">Browse File</button>
+          <div class="nx-dz-formats">PDF · MAX 25MB</div>
+          <input type="file" id="nxFileInput" class="nx-dz-input" accept="application/pdf">
+        </div>
+        <div class="nx-dz-scan" id="nxDzScan">
+          <div class="nx-scan-file">
+            <div class="nx-scan-filename" id="nxScanFilename">TECHPACK_FW26_CARGO.pdf</div>
+            <div class="nx-scan-status" id="nxScanStatus"><span class="dot"></span> INGESTING</div>
+          </div>
+          <div class="nx-progress-track"><div class="nx-progress-fill" id="nxProgFill"></div></div>
+          <div class="nx-progress-pct">PROGRESS <span id="nxProgPct">0%</span></div>
+          <div class="nx-terminal" id="nxTerminal"></div>
+        </div>
+      </div>
+
+      <div class="nx-dash">
+        <div class="nx-dash-empty" id="nxDashEmpty">
+          <div class="ico">▢</div>
+          <p>Predictive dashboard renders here once a tech pack is ingested.</p>
+        </div>
+
+        <div class="nx-dash-body" id="nxDashBody">
+          <div class="nx-dash-label">Predictive Dashboard <span class="nx-dash-conf" id="nxConfidence">CONFIDENCE 93.8%</span></div>
+
+          <div class="nx-fob-display">
+            <div class="nx-fob-num" id="nxFobPrice">4.85</div>
+            <div class="nx-fob-unit">USD / PC</div>
+            <div class="nx-fob-delta" id="nxFobDelta">at <b>300</b> pcs</div>
+          </div>
+
+          <div class="nx-moq-block">
+            <div class="nx-moq-row">
+              <span class="nx-moq-label">MOQ Optimization</span>
+              <span class="nx-moq-val" id="nxMoqVal">300 pcs</span>
+            </div>
+            <input type="range" min="100" max="2000" step="50" value="300" class="nx-slider" id="nxMoqSlider">
+            <div class="nx-moq-scale"><span>100</span><span>1000</span><span>2000 PCS</span></div>
+          </div>
+
+          <div class="nx-timeline-label">Lead Time Forecast <span id="nxTotalDays">38 DAYS TOTAL</span></div>
+          <div class="nx-timeline" id="nxTimeline"></div>
+
+          <div class="nx-dash-cta">
+            <button class="nx-btn-acid" id="nxConfirmRfq">Confirm RFQ →</button>
+            <button class="nx-btn-outline" id="nxResetDz">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MODULE 02 — LIVE ESG & COMPLIANCE LEDGER
+     ============================================================ -->
+<section class="nx-module" id="module-esg">
+  <div class="nx-wrap">
+    <div class="nx-eyebrow">Module 02 / Verified Compliance</div>
+    <h2 class="nx-title">Live ESG & <em>Compliance</em> Ledger</h2>
+    <p class="nx-sub">Real-time factory metrics and a verified certificate ledger — every credential hash-stamped so your compliance team never has to take our word for it.</p>
+
+    <div class="nx-esg-metrics">
+      <div class="nx-metric">
+        <div class="nx-metric-top">
+          <div class="nx-metric-label">Carbon Footprint per Garment</div>
+          <div class="nx-metric-score" id="nxCarbonScore">A-</div>
+        </div>
+        <div class="nx-metric-val" id="nxCarbonVal">2.4<span class="unit">KG CO₂E</span></div>
+        <div class="nx-bar-track"><div class="nx-bar-fill" id="nxCarbonBar" style="width:0%"></div></div>
+        <div class="nx-metric-foot"><span>Industry avg <b>4.1 kg</b></span><span>−41.5%</span></div>
+      </div>
+      <div class="nx-metric">
+        <div class="nx-metric-top">
+          <div class="nx-metric-label">Worker Safety Index</div>
+          <div class="nx-metric-score" id="nxSafetyScore">91</div>
+        </div>
+        <div class="nx-metric-val" id="nxSafetyVal">91<span class="unit">/ 100</span></div>
+        <div class="nx-bar-track"><div class="nx-bar-fill" id="nxSafetyBar" style="width:0%"></div></div>
+        <div class="nx-metric-foot"><span>BSCI threshold <b>≥80</b></span><span>Updated 6h ago</span></div>
+      </div>
+      <div class="nx-metric">
+        <div class="nx-metric-top">
+          <div class="nx-metric-label">Water Stewardship Index</div>
+          <div class="nx-metric-score" id="nxWaterScore">78</div>
+        </div>
+        <div class="nx-metric-val" id="nxWaterVal">38<span class="unit">L / GARMENT</span></div>
+        <div class="nx-bar-track"><div class="nx-bar-fill warn" id="nxWaterBar" style="width:0%"></div></div>
+        <div class="nx-metric-foot"><span>Target <b>≤30L</b></span><span>Monitoring</span></div>
+      </div>
+    </div>
+
+    <div class="nx-cert-ledger" id="nxCertLedger">
+      <div class="nx-cert-head"><span>Certificate</span><span>Status</span><span>Valid Until</span><span>Verification Hash</span><span></span></div>
+      <!-- rows injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MODULE 03 — DIGITAL TWIN & SAMPLE APPROVAL HUB
+     ============================================================ -->
+<section class="nx-module" id="module-twin">
+  <div class="nx-wrap">
+    <div class="nx-eyebrow">Module 03 / Digital Twin</div>
+    <h2 class="nx-title">Sample <em>Approval</em> Hub</h2>
+    <p class="nx-sub">Lock in a sample design from the AI-generated digital prototype — collapse a 14-day physical sample cycle into a single signed approval.</p>
+
+    <div class="nx-twin-layout">
+      <div class="nx-viewer">
+        <div class="nx-viewer-top">
+          <div class="nx-viewer-label">Digital Prototype · Cargo Trouser FW26</div>
+          <div class="nx-viewer-mode">
+            <button class="nx-mode-btn active" data-mode="wire" id="nxModeWire">Wireframe</button>
+            <button class="nx-mode-btn" data-mode="render" id="nxModeRender">Render</button>
+          </div>
+        </div>
+
+        <div class="nx-stage mode-wire" id="nxStage">
+          <div class="nx-stage-grid"></div>
+          <div class="nx-scanbeam"></div>
+          <div class="nx-stage-corner tl"></div>
+          <div class="nx-stage-corner tr"></div>
+          <div class="nx-stage-corner bl"></div>
+          <div class="nx-stage-corner br"></div>
+          <div class="nx-stage-tag"><span class="dot"></span> AI RENDER · LIVE SYNC</div>
+
+          <div class="nx-garment" id="nxGarment">
+            <svg viewBox="0 0 200 280">
+              <path class="solid" d="M70 20 L130 20 L150 55 L130 70 L130 260 L70 260 L70 70 L50 55 Z" />
+              <path class="mesh" d="M70 20 L130 20 L150 55 L130 70 L130 260 L70 260 L70 70 L50 55 Z" />
+              <path class="mesh" d="M70 70 L130 70" />
+              <path class="mesh" d="M70 110 L130 110" />
+              <path class="mesh" d="M70 150 L130 150" />
+              <path class="mesh" d="M70 190 L130 190" />
+              <path class="mesh" d="M70 230 L130 230" />
+              <path class="mesh" d="M85 20 L85 260" />
+              <path class="mesh" d="M100 20 L100 260" />
+              <path class="mesh" d="M115 20 L115 260" />
+              <path class="mesh" d="M70 20 L50 55 L70 70" />
+              <path class="mesh" d="M130 20 L150 55 L130 70" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="nx-viewer-controls">
+          <button class="nx-vctl" id="nxRotateToggle">⏸ Pause Rotation</button>
+          <button class="nx-vctl" id="nxResetView">↺ Reset View</button>
+        </div>
+      </div>
+
+      <div class="nx-spec">
+        <div class="nx-spec-top">
+          <div>
+            <div class="nx-spec-style">CG-FW26-014</div>
+            <div class="nx-spec-rev">Revision 03 · Generated 28 Jun 2026</div>
+          </div>
+          <div class="nx-spec-badge pending" id="nxSpecBadge">Pending Review</div>
+        </div>
+
+        <div class="nx-spec-rows">
+          <div class="nx-spec-row"><span>Style</span><b>Utility Cargo Trouser</b></div>
+          <div class="nx-spec-row"><span>Base Fabric</span><b>97/3 Cotton-Spandex Twill</b></div>
+          <div class="nx-spec-row"><span>GSM</span><b>260 GSM</b></div>
+          <div class="nx-spec-row"><span>Colorway</span><b>Olive Drab / PMS 4975C</b></div>
+          <div class="nx-spec-row"><span>Trims</span><b>YKK Zip, Matte Cargo Snaps</b></div>
+          <div class="nx-spec-row"><span>Wash</span><b>Enzyme Garment Wash</b></div>
+          <div class="nx-spec-row"><span>Size Range Sampled</span><b>S – XXL</b></div>
+        </div>
+
+        <div class="nx-spec-actions" id="nxSpecActions">
+          <button class="nx-btn-acid" id="nxApproveBtn">Approve Digital Prototype</button>
+          <button class="nx-btn-outline" id="nxPhysicalBtn">Request Physical Sample</button>
+        </div>
+
+        <div class="nx-spec-resolved" id="nxSpecResolved">
+          <div class="ico" id="nxResolvedIco">✓</div>
+          <div class="nx-spec-resolved-text" id="nxResolvedText">
+            <b>Prototype Locked</b>
+            Approved &amp; hash-stamped. Routed to bulk production scheduling.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROVAL MODAL -->
+<div class="nx-modal-overlay" id="nxModalOverlay">
+  <div class="nx-modal">
+    <div class="nx-modal-head">
+      <div class="nx-modal-head-title">Lock Digital Prototype</div>
+      <button class="nx-modal-close" id="nxModalClose">✕</button>
+    </div>
+    <div class="nx-modal-body">
+      <div class="nx-modal-warn">Signing this approval locks spec revision <b>CG-FW26-014 · Rev 03</b> as the production reference. Bulk cutting will key off these exact specifications.</div>
+
+      <div class="nx-sig-label"><span>Digital Signature</span><span id="nxSigState">UNSIGNED</span></div>
+      <div class="nx-sig-pad-wrap">
+        <canvas class="nx-sig-pad" id="nxSigPad"></canvas>
+        <div class="nx-sig-baseline"></div>
+        <div class="nx-sig-placeholder" id="nxSigPlaceholder">Sign with mouse / touch</div>
+      </div>
+      <button class="nx-sig-clear" id="nxSigClear">Clear signature</button>
+
+      <div class="nx-field">
+        <label>Full Name &amp; Title</label>
+        <input type="text" id="nxSignerName" placeholder="e.g. Anna de Vries, Head of Sourcing">
+      </div>
+
+      <label class="nx-check-row">
+        <input type="checkbox" id="nxSignConfirm">
+        <span>I confirm this digital prototype matches our approved specifications and authorize NexOS to proceed to bulk production scheduling.</span>
+      </label>
+
+      <div class="nx-modal-actions">
+        <button class="nx-btn-acid" id="nxLockBtn" disabled>Lock Prototype</button>
+        <button class="nx-btn-outline" id="nxModalCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   NEXOS CORE PORTAL — VANILLA JS
+   Hook points for Make.com webhooks / Shopify Storefront API
+   are marked inline. All scan/estimate logic is simulated
+   client-side and ready to be swapped for live fetch() calls.
+   ============================================================ */
+
+function nxToast(msg){
+  let t=document.getElementById('nxToastEl');
+  if(!t){
+    t=document.createElement('div');
+    t.id='nxToastEl';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#0c0c0c;border:1px solid var(--acid);color:var(--acid);font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:10px 18px;z-index:99999;opacity:0;transition:all .25s;text-transform:uppercase';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)'});
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)'},1900);
+}
+function nxFakeHash(seed){
+  let h=0;
+  for(let i=0;i<seed.length;i++){h=(h<<5)-h+seed.charCodeAt(i);h|=0}
+  const hex=(h>>>0).toString(16).padStart(8,'0');
+  let tail='';
+  for(let i=0;i<6;i++)tail+=Math.floor(Math.random()*16).toString(16);
+  return '0x'+hex+tail;
+}
+function nxDownloadJSON(filename,obj){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+/* ============================================================
+   MODULE 01 — SMART SOURCING ENGINE
+   ============================================================ */
+(function(){
+  const dz=document.getElementById('nxDropzone');
+  const idle=document.getElementById('nxDzIdle');
+  const fileInput=document.getElementById('nxFileInput');
+  const browseBtn=document.getElementById('nxBrowseBtn');
+  const filenameEl=document.getElementById('nxScanFilename');
+  const statusEl=document.getElementById('nxScanStatus');
+  const progFill=document.getElementById('nxProgFill');
+  const progPct=document.getElementById('nxProgPct');
+  const terminal=document.getElementById('nxTerminal');
+  const dashEmpty=document.getElementById('nxDashEmpty');
+  const dashBody=document.getElementById('nxDashBody');
+  const resetBtn=document.getElementById('nxResetDz');
+  const moqSlider=document.getElementById('nxMoqSlider');
+  const moqVal=document.getElementById('nxMoqVal');
+  const fobPriceEl=document.getElementById('nxFobPrice');
+  const fobDeltaEl=document.getElementById('nxFobDelta');
+  const totalDaysEl=document.getElementById('nxTotalDays');
+  const timelineEl=document.getElementById('nxTimeline');
+
+  const LOG_SEQUENCE=[
+    {pct:9,  text:'Reading PDF structure…'},
+    {pct:19, text:'Detecting garment category…'},
+    {pct:30, text:'Parsing GSM…'},
+    {pct:42, text:'Identifying trims & hardware…'},
+    {pct:54, text:'Extracting stitching & construction map…'},
+    {pct:66, text:'Cross-referencing factory line capacity…'},
+    {pct:78, text:'Calculating CM (cut-make)…'},
+    {pct:90, text:'Modelling MOQ price curve…'},
+    {pct:100,text:'Ingestion complete.'}
+  ];
+
+  const STAGES=[
+    {name:'Sampling',days:7},{name:'Cutting',days:4},{name:'Sewing',days:14},
+    {name:'QC',days:5},{name:'Finishing',days:4},{name:'Dispatch',days:4}
+  ];
+
+  let baseFob=4.85, baseDays=38, timers=[];
+  function clearTimers(){timers.forEach(clearTimeout);timers=[]}
+
+  function resetDropzone(){
+    clearTimers();
+    dz.classList.remove('is-scanning','is-drag');
+    idle.style.display='';
+    terminal.innerHTML='';
+    progFill.style.width='0%';
+    progPct.innerHTML='<span>0%</span>';
+    dashEmpty.style.display='';
+    dashBody.classList.remove('is-visible');
+    fileInput.value='';
+  }
+
+  function appendLog(line,isLast){
+    const row=document.createElement('div');
+    row.className='nx-term-line';
+    row.innerHTML='<span class="tag">[NEXOS-AI]</span>'+line+(isLast?'':' <span class="nx-term-cursor"></span>');
+    const prevCursor=terminal.querySelector('.nx-term-cursor');
+    if(prevCursor)prevCursor.remove();
+    const prevLast=terminal.lastElementChild;
+    if(prevLast)prevLast.classList.add('done');
+    terminal.appendChild(row);
+    terminal.scrollTop=terminal.scrollHeight;
+  }
+
+  function runScanSimulation(file){
+    dz.classList.add('is-scanning');
+    dz.classList.remove('is-drag');
+    idle.style.display='none';
+    filenameEl.textContent=(file && file.name) ? file.name : 'TECHPACK_FW26_CARGO.pdf';
+    statusEl.innerHTML='<span class="dot"></span> INGESTING';
+    terminal.innerHTML='';
+    progFill.style.width='0%';
+    dashEmpty.style.display='';
+    dashBody.classList.remove('is-visible');
+
+    let cumulativeDelay=0;
+    LOG_SEQUENCE.forEach((step,i)=>{
+      cumulativeDelay += 380+Math.random()*420;
+      const t=setTimeout(()=>{
+        progFill.style.width=step.pct+'%';
+        progPct.innerHTML='<span>'+step.pct+'%</span>';
+        appendLog(step.text,i===LOG_SEQUENCE.length-1);
+        if(i===LOG_SEQUENCE.length-1){
+          statusEl.innerHTML='<span class="dot" style="background:var(--acid)"></span> COMPLETE';
+          revealDashboard();
+        }
+      },cumulativeDelay);
+      timers.push(t);
+    });
+  }
+
+  function buildTimeline(scale){
+    timelineEl.innerHTML='';
+    let total=0;
+    STAGES.forEach((s,i)=>{
+      const adjDays=Math.max(1,Math.round(s.days*scale));
+      total+=adjDays;
+      const step=document.createElement('div');
+      step.className='nx-tl-step filled';
+      step.innerHTML='<div class="nx-tl-dot"></div><div class="nx-tl-name">'+s.name+'</div><div class="nx-tl-days">'+adjDays+'D</div>';
+      timelineEl.appendChild(step);
+    });
+    return total;
+  }
+
+  function recalc(){
+    const qty=parseInt(moqSlider.value,10);
+    moqVal.textContent=qty+' pcs';
+    // simple economies-of-scale curve: more qty -> lower unit price, longer total run days
+    const priceFactor=1-Math.min(0.34,(qty-100)/2000*0.4);
+    const fob=(baseFob*priceFactor).toFixed(2);
+    const dayScale=0.82+Math.min(0.6,(qty/2000)*0.6);
+    const totalDays=buildTimeline(dayScale);
+
+    fobPriceEl.textContent=fob;
+    fobDeltaEl.innerHTML='at <b>'+qty+'</b> pcs';
+    totalDaysEl.textContent=totalDays+' DAYS TOTAL';
+  }
+
+  function revealDashboard(){
+    const gsmOptions=[160,180,200,220,240,260,280];
+    baseFob=(3.4+Math.random()*3.6);
+    baseDays=30+Math.floor(Math.random()*16);
+    document.getElementById('nxConfidence').textContent='CONFIDENCE '+(90+Math.random()*8).toFixed(1)+'%';
+    moqSlider.value=300;
+    recalc();
+    dashEmpty.style.display='none';
+    dashBody.classList.add('is-visible');
+  }
+
+  ['dragenter','dragover'].forEach(evt=>{
+    dz.addEventListener(evt,e=>{e.preventDefault();e.stopPropagation();if(!dz.classList.contains('is-scanning'))dz.classList.add('is-drag')});
+  });
+  ['dragleave','dragend'].forEach(evt=>{
+    dz.addEventListener(evt,e=>{e.preventDefault();dz.classList.remove('is-drag')});
+  });
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();e.stopPropagation();
+    dz.classList.remove('is-drag');
+    if(dz.classList.contains('is-scanning'))return;
+    const file=e.dataTransfer.files && e.dataTransfer.files[0];
+    runScanSimulation(file);
+  });
+  browseBtn.addEventListener('click',e=>{e.stopPropagation();fileInput.click()});
+  fileInput.addEventListener('change',()=>{
+    if(fileInput.files && fileInput.files[0])runScanSimulation(fileInput.files[0]);
+  });
+  resetBtn.addEventListener('click',resetDropzone);
+  moqSlider.addEventListener('input',recalc);
+
+  document.getElementById('nxConfirmRfq').addEventListener('click',()=>{
+    nxToast('RFQ routed to NexOS pipeline');
+    // Hook point — Make.com:
+    // fetch('YOUR_MAKE_COM_WEBHOOK_URL_HERE',{method:'POST',headers:{'Content-Type':'application/json'},
+    //   body:JSON.stringify({fob:fobPriceEl.textContent, moq:moqSlider.value, leadDays:totalDaysEl.textContent})});
+  });
+})();
+
+/* ============================================================
+   MODULE 02 — LIVE ESG & COMPLIANCE LEDGER
+   ============================================================ */
+(function(){
+  function animateBar(id,pct){
+    const el=document.getElementById(id);
+    requestAnimationFrame(()=>{el.style.width=pct+'%'});
+  }
+  animateBar('nxCarbonBar',59);   // lower-is-better metric, bar shown as "performance vs benchmark"
+  animateBar('nxSafetyBar',91);
+  animateBar('nxWaterBar',62);
+
+  const CERTS=[
+    {name:'BSCI — Business Social Compliance',status:'VERIFIED',until:'14 Mar 2027'},
+    {name:'OEKO-TEX Standard 100',status:'VERIFIED',until:'02 Sep 2026'},
+    {name:'GOTS — Global Organic Textile',status:'VERIFIED',until:'21 Nov 2026'},
+    {name:'Higg FEM 4.0 Self-Assessment',status:'IN REVIEW',until:'Pending'}
+  ];
+
+  const ledger=document.getElementById('nxCertLedger');
+  CERTS.forEach((c,i)=>{
+    const hash=nxFakeHash(c.name+i);
+    const row=document.createElement('div');
+    row.className='nx-cert-row';
+    const isVerified=c.status==='VERIFIED';
+    row.innerHTML=
+      '<div class="nx-cert-name">'+c.name+'</div>'+
+      '<div class="nx-cert-status" style="'+(isVerified?'':'color:#e0c878')+'"><span class="dot" style="'+(isVerified?'':'background:#e0c878;box-shadow:none')+'"></span>'+c.status+'</div>'+
+      '<div class="nx-cert-date">'+c.until+'</div>'+
+      '<div class="nx-cert-hash">'+hash+'</div>'+
+      '<button class="nx-cert-dl" '+(isVerified?'':'disabled style="opacity:.35;cursor:not-allowed"')+'>Download Hash</button>';
+    ledger.appendChild(row);
+
+    const dlBtn=row.querySelector('.nx-cert-dl');
+    if(isVerified){
+      dlBtn.addEventListener('click',()=>{
+        nxDownloadJSON(c.name.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'_proof.json',{
+          certificate:c.name,
+          status:c.status,
+          valid_until:c.until,
+          verification_hash:hash,
+          generated_at:new Date().toISOString(),
+          issuer:'NexOS Compliance Ledger'
+        });
+        nxToast('Verification proof downloaded');
+        // Hook point — Make.com:
+        // fetch('YOUR_MAKE_COM_WEBHOOK_URL_HERE',{method:'POST',body:JSON.stringify({event:'cert_hash_downloaded',cert:c.name,hash})});
+      });
+    }
+  });
+})();
+
+/* ============================================================
+   MODULE 03 — DIGITAL TWIN & SAMPLE APPROVAL HUB
+   ============================================================ */
+(function(){
+  const stage=document.getElementById('nxStage');
+  const garment=document.getElementById('nxGarment');
+  const modeWire=document.getElementById('nxModeWire');
+  const modeRender=document.getElementById('nxModeRender');
+  const rotateToggle=document.getElementById('nxRotateToggle');
+  const resetView=document.getElementById('nxResetView');
+
+  modeWire.addEventListener('click',()=>{
+    modeWire.classList.add('active');modeRender.classList.remove('active');
+    stage.classList.add('mode-wire');stage.classList.remove('mode-render');
+  });
+  modeRender.addEventListener('click',()=>{
+    modeRender.classList.add('active');modeWire.classList.remove('active');
+    stage.classList.add('mode-render');stage.classList.remove('mode-wire');
+  });
+
+  let paused=false;
+  rotateToggle.addEventListener('click',()=>{
+    paused=!paused;
+    stage.classList.toggle('is-paused',paused);
+    rotateToggle.textContent=paused?'▶ Resume Rotation':'⏸ Pause Rotation';
+  });
+  resetView.addEventListener('click',()=>{
+    garment.style.animation='none';
+    void garment.offsetWidth;
+    garment.style.animation='';
+    stage.classList.remove('is-paused');
+    paused=false;
+    rotateToggle.textContent='⏸ Pause Rotation';
+  });
+
+  // ---- spec approval flow ----
+  const specBadge=document.getElementById('nxSpecBadge');
+  const specActions=document.getElementById('nxSpecActions');
+  const specResolved=document.getElementById('nxSpecResolved');
+  const resolvedIco=document.getElementById('nxResolvedIco');
+  const resolvedText=document.getElementById('nxResolvedText');
+  const approveBtn=document.getElementById('nxApproveBtn');
+  const physicalBtn=document.getElementById('nxPhysicalBtn');
+
+  physicalBtn.addEventListener('click',()=>{
+    specBadge.textContent='Physical Sample Requested';
+    specBadge.className='nx-spec-badge pending';
+    specActions.style.display='none';
+    resolvedIco.textContent='⏳';
+    specResolved.className='nx-spec-resolved is-visible is-physical';
+    resolvedText.innerHTML='<b>Physical Sample Requested</b>Routed to sample room. Estimated dispatch in 5 business days.';
+    nxToast('Physical sample requested');
+    // Hook point — Make.com:
+    // fetch('YOUR_MAKE_COM_WEBHOOK_URL_HERE',{method:'POST',body:JSON.stringify({event:'physical_sample_requested',style:'CG-FW26-014'})});
+  });
+
+  // ---- modal + signature pad ----
+  const overlay=document.getElementById('nxModalOverlay');
+  const modalClose=document.getElementById('nxModalClose');
+  const modalCancel=document.getElementById('nxModalCancel');
+  const lockBtn=document.getElementById('nxLockBtn');
+  const sigCanvas=document.getElementById('nxSigPad');
+  const sigCtx=sigCanvas.getContext('2d');
+  const sigPlaceholder=document.getElementById('nxSigPlaceholder');
+  const sigState=document.getElementById('nxSigState');
+  const sigClear=document.getElementById('nxSigClear');
+  const signerName=document.getElementById('nxSignerName');
+  const signConfirm=document.getElementById('nxSignConfirm');
+
+  let hasSignature=false, drawing=false, lastX=0, lastY=0;
+
+  function resizeCanvas(){
+    const ratio=window.devicePixelRatio||1;
+    const rect=sigCanvas.getBoundingClientRect();
+    sigCanvas.width=rect.width*ratio;
+    sigCanvas.height=rect.height*ratio;
+    sigCtx.scale(ratio,ratio);
+    sigCtx.strokeStyle='#b8ff00';
+    sigCtx.lineWidth=2;
+    sigCtx.lineCap='round';
+    sigCtx.lineJoin='round';
+  }
+
+  function getPos(e){
+    const rect=sigCanvas.getBoundingClientRect();
+    const t=e.touches? e.touches[0]:e;
+    return {x:t.clientX-rect.left,y:t.clientY-rect.top};
+  }
+  function startDraw(e){
+    e.preventDefault();
+    drawing=true;
+    const p=getPos(e);lastX=p.x;lastY=p.y;
+    if(!hasSignature){hasSignature=true;sigPlaceholder.style.display='none';sigState.textContent='SIGNED';updateLockState()}
+  }
+  function moveDraw(e){
+    if(!drawing)return;
+    e.preventDefault();
+    const p=getPos(e);
+    sigCtx.beginPath();
+    sigCtx.moveTo(lastX,lastY);
+    sigCtx.lineTo(p.x,p.y);
+    sigCtx.stroke();
+    lastX=p.x;lastY=p.y;
+  }
+  function endDraw(){drawing=false}
+
+  sigCanvas.addEventListener('mousedown',startDraw);
+  sigCanvas.addEventListener('mousemove',moveDraw);
+  window.addEventListener('mouseup',endDraw);
+  sigCanvas.addEventListener('touchstart',startDraw,{passive:false});
+  sigCanvas.addEventListener('touchmove',moveDraw,{passive:false});
+  sigCanvas.addEventListener('touchend',endDraw);
+
+  sigClear.addEventListener('click',()=>{
+    sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+    hasSignature=false;
+    sigPlaceholder.style.display='';
+    sigState.textContent='UNSIGNED';
+    updateLockState();
+  });
+
+  function updateLockState(){
+    lockBtn.disabled=!(hasSignature && signerName.value.trim().length>2 && signConfirm.checked);
+  }
+  signerName.addEventListener('input',updateLockState);
+  signConfirm.addEventListener('change',updateLockState);
+
+  function openModal(){
+    overlay.classList.add('is-open');
+    requestAnimationFrame(resizeCanvas);
+  }
+  function closeModal(){overlay.classList.remove('is-open')}
+
+  approveBtn.addEventListener('click',openModal);
+  modalClose.addEventListener('click',closeModal);
+  modalCancel.addEventListener('click',closeModal);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});
+
+  lockBtn.addEventListener('click',()=>{
+    if(lockBtn.disabled)return;
+    const hash=nxFakeHash(signerName.value+Date.now());
+    closeModal();
+    specBadge.textContent='Approved · Locked';
+    specBadge.className='nx-spec-badge approved';
+    specActions.style.display='none';
+    resolvedIco.textContent='✓';
+    specResolved.className='nx-spec-resolved is-visible';
+    resolvedText.innerHTML='<b>Prototype Locked</b>Signed by '+signerName.value+' · '+hash.slice(0,14)+'… · Routed to bulk production scheduling.';
+    nxToast('Digital prototype locked & signed');
+    // Hook point — Make.com / Shopify Storefront API:
+    // fetch('YOUR_MAKE_COM_WEBHOOK_URL_HERE',{method:'POST',headers:{'Content-Type':'application/json'},
+    //   body:JSON.stringify({event:'prototype_approved',style:'CG-FW26-014',signer:signerName.value,hash})});
+  });
+
+  window.addEventListener('resize',()=>{ if(overlay.classList.contains('is-open')) resizeCanvas(); });
+})();
+</script>
+</body>
+</html>

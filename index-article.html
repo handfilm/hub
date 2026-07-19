@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Distributed Architecture — Rakib Himon</title>
+<meta name="description" content="Building an autonomous 4-app ecosystem: how a PC, tablet, and Android phone became one distributed development pipeline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style-article.css">
+</head>
+<body>
+
+<!-- ================= SYSTEM READOUT STRIP ================= -->
+<div class="sys-strip">
+  <span class="sys-item">RAWX_ENGINE // FIELD_LOG</span>
+  <span class="sys-item sys-item-right" id="sysClock">--:--:--</span>
+</div>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <a class="nav-brand" href="#top">
+    <span class="nav-brand-main">RAKIB_HIMON</span>
+    <span class="nav-brand-sub" data-i18n="nav.role">WORKFLOW ARCHITECT</span>
+  </a>
+  <div class="nav-right">
+    <span class="nav-sig" data-i18n="nav.sig">SIG: 4-STAGE</span>
+    <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
+      <span class="lt-en active" data-lang-btn="en">EN</span>
+      <span class="lt-sep">//</span>
+      <span class="lt-bn" data-lang-btn="bn">BN</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ================= STAGE RAIL (desktop only) ================= -->
+<aside class="stage-rail" id="stageRail">
+  <div class="rail-line"></div>
+  <a href="#sheets" class="rail-node" data-stage="1"><span class="rail-num">01</span><span class="rail-label" data-i18n="rail.01">SHEETS</span></a>
+  <a href="#appsscript" class="rail-node" data-stage="2"><span class="rail-num">02</span><span class="rail-label" data-i18n="rail.02">API ENGINE</span></a>
+  <a href="#codespaces" class="rail-node" data-stage="3"><span class="rail-num">03</span><span class="rail-label" data-i18n="rail.03">CLOUD IDE</span></a>
+  <a href="#termux" class="rail-node" data-stage="4"><span class="rail-num">04</span><span class="rail-label" data-i18n="rail.04">TACTICAL</span></a>
+</aside>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="hero-media">
+    <img src="assets/workflow-architect/command-center.jpeg" alt="Laptop with red command-center dashboard on a rooftop at night">
+    <div class="hero-scanline"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow" data-i18n="hero.eyebrow">FIELD NOTES // RAKIB HIMON</div>
+    <h1 class="hero-title" data-i18n="hero.title">THE DISTRIBUTED ARCHITECTURE</h1>
+    <p class="hero-subtitle" data-i18n="hero.subtitle">Building an Autonomous 4-App Ecosystem</p>
+    <div class="hero-meta">
+      <span data-i18n="hero.byline">Rakib Himon — Creative Operator, Automation Architect</span>
+      <span class="hero-meta-dot">//</span>
+      <span data-i18n="hero.location">DHAKA, BD</span>
+    </div>
+  </div>
+  <div class="hero-corner tl"></div>
+  <div class="hero-corner tr"></div>
+  <div class="hero-corner bl"></div>
+  <div class="hero-corner br"></div>
+</header>
+
+<!-- ================= ARTICLE ================= -->
+<main class="article">
+
+  <!-- SECTION 01 — THE PHYSICAL TOLL -->
+  <section class="section" id="intro">
+    <div class="section-head">
+      <span class="section-eyebrow" data-i18n="s1.eyebrow">01 // THE PROBLEM</span>
+      <h2 class="section-title" data-i18n="s1.title">The Body Wasn't Built for One Chair</h2>
+    </div>
+    <div class="section-body two-col">
+      <div class="col-text">
+        <p data-i18n="s1.p1">Eleven hours into a color grade, the pain stops being about the work and starts being about the chair. Stiff shoulders. A locked lower back. Eyes that have stared at the same 27-inch panel since sunrise. For years the assumption in this industry was simple: real work happens at a desk, on a machine powerful enough to carry it, and everything else is a compromise. That assumption is what breaks bodies.</p>
+        <p data-i18n="s1.p2">The fix isn't a better chair. It's refusing to let one machine be the only place work can happen. A distributed workflow means the work follows the operator, not the other way around — from the studio, to a client's office, to a rooftop at midnight when the only thing open is a laptop and a coffee.</p>
+      </div>
+      <figure class="col-figure">
+        <img src="assets/workflow-architect/intro-portrait.jpeg" alt="An operator reviewing a technical blueprint interface on a large monitor">
+        <figcaption><span data-i18n="s1.fig">FIG. 01 // THE OPERATOR, REVIEWING</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="trio-lede">
+      <p data-i18n="s1.p3">Three devices, three jobs — one autonomous chain of command.</p>
+    </div>
+    <div class="trio-grid">
+      <figure class="trio-card">
+        <img src="assets/workflow-architect/pc-station.jpeg" alt="A dual-monitor desk setup displaying architectural blueprints and code">
+        <div class="trio-card-body">
+          <span class="trio-tag">01 // PC</span>
+          <h4 data-i18n="s1.pc">The Heavy-Lifting Command Center</h4>
+          <p data-i18n="s1.pcBody">The only machine trusted with 2TB of visual archive and the compute weight of a full presentation build.</p>
+        </div>
+      </figure>
+      <figure class="trio-card">
+        <img src="assets/workflow-architect/tablet-layer.jpeg" alt="A tablet on a workbench displaying structured JSON data">
+        <div class="trio-card-body">
+          <span class="trio-tag">02 // TABLET</span>
+          <h4 data-i18n="s1.tablet">The Client Presentation Layer</h4>
+          <p data-i18n="s1.tabletBody">Light enough to hand across a table, fast enough to open a live deck without apology.</p>
+        </div>
+      </figure>
+      <figure class="trio-card">
+        <img src="assets/workflow-architect/tactical-mobile.jpeg" alt="A hand holding a phone with a red technical dashboard interface">
+        <div class="trio-card-body">
+          <span class="trio-tag">03 // ANDROID</span>
+          <h4 data-i18n="s1.phone">The Tactical Handgun</h4>
+          <p data-i18n="s1.phoneBody">Always holstered, always loaded — never the primary weapon, but never far from the hand.</p>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- SECTION 02 — THE DATA STRATEGY -->
+  <section class="section" id="data-strategy">
+    <div class="section-head">
+      <span class="section-eyebrow" data-i18n="s2.eyebrow">02 // THE SHIFT</span>
+      <h2 class="section-title" data-i18n="s2.title">From Local Drives to a Cloud-First Spine</h2>
+    </div>
+    <div class="section-body two-col reverse">
+      <figure class="col-figure">
+        <img src="assets/workflow-architect/data-strategy.jpeg" alt="Structural steel beams carrying streams of binary data, an infrastructure metaphor">
+        <figcaption><span data-i18n="s2.fig">FIG. 02 // THE LOAD-BEARING LAYER</span></figcaption>
+      </figure>
+      <div class="col-text">
+        <p data-i18n="s2.p1">An external hard drive is not a strategy. It's a single point of failure with a USB cable. The old habit — copy the shoot to the laptop, copy the laptop to a backup drive, hope nothing dies before the next copy — collapses the moment two devices need to see the same file at once.</p>
+        <p data-i18n="s2.p2">The fix was to stop treating cloud storage as a backup and start treating it as the spine. Google Drive now holds the entire visual archive: raw stills, graded video, source files, the works. Every device — desk, tablet, phone — points at the same folder IDs. There is no "which laptop has the latest version" anymore, because there is only one version, and it lives in the cloud, not on any single machine.</p>
+        <p data-i18n="s2.p3">This one decision is what makes the rest of the ecosystem possible. Once the data has a permanent, device-agnostic home, every other tool in the stack can be swapped, upgraded, or replaced without anything downstream breaking.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 03 — THE 4-APP ECOSYSTEM (INTRO) -->
+  <section class="section" id="ecosystem">
+    <div class="section-head">
+      <span class="section-eyebrow" data-i18n="s3.eyebrow">03 // THE STACK</span>
+      <h2 class="section-title" data-i18n="s3.title">Four Apps, One Autonomous Pipeline</h2>
+    </div>
+    <div class="section-body">
+      <p class="lede" data-i18n="s3.p1">Four ordinary apps, none of them built for this purpose, wired together into something none of them do alone: a pipeline that fetches data, generates an API, syncs to the cloud, and deploys from a phone — with no dedicated backend and no server to maintain.</p>
+      <figure class="diagram-figure">
+        <img src="assets/workflow-architect/ecosystem-diagram.jpeg" alt="Diagram of the NEXOS distributed hub: a 4-stage workflow from Google Drive and Sheets, through Apps Script, to GitHub Codespaces, to tactical mobile deployment">
+        <figcaption><span data-i18n="s3.fig">FIG. 03 // THE FULL PIPELINE, END TO END</span></figcaption>
+      </figure>
+    </div>
+
+    <!-- STAGE 01 — GOOGLE SHEETS -->
+    <div class="stage-block" id="sheets">
+      <div class="stage-marker"><span class="stage-marker-num">01</span></div>
+      <div class="stage-content">
+        <h3 class="stage-title" data-i18n="s3.sheets.title">Google Sheets — The Database</h3>
+        <p data-i18n="s3.sheets.p1">No schema migrations. No code editor. A spreadsheet is the fastest database a one-person studio will ever need — every asset, every project, every client note logged as a row anyone on the team can add to from a phone, in transit, without touching a line of code.</p>
+        <p data-i18n="s3.sheets.p2">It isn't elegant. It's fast, forgiving, and already installed on every device in the ecosystem — which makes it the correct choice, not the compromise.</p>
+      </div>
+    </div>
+
+    <!-- STAGE 02 — GOOGLE APPS SCRIPT -->
+    <div class="stage-block" id="appsscript">
+      <div class="stage-marker"><span class="stage-marker-num">02</span></div>
+      <div class="stage-content">
+        <h3 class="stage-title" data-i18n="s3.gas.title">Google Apps Script — The API Engine</h3>
+        <p data-i18n="s3.gas.p1">A single <code>doGet()</code> function turns that spreadsheet into a live, structured JSON feed — reachable from anywhere, updating the moment a row changes, with zero servers to patch or pay for.</p>
+        <p data-i18n="s3.gas.p2">This is the quiet middleware layer of the whole ecosystem: not glamorous, barely visible, and the exact reason every other app in the stack can talk to the same source of truth without knowing anything about a spreadsheet.</p>
+        <figure class="inline-figure">
+          <img src="assets/workflow-architect/apps-script-node.jpeg" alt="A laptop on a rooftop displaying a node graph, representing the API middleware layer">
+          <figcaption><span data-i18n="s3.gas.fig">FIG. 04 // THE MIDDLEWARE, LIVE</span></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- STAGE 03 — GITHUB CODESPACES -->
+    <div class="stage-block" id="codespaces">
+      <div class="stage-marker"><span class="stage-marker-num">03</span></div>
+      <div class="stage-content">
+        <h3 class="stage-title" data-i18n="s3.codespaces.title">GitHub Codespaces — The Cloud IDE</h3>
+        <p data-i18n="s3.codespaces.p1">The local editor is gone. In its place: a full, high-end VS Code environment running in the browser, identical whether it's opened from the studio's main tower or a borrowed laptop in a client's lobby.</p>
+        <p data-i18n="s3.codespaces.p2">Heavy architecture work — the actual engineering of the 4-app ecosystem itself — happens here, in a container that spins up on demand and never depends on which physical machine is nearby.</p>
+        <figure class="inline-figure">
+          <img src="assets/workflow-architect/codespaces-node.jpeg" alt="A laptop on a rooftop displaying a network map dashboard, representing the cloud development environment">
+          <figcaption><span data-i18n="s3.codespaces.fig">FIG. 05 // THE CLOUD, AS WORKSTATION</span></figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <!-- STAGE 04 — TERMUX & SPCK -->
+    <div class="stage-block" id="termux">
+      <div class="stage-marker"><span class="stage-marker-num">04</span></div>
+      <div class="stage-content">
+        <h3 class="stage-title" data-i18n="s3.termux.title">Termux &amp; Spck Editor — The Tactical Command</h3>
+        <p data-i18n="s3.termux.p1">The phone stops being a viewer and becomes a real terminal. Termux turns Android into a raw command line — <code>git push</code> from a pocket, a quick fix shipped between meetings, an SSH session into deeper infrastructure without ever opening a laptop.</p>
+        <p data-i18n="s3.termux.p2">Spck Editor covers what Termux alone can't: syntax-highlighted edits and Git operations through an actual interface, for the moments a raw shell isn't fast enough. Together they make the phone the last mile of the pipeline — the tactical handgun, always holstered, always ready to fire a deploy.</p>
+        <figure class="inline-figure">
+          <img src="assets/workflow-architect/termux-terminal.jpeg" alt="A hand holding a phone showing an SSH terminal session with a red-lit interface">
+          <figcaption><span data-i18n="s3.termux.fig">FIG. 06 // THE LAST MILE, IN A POCKET</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04 — CLOSING -->
+  <section class="section" id="closing">
+    <div class="section-head">
+      <span class="section-eyebrow" data-i18n="s4.eyebrow">04 // THE TAKEAWAY</span>
+      <h2 class="section-title" data-i18n="s4.title">Autonomy Is an Architecture, Not a Habit</h2>
+    </div>
+    <div class="section-body">
+      <div class="col-text col-text-wide">
+        <p data-i18n="s4.p1">None of this exists to look impressive on a diagram. It exists so an eleven-hour render doesn't have to happen in one chair, so a bug fix doesn't have to wait for a laptop to open, so a client demo can run from whatever device is already in the room.</p>
+        <p data-i18n="s4.p2">The tablet, in this ecosystem, earns its keep as the presentation layer — the device that opens a live deck for a buyer without ever touching the machine that built it. That separation of duty, more than any single tool, is the actual architecture: not one powerful machine doing everything, but four ordinary ones, each doing exactly one job well.</p>
+        <p data-i18n="s4.p3">Build the pipeline once, and the body stops paying the price for the work.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-row">
+    <span data-i18n="footer.byline">RAKIB HIMON // CREATIVE OPERATOR — AUTOMATION ARCHITECT</span>
+    <span class="footer-dot">//</span>
+    <span data-i18n="footer.origin">DHAKA, BANGLADESH</span>
+  </div>
+</footer>
+
+<script src="app-article.js"></script>
+</body>
+</html>

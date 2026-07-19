@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HANDS &amp; HEAD — OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void: #000000;
+    --panel: #0a0a0a;
+    --panel-2: #111111;
+    --panel-line: rgba(255, 0, 0, 0.25);
+    --red: #ff0000;
+    --red-bright: #ff3333;
+    --red-dim: #800000;
+    --steel: #ffffff;
+    --steel-dim: #888888;
+    --white: #ffffff;
+    --radius: 0px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--white);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--red); color:var(--white); }
+
+  /* ---------- utility ---------- */
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--red);
+  }
+  .display{
+    font-family:'Bebas Neue', sans-serif;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    line-height:0.95;
+  }
+  .serif-em{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:500;
+  }
+  .mono{ font-family:'Space Mono', monospace; }
+  .bracket{ position:relative; }
+  .bracket::before, .bracket::after{
+    content:''; position:absolute; width:14px; height:14px;
+    border-color:var(--red); opacity:0.7;
+  }
+  .bracket::before{ top:-1px; left:-1px; border-top:1px solid; border-left:1px solid; }
+  .bracket::after{ bottom:-1px; right:-1px; border-bottom:1px solid; border-right:1px solid; }
+  button{ font-family:inherit; cursor:pointer; }
+  a{ color:inherit; text-decoration:none; }
+  .btn{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    padding:13px 22px;
+    border:1px solid var(--red-dim);
+    background:transparent;
+    color:var(--red-bright);
+    transition:all .25s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{ background:var(--red); color:var(--white); border-color:var(--red); }
+  .btn.solid{ background:var(--red); color:var(--white); }
+  .btn.solid:hover{ background:var(--red-bright); }
+
+  /* ---------- boot sequence ---------- */
+  #boot{
+    position:fixed; inset:0; background:var(--void); z-index:999;
+    display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+    padding:8vw; font-family:'Space Mono', monospace; color:var(--red);
+    transition:opacity .6s ease, visibility .6s ease;
+  }
+  #boot.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  #boot .line{ font-size:12px; letter-spacing:0.08em; opacity:0; margin-bottom:6px; color:var(--steel-dim); }
+  #boot .line.show{ opacity:1; }
+  #boot .line b{ color:var(--red-bright); }
+  #boot .barwrap{ width:min(340px,60vw); height:2px; background:var(--panel-2); margin-top:18px; }
+  #boot .bar{ height:100%; width:0%; background:var(--red); transition:width 1.4s ease; }
+
+  /* ---------- HUD top bar ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 28px; height:64px;
+    background:rgba(0,0,0,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--panel-line);
+  }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo .mark{
+    width:30px;height:30px; border:1px solid var(--red); display:flex; align-items:center; justify-content:center;
+    font-family:'Bebas Neue'; font-size:14px; color:var(--red-bright); transform:rotate(45deg);
+  }
+  .logo .mark span{ transform:rotate(-45deg); }
+  .logo .name{ font-family:'Bebas Neue'; font-size:19px; letter-spacing:0.06em; }
+  .logo .name small{ display:block; font-family:'Space Mono'; font-size:9px; letter-spacing:0.2em; color:var(--steel-dim); }
+
+  nav.hud{ display:flex; align-items:center; gap:2px; }
+  nav.hud .mod-btn{
+    font-family:'Space Mono', monospace; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--steel-dim); background:transparent; border:1px solid transparent; padding:9px 13px;
+    display:flex; align-items:center; gap:7px; transition:all .2s ease;
+  }
+  nav.hud .mod-btn .dot{ width:5px;height:5px; border-radius:50%; background:var(--steel-dim); }
+  nav.hud .mod-btn:hover, nav.hud .mod-btn.active{ color:var(--red-bright); border-color:var(--panel-line); background:var(--panel); }
+  nav.hud .mod-btn.active .dot{ background:var(--red); box-shadow:0 0 6px var(--red); }
+
+  .hud-right{ display:flex; align-items:center; gap:16px; }
+  .status{ font-family:'Space Mono'; font-size:10px; color:var(--steel-dim); letter-spacing:0.1em; display:flex; align-items:center; gap:7px;}
+  .status .dot{ width:6px;height:6px; border-radius:50%; background:var(--red); box-shadow:0 0 8px var(--red); animation:pulse 2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  @media (max-width: 980px){ nav.hud{ display:none; } }
+
+  /* ---------- hero slider ---------- */
+  .hero{
+    position:relative; height:100vh; min-height:640px; width:100%;
+    overflow:hidden; background:var(--panel);
+  }
+  .slide{
+    position:absolute; inset:0; opacity:0; transition:opacity 1s ease;
+    display:flex; align-items:flex-end;
+  }
+  .slide.active{ opacity:1; }
+  .slide .art{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+  }
+  .slide .art::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.94) 100%);
+  }
+  .slide-content{
+    position:relative; z-index:2; padding:0 60px 90px; width:100%;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
+  }
+  .slide-content .left{ max-width:640px; }
+  .slide-content .eyebrow{ margin-bottom:16px; }
+  .slide-content h1{ font-size:clamp(46px,7vw,104px); color:var(--white); }
+  .slide-content h1 em{ color:var(--red-bright); }
+  .slide-content p{ color:var(--steel-dim); max-width:440px; margin:18px 0 26px; font-size:14.5px; line-height:1.6; }
+  .slide-cta{ display:flex; gap:12px; }
+
+  .hero-hud{
+    position:relative; z-index:2; display:flex; flex-direction:column; align-items:flex-end; gap:18px;
+    padding-bottom:8px;
+  }
+  .frame-counter{ font-family:'Space Mono'; font-size:12px; color:var(--steel-dim); letter-spacing:0.1em; }
+  .frame-counter b{ color:var(--red-bright); font-size:22px; }
+  .slide-dots{ display:flex; gap:8px; }
+  .slide-dots button{ width:26px; height:2px; background:var(--steel-dim); border:none; transition:all .3s ease; }
+  .slide-dots button.active{ background:var(--red); width:38px; }
+
+  .hero-corner{
+    position:absolute; top:100px; left:60px; z-index:2; width:64px; height:64px;
+  }
+  .hero-corner::before, .hero-corner::after{
+    content:''; position:absolute; border-color:var(--red); opacity:.55;
+  }
+  .hero-corner::before{ top:0;left:0;width:100%;height:100%; border-top:1px solid; border-left:1px solid; }
+
+  .scroll-cue{
+    position:absolute; z-index:2; right:60px; top:100px; writing-mode:vertical-rl;
+    font-family:'Space Mono'; font-size:10px; letter-spacing:0.2em; color:var(--steel-dim);
+  }
+
+  /* ---------- section shell ---------- */
+  section{ padding:120px 60px; position:relative; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:56px; gap:24px; flex-wrap:wrap; }
+  .section-head h2{ font-size:clamp(30px,4vw,52px); }
+  .section-head .num{ font-family:'Space Mono'; font-size:12px; color:var(--red-dim); letter-spacing:0.15em; }
+  .rule{ height:1px; background:var(--panel-line); width:100%; margin:8px 0 0; }
+
+  /* ---------- split slider (compare) ---------- */
+  .split-wrap{
+    position:relative; height:560px; overflow:hidden; border:1px solid var(--panel-line); user-select:none;
+  }
+  .split-side{ position:absolute; inset:0; background-size:cover; background-position:center; }
+  .split-side.right{ clip-path: inset(0 0 0 50%); }
+  .split-side::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.88) 100%); }
+  .split-label{ position:absolute; bottom:28px; z-index:3; font-family:'Bebas Neue'; font-size:26px; letter-spacing:0.03em; max-width:46%; }
+  .split-label.left{ left:28px; }
+  .split-label.right{ right:28px; text-align:right; }
+  .split-label small{ display:block; font-family:'Space Mono'; font-size:10px; letter-spacing:0.15em; color:var(--red-bright); margin-bottom:4px; }
+  .split-label p{ font-family:'Space Mono'; font-size:10.5px; color:var(--steel-dim); text-transform:none; letter-spacing:0.02em; margin-top:8px; line-height:1.5; }
+  .split-handle{
+    position:absolute; top:0; bottom:0; width:2px; background:var(--red); z-index:4; cursor:ew-resize;
+    left:50%; transform:translateX(-1px);
+  }
+  .split-handle .grip{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:44px; height:44px;
+    border:1px solid var(--red); background:var(--void); display:flex; align-items:center; justify-content:center;
+    transform:translate(-50%,-50%) rotate(45deg);
+  }
+  .split-handle .grip span{ transform:rotate(-45deg); font-family:'Space Mono'; font-size:9px; color:var(--red-bright); }
+
+  /* ---------- brand module grid ---------- */
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:1px;
+    background:var(--panel-line); border:1px solid var(--panel-line);
+  }
+  .card{
+    background:var(--void); padding:30px 26px; position:relative; transition:background .3s ease;
+    display:flex; flex-direction:column; min-height:360px;
+  }
+  .card:hover{ background:var(--panel); }
+  .card .top-row{ display:flex; justify-content:space-between; align-items:flex-start; }
+  .card .mod-id{ font-family:'Space Mono'; font-size:10px; color:var(--red-dim); letter-spacing:0.15em; }
+  .card .tag{ font-family:'Space Mono'; font-size:9px; color:var(--steel-dim); border:1px solid var(--panel-line); padding:3px 7px; letter-spacing:0.1em; }
+  .card h3{ font-family:'Bebas Neue'; font-size:34px; margin:22px 0 6px; letter-spacing:0.02em; }
+  .card .cat{ font-family:'Cormorant Garamond'; font-style:italic; color:var(--steel-dim); font-size:15px; margin-bottom:22px; }
+  .stat-readout{ margin-top:auto; display:flex; flex-direction:column; gap:9px; padding-top:18px; border-top:1px solid var(--panel-line); }
+  .stat-row{ display:flex; justify-content:space-between; font-family:'Space Mono'; font-size:10.5px; }
+  .stat-row .k{ color:var(--steel-dim); letter-spacing:0.08em; }
+  .stat-row .v{ color:var(--red-bright); }
+  .card .enter{ margin-top:18px; }
+
+  /* ---------- gallery / iframe view ---------- */
+  .gallery-view{
+    display:none; padding-top:110px; height: 100vh;
+  }
+  .gallery-view.active{ display:flex; flex-direction: column; }
+  .gallery-back{ display:flex; align-items:center; gap:8px; margin:0 60px 36px; color:var(--steel-dim); font-family:'Space Mono'; font-size:11px; letter-spacing:0.1em; cursor:pointer;}
+  .gallery-back:hover{ color:var(--red-bright); }
+  .iframe-container { flex-grow: 1; width: 100%; position: relative; border-top: 1px solid var(--panel-line); background: var(--void); }
+  .iframe-container iframe { width: 100%; height: 100%; border: none; }
+
+  /* ---------- RFQ terminal ---------- */
+  .terminal{
+    border:1px solid var(--panel-line); background:var(--panel);
+    display:grid; grid-template-columns:1.1fr 1fr;
+  }
+  .terminal .brief{ padding:54px; border-right:1px solid var(--panel-line); }
+  .terminal .brief h2{ font-size:clamp(28px,3.6vw,44px); margin-bottom:18px; }
+  .terminal .brief p{ color:var(--steel-dim); font-size:14px; line-height:1.7; max-width:420px; margin-bottom:26px; }
+  .flow-steps{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; font-family:'Space Mono'; font-size:10.5px; color:var(--red-bright); letter-spacing:0.06em; margin-bottom:28px; }
+  .flow-steps span.sep{ color:var(--steel-dim); }
+  .terminal .brief .checklist{ display:flex; flex-direction:column; gap:10px; }
+  .terminal .brief .checklist div{ font-family:'Space Mono'; font-size:11px; color:var(--steel-dim); display:flex; gap:10px; }
+  .terminal .brief .checklist div::before{ content:'▸'; color:var(--red); }
+  .terminal form{ padding:54px; display:flex; flex-direction:column; gap:18px; }
+  .field{ display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-family:'Space Mono'; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--red-dim); }
+  .field input, .field select, .field textarea{
+    background:var(--void); border:1px solid var(--panel-line); color:var(--white);
+    padding:12px 14px; font-family:'Inter'; font-size:13.5px; outline:none; transition:border-color .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--red); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .terminal-submit{ margin-top:8px; }
+  .transmit-status{ font-family:'Space Mono'; font-size:11px; color:var(--red-bright); letter-spacing:0.08em; display:none; margin-top:4px;}
+  .transmit-status.show{ display:block; }
+
+  @media (max-width: 900px){
+    .terminal{ grid-template-columns:1fr; }
+    .terminal .brief{ border-right:none; border-bottom:1px solid var(--panel-line); }
+    section{ padding:80px 22px; }
+    .slide-content{ padding:0 24px 60px; flex-direction:column; align-items:flex-start; gap:24px;}
+    .hero-hud{ align-items:flex-start; }
+    .hero-corner, .scroll-cue{ display:none; }
+    header{ padding:0 16px; }
+    .split-label{ max-width:80%; }
+  }
+
+  /* ---------- gated buyer login ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.92); backdrop-filter:blur(6px); z-index:200;
+    display:none; align-items:center; justify-content:center; padding:20px;
+  }
+  .overlay.show{ display:flex; }
+  .login-panel{
+    width:min(420px,100%); background:var(--panel); border:1px solid var(--red-dim); padding:44px;
+    position:relative;
+  }
+  .login-panel .close{ position:absolute; top:16px; right:18px; font-family:'Space Mono'; color:var(--steel-dim); font-size:16px; background:none; border:none; }
+  .login-panel .lock{ width:38px; height:38px; border:1px solid var(--red); display:flex; align-items:center; justify-content:center; margin-bottom:22px; transform:rotate(45deg); }
+  .login-panel .lock span{ transform:rotate(-45deg); color:var(--red-bright); font-family:'Bebas Neue'; }
+  .login-panel h3{ font-family:'Bebas Neue'; font-size:28px; margin-bottom:10px; }
+  .login-panel p{ color:var(--steel-dim); font-size:13px; line-height:1.6; margin-bottom:26px; }
+  .login-panel .field{ margin-bottom:14px; }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--panel-line); padding:50px 60px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+  footer .fmark{ font-family:'Bebas Neue'; font-size:16px; letter-spacing:0.05em; color:var(--steel-dim); }
+  footer .flinks{ display:flex; gap:22px; font-family:'Space Mono'; font-size:10px; letter-spacing:0.1em; color:var(--steel-dim); }
+  footer .flinks a:hover{ color:var(--red-bright); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BOOT SEQUENCE -->
+<div id="boot">
+  <div class="line" id="l1">SYSTEM // <b>HANDS &amp; HEAD OS</b> v2.2</div>
+  <div class="line" id="l2">INITIALIZING BRAND MODULES — RMG · ARUTEMIKA EU · DENIM · LINGERIE · RAWx</div>
+  <div class="line" id="l3">ESTABLISHING DYNAMIC NODE CONNECTIONS...</div>
+  <div class="line" id="l4">READY.</div>
+  <div class="barwrap"><div class="bar" id="bootbar"></div></div>
+</div>
+
+<!-- HUD HEADER -->
+<header>
+  <div class="logo">
+    <div class="mark"><span>H</span></div>
+    <div class="name">HANDS &amp; HEAD<small>WHOLESALE OS — B2B</small></div>
+  </div>
+  <nav class="hud" id="navHud">
+    <button class="mod-btn active" data-target="home"><span class="dot"></span>HOME</button>
+    <button class="mod-btn" data-target="rmg"><span class="dot"></span>RMG</button>
+    <button class="mod-btn" data-target="leather"><span class="dot"></span>ARUTEMIKA EU</button>
+    <button class="mod-btn" data-target="denim"><span class="dot"></span>DENIM</button>
+    <button class="mod-btn" data-target="lingerie"><span class="dot"></span>LINGERIE</button>
+    <button class="mod-btn" data-target="rawx"><span class="dot"></span>RAWx</button>
+    <button class="mod-btn" data-target="rfq"><span class="dot"></span>RFQ</button>
+  </nav>
+  <div class="hud-right">
+    <div class="status"><span class="dot"></span><span class="mono" id="clock">ONLINE</span></div>
+    <button class="btn" id="loginBtn">Buyer Login</button>
+  </div>
+</header>
+
+<!-- HOME VIEW -->
+<div id="view-home">
+
+  <!-- HERO SLIDER -->
+  <div class="hero">
+    <div class="hero-corner bracket"></div>
+    <div class="scroll-cue">SCROLL TO EXPLORE DIVISIONS</div>
+
+    <div class="slide active">
+      <div class="art" style="background:linear-gradient(135deg,#1a0000,#000000 70%)"></div>
+      <div class="slide-content">
+        <div class="left">
+          <div class="eyebrow">MODULE 04 — LINGERIE &amp; ACTIVEWEAR</div>
+          <h1 class="display">HIGH<br>MARGIN<span class="serif-em"> line</span></h1>
+          <p>The highest-retention division. Engineered fits, fast turnaround, and margin structures built to hold repeat wholesale orders globally.</p>
+          <div class="slide-cta">
+            <button class="btn solid" onclick="goTo('lingerie')">View Division</button>
+          </div>
+        </div>
+        <div class="hero-hud">
+          <div class="frame-counter"><b>01</b> / 04</div>
+          <div class="slide-dots" id="dots"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="art" style="background:linear-gradient(135deg,#0a0a0a,#000000 65%)"></div>
+      <div class="slide-content">
+        <div class="left">
+          <div class="eyebrow">MODULE 02 — LEATHER, EU SOURCED</div>
+          <h1 class="display">ARUTEMIKA<br><span class="serif-em">Europe</span></h1>
+          <p>Full-grain leather goods manufactured to stringent compliance standards, designed for data-oriented B2B buyers.</p>
+          <div class="slide-cta">
+            <button class="btn solid" onclick="goTo('leather')">View Division</button>
+          </div>
+        </div>
+        <div class="hero-hud">
+          <div class="frame-counter"><b>02</b> / 04</div>
+          <div class="slide-dots"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="art" style="background:linear-gradient(135deg,#150000,#000000 65%)"></div>
+      <div class="slide-content">
+        <div class="left">
+          <div class="eyebrow">MODULE 05 — FACTORY-DIRECT, DHAKA ORIGIN</div>
+          <h1 class="display">RAWx<span class="serif-em"> —</span><br>SECOND-SKIN</h1>
+          <p>The house's proof-of-concept: a live storefront and wholesale terminal running the same construction, zero middleman markup, on the same cutting floor.</p>
+          <div class="slide-cta">
+            <button class="btn solid" onclick="goTo('rawx')">Enter Wholesale Terminal</button>
+          </div>
+        </div>
+        <div class="hero-hud">
+          <div class="frame-counter"><b>03</b> / 04</div>
+          <div class="slide-dots"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="art" style="background:linear-gradient(135deg,#111111,#000000 65%)"></div>
+      <div class="slide-content">
+        <div class="left">
+          <div class="eyebrow">RETAIL CHANNEL — NOT WHOLESALE</div>
+          <h1 class="display">DROP SHOULDER<br>ARCHIVE</h1>
+          <p>Thousands of archived tee designs, running as a distinct retail channel through its own checkout, connected but separate from the sourcing pipeline.</p>
+          <div class="slide-cta">
+            <a class="btn" href="https://handfilm.myshopify.com/handsandhead" target="_blank">Visit Retail Shop ↗</a>
+          </div>
+        </div>
+        <div class="hero-hud">
+          <div class="frame-counter"><b>04</b> / 04</div>
+          <div class="slide-dots"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPLIT SECTION 01 — the recommended compare -->
+  <section style="padding-bottom:60px;">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">COMPARE — 01 // BUYER PATH</div>
+        <h2 class="display">Storefront <span class="serif-em">vs.</span> Wholesale Terminal</h2>
+      </div>
+      <div class="num">DRAG TO COMPARE</div>
+    </div>
+    <div class="split-wrap" id="split1">
+      <div class="split-side left" style="background:linear-gradient(160deg,#1a0000,#050000)"></div>
+      <div class="split-side right" style="background:linear-gradient(200deg,#0a0a0a,#000000)"></div>
+      <div class="split-label left">
+        <small>Line A — D2C</small>RAWx Storefront
+        <p>Browse the edit, no markup, checkout direct. Built for a customer, not a buying committee.</p>
+      </div>
+      <div class="split-label right">
+        <small>Line B — B2B</small>Wholesale Terminal
+        <p>Tech packs, MOQ, landed cost, production timelines. Built for sourcing teams who audit before they sign.</p>
+      </div>
+      <div class="split-handle" id="handle1"><div class="grip"><span>vs</span></div></div>
+    </div>
+  </section>
+
+  <!-- SPLIT SECTION 02 -->
+  <section style="padding-top:0;">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">COMPARE — 02 // MATERIAL</div>
+        <h2 class="display">Leather <span class="serif-em">vs.</span> Denim</h2>
+      </div>
+      <div class="num">DRAG TO COMPARE</div>
+    </div>
+    <div class="split-wrap" id="split2">
+      <div class="split-side left" style="background:linear-gradient(160deg,#150000,#020000)"></div>
+      <div class="split-side right" style="background:linear-gradient(200deg,#111111,#000000)"></div>
+      <div class="split-label left">
+        <small>Line A</small>Arutemika Leather
+        <p>Full-grain, EU compliance standard. Longer lead time, higher price tier, lower minimums.</p>
+      </div>
+      <div class="split-label right">
+        <small>Line B</small>RMG Denim
+        <p>Faster turnaround, mid price tier, built for repeat bulk reorders.</p>
+      </div>
+      <div class="split-handle" id="handle2"><div class="grip"><span>vs</span></div></div>
+    </div>
+  </section>
+
+  <!-- BRAND MODULE GRID -->
+  <section id="modules">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">ACTIVE DIVISIONS</div>
+        <h2 class="display">Select a Module</h2>
+      </div>
+      <div class="num">05 B2B NODES ONLINE</div>
+    </div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="top-row"><span class="mod-id">MOD // 01</span><span class="tag">WHOLESALE</span></div>
+        <h3>RMG</h3>
+        <div class="cat">General ready-made garments</div>
+        <div class="stat-readout">
+          <div class="stat-row"><span class="k">MOQ</span><span class="v">500 / STYLE</span></div>
+          <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">25–30 DAYS</span></div>
+          <div class="stat-row"><span class="k">PRICE TIER</span><span class="v">$$</span></div>
+        </div>
+        <button class="btn enter" onclick="goTo('rmg')">Load Node →</button>
+      </div>
+
+      <div class="card">
+        <div class="top-row"><span class="mod-id">MOD // 02</span><span class="tag">EU SOURCED</span></div>
+        <h3>Arutemika</h3>
+        <div class="cat">Leather goods, European standard</div>
+        <div class="stat-readout">
+          <div class="stat-row"><span class="k">MOQ</span><span class="v">200 / STYLE</span></div>
+          <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">35–40 DAYS</span></div>
+          <div class="stat-row"><span class="k">PRICE TIER</span><span class="v">$$$</span></div>
+        </div>
+        <button class="btn enter" onclick="goTo('leather')">Load Node →</button>
+      </div>
+
+      <div class="card">
+        <div class="top-row"><span class="mod-id">MOD // 03</span><span class="tag">WHOLESALE</span></div>
+        <h3>Denim</h3>
+        <div class="cat">RMG denim division</div>
+        <div class="stat-readout">
+          <div class="stat-row"><span class="k">MOQ</span><span class="v">300 / STYLE</span></div>
+          <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">30 DAYS</span></div>
+          <div class="stat-row"><span class="k">PRICE TIER</span><span class="v">$$</span></div>
+        </div>
+        <button class="btn enter" onclick="goTo('denim')">Load Node →</button>
+      </div>
+
+      <div class="card">
+        <div class="top-row"><span class="mod-id">MOD // 04</span><span class="tag">HIGH MARGIN</span></div>
+        <h3>Lingerie</h3>
+        <div class="cat">Lingerie &amp; activewear</div>
+        <div class="stat-readout">
+          <div class="stat-row"><span class="k">MOQ</span><span class="v">500 / STYLE</span></div>
+          <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">20–25 DAYS</span></div>
+          <div class="stat-row"><span class="k">PRICE TIER</span><span class="v">$$</span></div>
+        </div>
+        <button class="btn enter" onclick="goTo('lingerie')">Load Node →</button>
+      </div>
+
+      <div class="card">
+        <div class="top-row"><span class="mod-id">MOD // 05</span><span class="tag">LIVE TERMINAL</span></div>
+        <h3>RAWx</h3>
+        <div class="cat">Second-skin architecture, Dhaka origin</div>
+        <div class="stat-readout">
+          <div class="stat-row"><span class="k">MOQ</span><span class="v">500+ / STYLE</span></div>
+          <div class="stat-row"><span class="k">LEAD TIME</span><span class="v">25–35 DAYS</span></div>
+          <div class="stat-row"><span class="k">ORIGIN</span><span class="v">DHAKA, BD</span></div>
+        </div>
+        <button class="btn enter" onclick="goTo('rawx')">Load Node →</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RFQ TERMINAL -->
+  <section id="rfq-section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">WHOLESALE INQUIRY</div>
+        <h2 class="display">RFQ Terminal</h2>
+      </div>
+      <div class="num">RESPONSE — UNDER 48H</div>
+    </div>
+    <div class="terminal">
+      <div class="brief">
+        <h2 class="display">One form.<br>Every division.</h2>
+        <p>Sourced through Apollo.io or found the OS directly — one submission routes to the right module, so nothing gets lost across five separate inboxes.</p>
+        <div class="flow-steps">
+          <span>INQUIRY SENT</span><span class="sep">→</span><span>ROUTED</span><span class="sep">→</span><span>QUOTED</span><span class="sep">→</span><span>PRODUCTION QUEUE</span>
+        </div>
+        <div class="checklist">
+          <div>Company &amp; verified contact required</div>
+          <div>Sample requests confirmed within 48 hours</div>
+          <div>Volume pricing returned as a spec sheet, not a sales call</div>
+          <div>No wholesale account needed to inquire</div>
+        </div>
+      </div>
+      <form id="rfqForm" onsubmit="submitRfq(event)">
+        <div class="field-row">
+          <div class="field"><label>Company</label><input required type="text" placeholder="Company name"></div>
+          <div class="field"><label>Contact Email</label><input required type="email" placeholder="you@company.com"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Division</label>
+            <select>
+              <option>RMG — General</option>
+              <option>Arutemika — Leather</option>
+              <option>RMG — Denim</option>
+              <option>RMG — Lingerie / Activewear</option>
+              <option>RAWx — Second-Skin</option>
+            </select>
+          </div>
+          <div class="field"><label>Target Volume</label><input type="text" placeholder="e.g. 1,000 units"></div>
+        </div>
+        <div class="field"><label>Message</label><textarea rows="3" placeholder="Product category, timeline, destination country..."></textarea></div>
+        <button class="btn solid terminal-submit" type="submit">Transmit Request</button>
+        <div class="transmit-status" id="transmitStatus">TRANSMITTING... REQUEST LOGGED. A DIVISION LEAD WILL RESPOND WITHIN 48H.</div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- DYNAMIC IFRAME VIEWS (Loads external static sites without a database) -->
+<div class="gallery-view" id="view-rmg">
+  <a class="gallery-back" onclick="goTo('home')">← BACK TO OS DASHBOARD</a>
+  <div class="iframe-container" id="node-rmg"></div>
+</div>
+
+<div class="gallery-view" id="view-leather">
+  <a class="gallery-back" onclick="goTo('home')">← BACK TO OS DASHBOARD</a>
+  <div class="iframe-container" id="node-leather"></div>
+</div>
+
+<div class="gallery-view" id="view-denim">
+  <a class="gallery-back" onclick="goTo('home')">← BACK TO OS DASHBOARD</a>
+  <div class="iframe-container" id="node-denim"></div>
+</div>
+
+<div class="gallery-view" id="view-lingerie">
+  <a class="gallery-back" onclick="goTo('home')">← BACK TO OS DASHBOARD</a>
+  <div class="iframe-container" id="node-lingerie"></div>
+</div>
+
+<div class="gallery-view" id="view-rawx">
+  <a class="gallery-back" onclick="goTo('home')">← BACK TO OS DASHBOARD</a>
+  <div class="iframe-container" id="node-rawx"></div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div class="overlay" id="loginOverlay">
+  <div class="login-panel">
+    <button class="close" onclick="toggleLogin(false)">✕</button>
+    <div class="lock"><span>H</span></div>
+    <h3 class="display">Buyer Access</h3>
+    <p>Gated catalog with net pricing, tech packs, and fabric sourcing sheets. Access is issued after your first verified inquiry.</p>
+    <div class="field"><label>Buyer Email</label><input type="email" placeholder="you@company.com"></div>
+    <div class="field"><label>Access Code</label><input type="password" placeholder="Issued after verification"></div>
+    <button class="btn solid" style="width:100%; justify-content:center;" onclick="toggleLogin(false)">Enter Catalog</button>
+  </div>
+</div>
+
+<footer>
+  <div class="fmark">HANDS &amp; HEAD — WHOLESALE OS</div>
+  <div class="flinks">
+    <a href="#">handsandhead.com</a>
+    <a href="https://handfilm.myshopify.com/handsandhead" target="_blank">Retail Shop ↗</a>
+    <a href="#" onclick="toggleLogin(true)">Buyer Login</a>
+  </div>
+</footer>
+
+<script>
+  // ---------- boot sequence ----------
+  const lines = ['l1','l2','l3','l4'];
+  lines.forEach((id,i)=> setTimeout(()=> document.getElementById(id).classList.add('show'), 260*i+150));
+  setTimeout(()=> document.getElementById('bootbar').style.width='100%', 200);
+  setTimeout(()=> document.getElementById('boot').classList.add('hide'), 1900);
+
+  // ---------- clock ----------
+  function tickClock(){
+    const d = new Date();
+    document.getElementById('clock').textContent = d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  }
+  tickClock(); setInterval(tickClock, 1000*30);
+
+  // ---------- hero slider ----------
+  const slides = document.querySelectorAll('.slide');
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((s,i)=>{
+    const d = document.createElement('button');
+    if(i===0) d.classList.add('active');
+    d.addEventListener('click', ()=> showSlide(i));
+    dotsWrap.appendChild(d);
+  });
+  let current = 0;
+  function showSlide(i){
+    slides[current].classList.remove('active');
+    dotsWrap.children[current] && dotsWrap.children[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dotsWrap.children[current].classList.add('active');
+  }
+  setInterval(()=> showSlide((current+1)%slides.length), 6000);
+
+  // ---------- split sliders ----------
+  function initSplit(wrapId, handleId){
+    const wrap = document.getElementById(wrapId);
+    const handle = document.getElementById(handleId);
+    const rightSide = wrap.querySelector('.split-side.right');
+    let dragging = false;
+    const move = (clientX)=>{
+      const rect = wrap.getBoundingClientRect();
+      let pct = ((clientX - rect.left)/rect.width)*100;
+      pct = Math.max(6, Math.min(94, pct));
+      handle.style.left = pct+'%';
+      rightSide.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    };
+    handle.addEventListener('mousedown', ()=> dragging=true);
+    window.addEventListener('mouseup', ()=> dragging=false);
+    window.addEventListener('mousemove', (e)=> dragging && move(e.clientX));
+    handle.addEventListener('touchstart', ()=> dragging=true, {passive:true});
+    window.addEventListener('touchend', ()=> dragging=false);
+    window.addEventListener('touchmove', (e)=> dragging && move(e.touches[0].clientX), {passive:true});
+  }
+  initSplit('split1','handle1');
+  initSplit('split2','handle2');
+
+  // ---------- Dynamic node loading (no database, iframe injection) ----------
+  const nodeUrls = {
+    'rmg': 'https://handfilm.github.io/rmg',
+    'leather': 'https://handfilm.github.io/arutemika-eu',
+    'denim': 'https://handfilm.github.io/rmg-denim',
+    'lingerie': 'https://handfilm.github.io/rmg-lingerie',
+    'rawx': 'https://handfilm.github.io/rawx-lingerie/index-b2b.html'
+  };
+
+  function injectDynamicNode(target) {
+    const container = document.getElementById('node-' + target);
+    if(container && container.innerHTML === '') {
+        container.innerHTML = `<iframe src="${nodeUrls[target]}"></iframe>`;
+    }
+  }
+
+  // ---------- view routing ----------
+  function goTo(target){
+    document.getElementById('view-home').style.display = (target==='home' || target==='rfq') ? 'block' : 'none';
+
+    ['rmg','leather','denim','lingerie','rawx'].forEach(id=>{
+      document.getElementById('view-'+id).classList.toggle('active', id===target);
+    });
+
+    document.querySelectorAll('nav.hud .mod-btn').forEach(b=> b.classList.remove('active'));
+    const navMatch = document.querySelector(`nav.hud .mod-btn[data-target="${target}"]`);
+    if(navMatch) navMatch.classList.add('active');
+
+    if(nodeUrls[target]) injectDynamicNode(target);
+
+    if(target==='rfq'){
+      setTimeout(()=> document.getElementById('rfq-section').scrollIntoView({behavior:'smooth'}), 50);
+    } else {
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  }
+
+  document.querySelectorAll('nav.hud .mod-btn').forEach(b=>{
+    b.addEventListener('click', ()=> goTo(b.dataset.target));
+  });
+
+  // ---------- RFQ submit ----------
+  function submitRfq(e){
+    e.preventDefault();
+    const status = document.getElementById('transmitStatus');
+    status.classList.add('show');
+    status.textContent = 'TRANSMITTING...';
+    setTimeout(()=>{
+      status.textContent = 'REQUEST LOGGED. A DIVISION LEAD WILL RESPOND WITHIN 48H.';
+    }, 1100);
+  }
+
+  // ---------- login overlay ----------
+  function toggleLogin(show){
+    document.getElementById('loginOverlay').classList.toggle('show', show);
+  }
+  document.getElementById('loginBtn').addEventListener('click', ()=> toggleLogin(true));
+  document.getElementById('loginOverlay').addEventListener('click', (e)=>{
+    if(e.target.id==='loginOverlay') toggleLogin(false);
+  });
+</script>
+</body>
+</html>

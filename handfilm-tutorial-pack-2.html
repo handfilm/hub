@@ -1,0 +1,2646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE BRUTALIST WORKFLOW — HANDFILM</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f0ede8;
+    --red: #e63329;
+    --grey-dark: #1a1a1a;
+    --grey-mid: #2e2e2e;
+    --grey-text: #888;
+    --accent-warm: #c8a96e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--red); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey-text);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--red);
+    color: var(--white) !important;
+    padding: 8px 20px;
+    font-size: 11px !important;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace !important;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-block;
+  }
+
+  .nav-cta:hover { background: #c4251b; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    padding-top: 80px;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px 80px 60px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 8vw, 120px);
+    line-height: 0.92;
+    letter-spacing: -1px;
+    margin-bottom: 32px;
+  }
+
+  .hero-title .line-red { color: var(--red); }
+  .hero-title .line-outline {
+    -webkit-text-stroke: 1px rgba(240,237,232,0.3);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(240,237,232,0.6);
+    max-width: 420px;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 14px;
+    color: var(--grey-text);
+  }
+
+  .badge.hot {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+    padding: 18px 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(230,51,41,0.4); }
+
+  .btn-ghost {
+    color: rgba(240,237,232,0.5);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-ghost:hover { color: var(--white); }
+  .btn-ghost svg { transition: transform 0.2s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+
+  /* ── HERO RIGHT: VIDEO STACK ── */
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+    background: var(--grey-dark);
+  }
+
+  .hero-video-bg {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .video-thumb {
+    background: var(--grey-mid);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .video-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    transition: opacity 0.4s, transform 0.4s;
+    filter: contrast(1.1) saturate(0.6);
+  }
+
+  .video-thumb:hover img { opacity: 0.85; transform: scale(1.04); filter: contrast(1.2) saturate(0.8); }
+
+  .video-thumb-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(240,237,232,0.7);
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 2;
+  }
+
+  .video-thumb:hover .play-icon {
+    background: var(--red);
+    border-color: var(--red);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .hero-overlay-text {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 0.85;
+    color: rgba(255,255,255,0.05);
+    letter-spacing: -2px;
+    text-align: right;
+    user-select: none;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: var(--grey-dark);
+  }
+
+  .stat-item {
+    padding: 32px 40px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .stat-number span { color: var(--red); }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey-text);
+  }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 100px 60px; }
+
+  .section-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-eyebrow::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5vw, 72px);
+    line-height: 0.95;
+    margin-bottom: 16px;
+  }
+
+  /* ── MODULES ── */
+  .modules-section { background: var(--black); }
+
+  .modules-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+
+  .modules-header p {
+    color: rgba(240,237,232,0.55);
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .module-card {
+    background: var(--grey-dark);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .module-card:hover { background: var(--grey-mid); }
+
+  .module-card::before {
+    content: attr(data-num);
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .module-card.active-module {
+    background: var(--grey-mid);
+    border-left: 3px solid var(--red);
+  }
+
+  .module-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .module-duration {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--grey-text);
+    margin-left: auto;
+  }
+
+  .module-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    line-height: 1.05;
+  }
+
+  .module-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .module-items li {
+    font-size: 14px;
+    color: rgba(240,237,232,0.65);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .module-items li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-size: 11px;
+    top: 2px;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section {
+    background: var(--grey-dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pricing-section::before {
+    content: 'PRICE';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 220px;
+    color: rgba(255,255,255,0.02);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .pricing-header {
+    margin-bottom: 64px;
+    max-width: 600px;
+  }
+
+  .pricing-header p {
+    font-size: 15px;
+    color: rgba(240,237,232,0.55);
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .pricing-card {
+    background: var(--black);
+    padding: 48px 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s;
+  }
+
+  .pricing-card:hover { transform: translateY(-6px); z-index: 2; }
+
+  .pricing-card.featured {
+    background: #141414;
+    border: 1px solid rgba(230,51,41,0.4);
+  }
+
+  .pricing-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: -1px;
+    left: 40px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    background: var(--red);
+    color: var(--white);
+    padding: 4px 12px;
+  }
+
+  .pricing-tier {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey-text);
+    margin-bottom: 16px;
+  }
+
+  .pricing-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .pricing-price {
+    margin-bottom: 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding-bottom: 32px;
+  }
+
+  .pricing-price .amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .pricing-price .currency {
+    font-size: 28px;
+    color: var(--grey-text);
+    vertical-align: top;
+    margin-top: 12px;
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  .pricing-price .range {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--grey-text);
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    margin-bottom: 40px;
+  }
+
+  .pricing-features li {
+    font-size: 14px;
+    color: rgba(240,237,232,0.6);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-size: 12px;
+  }
+
+  .pricing-strategy {
+    background: rgba(255,255,255,0.04);
+    padding: 16px;
+    font-size: 12px;
+    color: rgba(240,237,232,0.4);
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 32px;
+  }
+
+  .btn-card {
+    display: block;
+    text-align: center;
+    padding: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-card-outline {
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    background: transparent;
+  }
+
+  .btn-card-outline:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .btn-card-red {
+    background: var(--red);
+    color: var(--white);
+    border: 1px solid var(--red);
+  }
+
+  .btn-card-red:hover {
+    background: #c4251b;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(230,51,41,0.35);
+  }
+
+  /* ── TUTOR SECTION ── */
+  .tutor-section {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .tutor-visual {
+    background: var(--grey-dark);
+    position: relative;
+    min-height: 600px;
+    overflow: hidden;
+  }
+
+  .tutor-visual-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tutor-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.2);
+    opacity: 0.7;
+  }
+
+  .tutor-name-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 40px;
+    background: linear-gradient(transparent, rgba(10,10,10,0.95));
+  }
+
+  .tutor-name-overlay h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 2px;
+    line-height: 0.95;
+  }
+
+  .tutor-name-overlay p {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-top: 8px;
+  }
+
+  .tutor-big-initials {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 280px;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    user-select: none;
+  }
+
+  .tutor-content {
+    padding: 80px 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tutor-content .section-title { margin-bottom: 24px; }
+
+  .tutor-content p {
+    font-size: 15px;
+    color: rgba(240,237,232,0.6);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .tutor-credentials {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .credential-item {
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 20px;
+  }
+
+  .credential-item strong {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .credential-item span {
+    font-size: 14px;
+    color: rgba(240,237,232,0.7);
+  }
+
+  /* ── WORKFLOW TECH ── */
+  .workflow-section {
+    background: #0d0d0d;
+    position: relative;
+  }
+
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.05);
+    margin-top: 64px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .workflow-step {
+    background: var(--black);
+    padding: 36px 28px;
+    text-align: center;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .workflow-step:hover { background: var(--grey-dark); }
+
+  .workflow-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .workflow-step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .workflow-step h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .workflow-step p {
+    font-size: 12px;
+    color: var(--grey-text);
+    line-height: 1.6;
+  }
+
+  .workflow-arrow {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--red);
+    z-index: 2;
+  }
+
+  /* ── HOTKEY SECTION ── */
+  .hotkey-section {
+    background: var(--grey-dark);
+    padding: 100px 60px;
+  }
+
+  .hotkey-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 60px;
+  }
+
+  .hotkey-desc p {
+    font-size: 15px;
+    color: rgba(240,237,232,0.55);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .keyboard-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .key-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .key {
+    background: var(--black);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 3px solid rgba(255,255,255,0.08);
+    padding: 12px 18px;
+    min-width: 52px;
+    text-align: center;
+    font-size: 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+    cursor: default;
+    position: relative;
+  }
+
+  .key:hover {
+    border-color: var(--red);
+    border-bottom-color: #8a1f1b;
+    transform: translateY(-2px);
+    background: rgba(230,51,41,0.08);
+  }
+
+  .key.active {
+    background: var(--red);
+    border-color: var(--red);
+    border-bottom-color: #8a1f1b;
+    color: var(--white);
+    box-shadow: 0 4px 16px rgba(230,51,41,0.4);
+    transform: translateY(-3px);
+  }
+
+  .key-label {
+    font-size: 11px;
+    color: var(--grey-text);
+    margin-left: 12px;
+    letter-spacing: 1px;
+  }
+
+  .key-label span { color: var(--white); }
+
+  /* ── TESTIMONIAL/SOCIAL PROOF ── */
+  .social-proof {
+    background: var(--black);
+    padding: 80px 60px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .proof-ticker {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 60px;
+    animation: ticker 20s linear infinite;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey-text);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .ticker-item::after {
+    content: '✦';
+    color: var(--red);
+    font-size: 10px;
+  }
+
+  /* ── FAQ ── */
+  .faq-section {
+    background: var(--black);
+    padding: 100px 60px;
+  }
+
+  .faq-header { margin-bottom: 60px; }
+
+  .faq-list { max-width: 760px; }
+
+  .faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .faq-question {
+    padding: 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+    transition: color 0.2s;
+  }
+
+  .faq-question:hover { color: var(--red); }
+
+  .faq-icon {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    color: var(--red);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-left: 24px;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    font-size: 14px;
+    color: rgba(240,237,232,0.6);
+    line-height: 1.8;
+  }
+
+  .faq-item.open .faq-answer {
+    max-height: 200px;
+    padding-bottom: 24px;
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  /* ── FOOTER CTA ── */
+  .footer-cta {
+    background: var(--red);
+    padding: 100px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .footer-cta::before {
+    content: 'GO';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 400px;
+    color: rgba(0,0,0,0.1);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .footer-cta h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 100px);
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-cta p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-cta .btn-white {
+    background: var(--white);
+    color: var(--red);
+    padding: 20px 56px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-cta .btn-white:hover {
+    background: var(--black);
+    color: var(--white);
+    transform: translateY(-2px);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  footer .brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    color: var(--white);
+  }
+
+  footer .brand span { color: var(--red); }
+
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--grey-text);
+    text-transform: uppercase;
+  }
+
+  footer a {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--grey-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--red); }
+
+  /* ── SCROLL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── CURSOR CUSTOM ── */
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.1s;
+  }
+
+  .cursor-ring {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(230,51,41,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9997;
+    transition: transform 0.15s ease, width 0.2s, height 0.2s;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--red);
+    z-index: 9999;
+    transition: width 0.1s;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 40px 24px 60px; }
+    .hero-right { min-height: 280px; }
+    section { padding: 64px 24px; }
+    .modules-header { grid-template-columns: 1fr; gap: 20px; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .stat-item { border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .tutor-section { grid-template-columns: 1fr; }
+    .tutor-visual { min-height: 360px; }
+    .tutor-content { padding: 40px 24px; }
+    .workflow-grid { grid-template-columns: 1fr 1fr; }
+    .hotkey-layout { grid-template-columns: 1fr; gap: 40px; }
+    .tutor-credentials { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    .footer-cta { padding: 64px 24px; }
+  }
+
+  /* ── SALES PITCH ── */
+  .pitch-section {
+    background: var(--black);
+    padding: 120px 60px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pitch-bg-word {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 380px;
+    color: rgba(255,255,255,0.012);
+    top: 50%;
+    left: -40px;
+    transform: translateY(-50%);
+    user-select: none;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .pitch-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    position: relative;
+    z-index: 2;
+  }
+
+  .pitch-problem-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 4.5vw, 64px);
+    line-height: 0.92;
+    margin-bottom: 40px;
+    color: rgba(240,237,232,0.25);
+  }
+
+  .pitch-problem-headline span { color: rgba(240,237,232,0.7); }
+
+  .pain-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+
+  .pain-item {
+    display: flex;
+    gap: 20px;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    align-items: flex-start;
+  }
+
+  .pain-item:first-child { border-top: 1px solid rgba(255,255,255,0.05); }
+
+  .pain-marker {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: rgba(230,51,41,0.4);
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .pain-text {
+    font-size: 14px;
+    color: rgba(240,237,232,0.38);
+    line-height: 1.65;
+  }
+
+  .pain-text strong {
+    color: rgba(240,237,232,0.65);
+    font-weight: 600;
+  }
+
+  .pitch-solution-side {
+    position: relative;
+    padding-left: 60px;
+  }
+
+  .pitch-solution-side::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .pitch-solution-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 4.5vw, 64px);
+    line-height: 0.92;
+    margin-bottom: 36px;
+  }
+
+  .pitch-solution-headline .accent { color: var(--red); }
+
+  .pitch-manifesto {
+    font-size: 16px;
+    line-height: 1.85;
+    color: rgba(240,237,232,0.55);
+    margin-bottom: 18px;
+    font-weight: 300;
+  }
+
+  .pitch-manifesto strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .pitch-claim {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(230,51,41,0.18);
+  }
+
+  /* ── MAKE.COM PIPELINE ── */
+  .make-section {
+    background: #070707;
+    padding: 100px 60px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .make-section::before {
+    content: 'AUTO';
+    position: absolute;
+    top: -10px;
+    right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 260px;
+    color: rgba(255,255,255,0.015);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .pipeline-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+
+  .pipeline-header p {
+    font-size: 15px;
+    color: rgba(240,237,232,0.5);
+    line-height: 1.75;
+  }
+
+  .pipeline-track {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr 48px 1fr;
+    align-items: stretch;
+    margin-bottom: 3px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .pipeline-node {
+    background: var(--grey-dark);
+    padding: 40px 36px;
+    position: relative;
+    transition: background 0.25s;
+  }
+
+  .pipeline-node:hover { background: #1c1c1c; }
+
+  .pipeline-node-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pipeline-node-num::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--red);
+    opacity: 0.5;
+  }
+
+  .pipeline-node-app {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey-text);
+    margin-bottom: 6px;
+  }
+
+  .pipeline-node-action {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1px;
+    line-height: 1.0;
+    margin-bottom: 20px;
+  }
+
+  .pipeline-node-detail {
+    font-size: 12px;
+    color: rgba(240,237,232,0.4);
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  .pipeline-node-detail code {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(200,169,110,0.85);
+    background: rgba(200,169,110,0.07);
+    padding: 2px 7px;
+    border: 1px solid rgba(200,169,110,0.12);
+  }
+
+  .pipeline-filter {
+    background: rgba(230,51,41,0.05);
+    border: 1px solid rgba(230,51,41,0.12);
+    padding: 14px 18px;
+    margin-top: auto;
+  }
+
+  .pipeline-filter-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(230,51,41,0.65);
+    margin-bottom: 8px;
+  }
+
+  .pipeline-filter-rule {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: rgba(240,237,232,0.42);
+    line-height: 1.7;
+  }
+
+  .pipeline-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .pipeline-arrow-svg { color: var(--red); opacity: 0.6; }
+
+  /* Email Preview */
+  .email-preview-block {
+    background: var(--grey-dark);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-left: 3px solid var(--red);
+    padding: 40px 48px;
+    margin-bottom: 3px;
+  }
+
+  .email-preview-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .email-preview-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(230,51,41,0.15);
+  }
+
+  .email-preview-meta {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 6px 20px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+
+  .email-meta-key { color: var(--grey-text); letter-spacing: 1px; }
+  .email-meta-val { color: rgba(240,237,232,0.65); }
+  .email-meta-val.subject-val { color: var(--white); font-size: 12px; }
+
+  .email-preview-body {
+    font-size: 14px;
+    line-height: 2;
+    color: rgba(240,237,232,0.45);
+    max-width: 600px;
+  }
+
+  .email-preview-body strong { color: rgba(240,237,232,0.75); font-weight: 600; }
+
+  .email-cta-link {
+    display: inline-block;
+    margin: 4px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--accent-warm);
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+    padding-bottom: 2px;
+  }
+
+  .email-sig {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--grey-text);
+  }
+
+  /* Activation Strip */
+  .activation-strip {
+    background: var(--grey-dark);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 36px 48px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 0;
+  }
+
+  .activation-step { display: flex; align-items: center; gap: 20px; }
+
+  .activation-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: rgba(255,255,255,0.06);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .activation-text strong {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .activation-text span {
+    font-size: 13px;
+    color: rgba(240,237,232,0.45);
+    line-height: 1.6;
+    display: block;
+  }
+
+  .activation-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    color: rgba(255,255,255,0.1);
+    padding: 0 24px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px) {
+    .pitch-layout { grid-template-columns: 1fr; gap: 48px; }
+    .pitch-solution-side { padding-left: 0; }
+    .pitch-solution-side::before { display: none; }
+    .pitch-section { padding: 64px 24px; }
+    .make-section { padding: 64px 24px; }
+    .pipeline-track { grid-template-columns: 1fr; }
+    .pipeline-connector { padding: 20px; min-height: 48px; border: none; border-left: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.05); }
+    .pipeline-connector svg { transform: rotate(90deg); }
+    .pipeline-header { grid-template-columns: 1fr; gap: 24px; }
+    .activation-strip { grid-template-columns: 1fr; gap: 24px; padding: 32px 24px; }
+    .activation-arrow { display: none; }
+    .email-preview-block { padding: 32px 24px; }
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-inner {
+    background: var(--grey-dark);
+    width: 90%;
+    max-width: 860px;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -48px;
+    right: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--white);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 8px;
+  }
+
+  .modal-inner iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: block;
+    border: none;
+  }
+
+  /* ── GLITCH ANIMATION ── */
+  @keyframes glitch-skew {
+    0%   { transform: skewX(0deg); }
+    2%   { transform: skewX(-4deg); }
+    4%   { transform: skewX(3deg); }
+    6%   { transform: skewX(-1deg); }
+    8%   { transform: skewX(0deg); }
+    100% { transform: skewX(0deg); }
+  }
+  @keyframes glitch-clip-1 {
+    0%,100% { clip-path: inset(0 0 100% 0); opacity: 0; }
+    2%  { clip-path: inset(8% 0 62% 0); opacity: 0.85; transform: translate(-4px, 1px); }
+    4%  { clip-path: inset(55% 0 12% 0); opacity: 0.85; transform: translate(4px, -1px); }
+    6%  { clip-path: inset(30% 0 45% 0); opacity: 0.85; transform: translate(-2px, 2px); }
+    8%  { clip-path: inset(0 0 100% 0); opacity: 0; }
+  }
+  @keyframes glitch-clip-2 {
+    0%,100% { clip-path: inset(0 0 100% 0); opacity: 0; }
+    2%  { clip-path: inset(60% 0 15% 0); opacity: 0.7; transform: translate(6px, -2px); }
+    4%  { clip-path: inset(20% 0 70% 0); opacity: 0.7; transform: translate(-6px, 1px); }
+    6%  { clip-path: inset(45% 0 30% 0); opacity: 0.6; transform: translate(3px, -1px); }
+    8%  { clip-path: inset(0 0 100% 0); opacity: 0; }
+  }
+
+  .hero-title {
+    position: relative;
+  }
+
+  .hero-title::before,
+  .hero-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: inherit;
+    line-height: 0.92;
+    letter-spacing: -1px;
+    pointer-events: none;
+    white-space: pre-line;
+  }
+
+  .hero-title::before {
+    color: var(--red);
+    animation: glitch-clip-1 8s ease-in-out infinite;
+    animation-delay: 3s;
+    mix-blend-mode: screen;
+  }
+
+  .hero-title::after {
+    color: #00e5ff;
+    animation: glitch-clip-2 8s ease-in-out infinite;
+    animation-delay: 3s;
+    mix-blend-mode: screen;
+  }
+
+  .hero-title.glitch-active {
+    animation: glitch-skew 0.4s ease-in-out;
+  }
+
+  /* ── VIDEO THUMB MP4 PREVIEW ── */
+  .video-thumb video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    transition: opacity 0.4s, transform 0.4s;
+    filter: contrast(1.3) saturate(0) brightness(0.85);
+  }
+
+  .video-thumb:hover video {
+    opacity: 0.85;
+    transform: scale(1.04);
+    filter: contrast(1.4) saturate(0.15) brightness(1);
+  }
+
+  /* ── UPSELL / PATREON SECTION ── */
+  .upsell-section {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 80px 60px;
+  }
+
+  .upsell-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .upsell-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .upsell-tag::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent-warm);
+  }
+
+  .upsell-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 4vw, 56px);
+    line-height: 0.95;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .upsell-title span { color: var(--accent-warm); }
+
+  .upsell-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(240,237,232,0.5);
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  .upsell-perks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .upsell-perks li {
+    font-size: 13px;
+    color: rgba(240,237,232,0.6);
+    padding-left: 20px;
+    position: relative;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .upsell-perks li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-warm);
+    font-size: 11px;
+  }
+
+  .upsell-price-block {
+    text-align: center;
+    border: 1px solid rgba(200,169,110,0.25);
+    padding: 36px 32px;
+    background: rgba(200,169,110,0.04);
+    min-width: 180px;
+    flex-shrink: 0;
+  }
+
+  .upsell-price-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-warm);
+    margin-bottom: 12px;
+  }
+
+  .upsell-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--white);
+    display: block;
+  }
+
+  .upsell-cadence {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--grey-text);
+    display: block;
+    margin-bottom: 24px;
+  }
+
+  .btn-upsell {
+    display: block;
+    text-align: center;
+    padding: 14px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(200,169,110,0.5);
+    color: var(--accent-warm);
+    background: transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-upsell:hover {
+    background: rgba(200,169,110,0.1);
+    border-color: var(--accent-warm);
+    color: var(--white);
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">HAND<span>FILM</span></a>
+  <ul class="nav-links">
+    <li><a href="#pitch">Why</a></li>
+    <li><a href="#modules">Modules</a></li>
+    <li><a href="#make-pipeline">Pipeline</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#pipeline">Patreon</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <!-- ★ REPLACE VARIANT_ID_BLUEPRINT below with your Shopify Blueprint variant ID for direct nav checkout -->
+  <a href="https://handfilm.myshopify.com/cart/VARIANT_ID_BLUEPRINT:1" target="_blank" class="nav-cta">Get The Pack →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding: 0; padding-top: 80px;">
+  <div class="hero-left">
+    <div class="hero-eyebrow">The Brutalist Workflow</div>
+    <h1 class="hero-title" data-text="ZERO&#10;FRICTION&#10;VIDEO&#10;EXTRACTION">
+      ZERO<br>
+      <span class="line-red">FRICTION</span><br>
+      <span class="line-outline">VIDEO</span><br>
+      EXTRACTION
+    </h1>
+    <p class="hero-sub">
+      A concentrated 60-minute skill injection. Cut 50 clips in real-time, upscale to pristine 4K, and automate your entire export pipeline — no fluff, no 14-hour masterclasses.
+    </p>
+    <div class="hero-badges">
+      <span class="badge hot">4 Modules</span>
+      <span class="badge">60 Mins</span>
+      <span class="badge">Q/W/E Engine</span>
+      <span class="badge">Make.com Pipeline</span>
+    </div>
+    <div class="hero-cta-group">
+      <a href="#pricing" class="btn-primary">Get Instant Access</a>
+      <button class="btn-ghost" onclick="openModal('https://www.youtube.com/embed/gkgx3IXIlpk')">
+        ▶ &nbsp;Watch Preview
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-video-bg">
+      <div class="video-thumb" onclick="openModal('https://www.youtube.com/embed/gkgx3IXIlpk')">
+        <!-- REPLACE src WITH YOUR DRIVE/CDN MP4 URL: e.g. https://drive.google.com/uc?export=download&id=YOUR_FILE_ID -->
+        <video autoplay muted loop playsinline poster="https://img.youtube.com/vi/gkgx3IXIlpk/maxresdefault.jpg">
+          <source src="YOUR_PREVIEW_1.mp4" type="video/mp4">
+          <img src="https://img.youtube.com/vi/gkgx3IXIlpk/maxresdefault.jpg" alt="Reference Work 1" onerror="this.src='https://img.youtube.com/vi/gkgx3IXIlpk/hqdefault.jpg'">
+        </video>
+        <span class="video-thumb-label">Ref 01</span>
+        <div class="play-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+      <div class="video-thumb" onclick="openModal('https://www.youtube.com/embed/ccDc80xRnqk')">
+        <!-- REPLACE src WITH YOUR DRIVE/CDN MP4 URL -->
+        <video autoplay muted loop playsinline poster="https://img.youtube.com/vi/ccDc80xRnqk/maxresdefault.jpg">
+          <source src="YOUR_PREVIEW_2.mp4" type="video/mp4">
+          <img src="https://img.youtube.com/vi/ccDc80xRnqk/maxresdefault.jpg" alt="Reference Work 2" onerror="this.src='https://img.youtube.com/vi/ccDc80xRnqk/hqdefault.jpg'">
+        </video>
+        <span class="video-thumb-label">Ref 02</span>
+        <div class="play-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+      <div class="video-thumb" onclick="openModal('https://www.youtube.com/embed/C2AWxFTY1wU')">
+        <!-- REPLACE src WITH YOUR DRIVE/CDN MP4 URL -->
+        <video autoplay muted loop playsinline poster="https://img.youtube.com/vi/C2AWxFTY1wU/maxresdefault.jpg">
+          <source src="YOUR_PREVIEW_3.mp4" type="video/mp4">
+          <img src="https://img.youtube.com/vi/C2AWxFTY1wU/maxresdefault.jpg" alt="Reference Work 3" onerror="this.src='https://img.youtube.com/vi/C2AWxFTY1wU/hqdefault.jpg'">
+        </video>
+        <span class="video-thumb-label">Ref 03</span>
+        <div class="play-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+      <div class="video-thumb" onclick="openModal('https://www.youtube.com/embed/UReGGhgKBBk')">
+        <!-- REPLACE src WITH YOUR DRIVE/CDN MP4 URL -->
+        <video autoplay muted loop playsinline poster="https://img.youtube.com/vi/UReGGhgKBBk/maxresdefault.jpg">
+          <source src="YOUR_PREVIEW_4.mp4" type="video/mp4">
+          <img src="https://img.youtube.com/vi/UReGGhgKBBk/maxresdefault.jpg" alt="Reference Work 4" onerror="this.src='https://img.youtube.com/vi/UReGGhgKBBk/hqdefault.jpg'">
+        </video>
+        <span class="video-thumb-label">Ref 04</span>
+        <div class="play-icon">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="hero-overlay-text">HAND<br>FILM</div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar reveal">
+  <div class="stat-item">
+    <div class="stat-number">60<span>m</span></div>
+    <div class="stat-label">Total Runtime</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">4</div>
+    <div class="stat-label">Precision Modules</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">50<span>+</span></div>
+    <div class="stat-label">Clips Cut Live</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">4<span>K</span></div>
+    <div class="stat-label">Output Quality</div>
+  </div>
+</div>
+
+<!-- SALES PITCH -->
+<section class="pitch-section" id="pitch">
+  <div class="pitch-bg-word">BROKEN</div>
+  <div class="pitch-layout">
+
+    <!-- Problem -->
+    <div class="pitch-problem-side reveal">
+      <div class="section-eyebrow" style="color:var(--grey-text);">
+        <span style="display:inline-block;width:24px;height:1px;background:var(--grey-text);margin-right:12px;"></span>
+        The Problem
+      </div>
+      <div class="pitch-problem-headline" style="margin-top:20px;">YOUR WORKFLOW<br>IS <span>BROKEN.</span></div>
+      <ul class="pain-list">
+        <li class="pain-item">
+          <span class="pain-marker">✗</span>
+          <span class="pain-text"><strong>AI edits without rhythm.</strong> It can find a face, but it cannot feel a beat drop. Your content loses its pulse the moment you let automation choose the cut.</span>
+        </li>
+        <li class="pain-item">
+          <span class="pain-marker">✗</span>
+          <span class="pain-text"><strong>Manual editing bleeds your hours.</strong> You have control, but at the cost of output speed. Two hours of work produces two minutes of content. The math doesn't work.</span>
+        </li>
+        <li class="pain-item">
+          <span class="pain-marker">✗</span>
+          <span class="pain-text"><strong>Dead space drowns your footage.</strong> Gigabytes of raw material sitting idle — no system, no speed, no pipeline to extract what matters.</span>
+        </li>
+        <li class="pain-item">
+          <span class="pain-marker">✗</span>
+          <span class="pain-text"><strong>Vertical crops destroy your runway footage.</strong> Every time you reformat a wide-shot to 9:16, you lose pixels permanently. Standard workflows cannot retain 4K resolution through a kinetic crop — the moment the frame moves, you're publishing a downgraded asset.</span>
+        </li>
+        <li class="pain-item">
+          <span class="pain-marker">✗</span>
+          <span class="pain-text"><strong>Low-resolution crops destroy reach.</strong> The vertical reformat happens after the damage is done. Pixels are already gone. The final asset looks like a downgrade.</span>
+        </li>
+        <li class="pain-item">
+          <span class="pain-marker">✗</span>
+          <span class="pain-text"><strong>UI friction kills every session.</strong> Clicking through menus, waiting on progress bars, babysitting exports. That is not a creative workflow — that is a maintenance job.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Solution -->
+    <div class="pitch-solution-side reveal">
+      <div class="section-eyebrow">The Fix</div>
+      <div class="pitch-solution-headline" style="margin-top:20px;">OPERATE<br>LIKE AN <span class="accent">ARCHITECT.</span></div>
+      <p class="pitch-manifesto">
+        <strong>Stop editing like a technician.</strong> The Brutalist Workflow is a hyper-efficient, surgical extraction engine — not a 14-hour theory class. It is a precise 45-minute blueprint to map your keystrokes, tear through hundreds of videos in minutes, and hand your final output directly to an automated distribution pipeline.
+      </p>
+      <p class="pitch-manifesto">
+        Every technique in this pack has been stress-tested in live production across thousands of clips. The result is a workflow where <strong>mechanical friction drops to zero</strong> and the only remaining variable is your rhythm. That is where the content lives. That is what AI cannot replicate.
+      </p>
+      <p class="pitch-manifesto">
+        This is not about working harder. It is about architecting the infrastructure that makes mediocre output structurally impossible. You build the system once. Then you operate it.
+      </p>
+      <div class="pitch-claim">Claim your time back. Build the asset.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="modules-section" id="modules">
+  <div class="modules-header reveal">
+    <div>
+      <div class="section-eyebrow">The Curriculum</div>
+      <div class="section-title">FOUR PHASES.<br>ONE SYSTEM.</div>
+    </div>
+    <p>Each module is a surgical extraction of only what matters. No padding, no re-explaining basics. You get the exact decision-making framework that separates high-retention vertical content from noise.</p>
+  </div>
+
+  <div class="modules-grid">
+    <div class="module-card active-module reveal" data-num="01">
+      <div class="module-tag">
+        Module 01
+        <span class="module-duration">10 MINS</span>
+      </div>
+      <div class="module-title">THE<br>ARCHITECTURE</div>
+      <ul class="module-items">
+        <li><strong>The Pancake Timeline</strong> — strip every UI friction point before touching a single clip</li>
+        <li><strong>The Q/W/E Engine</strong> — map the "Top and Tail" hotkeys so your hands never leave position</li>
+        <li><strong>The Philosophy</strong> — why full AI clip selection creates dead content, and why human rhythm is the separator</li>
+      </ul>
+    </div>
+
+    <div class="module-card reveal" data-num="02">
+      <div class="module-tag">
+        Module 02
+        <span class="module-duration">15 MINS</span>
+      </div>
+      <div class="module-title">THE KINETIC<br>CUT</div>
+      <ul class="module-items">
+        <li><strong>The 75/25 Rule</strong> — transform unusable landscape crowd shots into screen-filling vertical assets</li>
+        <li><strong>Rhythmic Slicing</strong> — live over-the-shoulder: 50 clips torn through in real-time, cut strictly to audio markers</li>
+        <li><strong>Retention Geometry</strong> — why composition decisions happen before the timeline, not inside it</li>
+      </ul>
+    </div>
+
+    <div class="module-card reveal" data-num="03">
+      <div class="module-tag">
+        Module 03
+        <span class="module-duration">10 MINS</span>
+      </div>
+      <div class="module-title">THE HIGH-FIDELITY<br>POLISH</div>
+      <ul class="module-items">
+        <li><strong>The Topaz Handoff</strong> — take aggressively cropped vertical shots and rebuild pixels to pristine 4K</li>
+        <li><strong>Industrial Grading</strong> — crush shadows and push contrast to lock in the raw, brutalist aesthetic</li>
+        <li><strong>Export Architecture</strong> — HEVC / 80,000 kbps exact settings for visually lossless output</li>
+      </ul>
+    </div>
+
+    <div class="module-card reveal" data-num="04">
+      <div class="module-tag">
+        Module 04
+        <span class="module-duration">10 MINS</span>
+      </div>
+      <div class="module-title">THE AUTOMATED<br>PIPELINE</div>
+      <ul class="module-items">
+        <li><strong>Visually Lossless Export</strong> — the exact codec and bitrate settings to survive every platform's compression</li>
+        <li><strong>The Serverless Handoff</strong> — final export drops into a watched folder and auto-pushes to social queues</li>
+        <li><strong>Shopify Integration</strong> — how the pipeline feeds directly into your storefront without manual intervention</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF TICKER -->
+<div class="social-proof">
+  <div class="proof-ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item">CapCut Q/W/E Engine</span>
+      <span class="ticker-item">Topaz 4K Upscaling</span>
+      <span class="ticker-item">75/25 Vertical Rule</span>
+      <span class="ticker-item">Make.com Automation</span>
+      <span class="ticker-item">HEVC 80K Kbps Export</span>
+      <span class="ticker-item">Pancake Timeline Setup</span>
+      <span class="ticker-item">Brutalist Aesthetic Grading</span>
+      <span class="ticker-item">Serverless Distribution</span>
+      <span class="ticker-item">CapCut Q/W/E Engine</span>
+      <span class="ticker-item">Topaz 4K Upscaling</span>
+      <span class="ticker-item">75/25 Vertical Rule</span>
+      <span class="ticker-item">Make.com Automation</span>
+      <span class="ticker-item">HEVC 80K Kbps Export</span>
+      <span class="ticker-item">Pancake Timeline Setup</span>
+      <span class="ticker-item">Brutalist Aesthetic Grading</span>
+      <span class="ticker-item">Serverless Distribution</span>
+    </div>
+  </div>
+</div>
+
+<!-- TUTOR -->
+<div class="tutor-section" id="tutor">
+  <div class="tutor-visual">
+    <div class="tutor-visual-inner">
+      <div class="tutor-big-initials">RH</div>
+    </div>
+    <div class="tutor-name-overlay">
+      <h2>RAKIB<br>HIMON</h2>
+      <p>Founder · HANDFILM</p>
+    </div>
+  </div>
+  <div class="tutor-content">
+    <div class="section-eyebrow">Your Instructor</div>
+    <div class="section-title">BUILT IN<br>THE FIELD.</div>
+    <p>
+      Rakib Himon is the architect behind the HANDFILM workflow — a production system built through years of real-world execution, not theory. Every technique in this pack has been stress-tested across thousands of clips and live production environments.
+    </p>
+    <p>
+      As a Super Admin-level operator, Rakib's background in system architecture translates directly into video workflow design: zero redundancy, maximum throughput, and an aesthetic that cannot be replicated by automation alone.
+    </p>
+    <div class="tutor-credentials">
+      <div class="credential-item">
+        <strong>Specialty</strong>
+        <span>Kinetic Vertical Editing</span>
+      </div>
+      <div class="credential-item">
+        <strong>Stack</strong>
+        <span>CapCut · Topaz · Make.com</span>
+      </div>
+      <div class="credential-item">
+        <strong>Output</strong>
+        <span>4K HEVC · Platform-Native</span>
+      </div>
+      <div class="credential-item">
+        <strong>Store</strong>
+        <span>handfilm.myshopify.com</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WORKFLOW TECH -->
+<section class="workflow-section" id="workflow">
+  <div class="reveal">
+    <div class="section-eyebrow">The Stack</div>
+    <div class="section-title">THE PRODUCTION<br>CHAIN</div>
+  </div>
+  <div class="workflow-grid reveal">
+    <div class="workflow-step">
+      <span class="workflow-icon">⚡</span>
+      <div class="workflow-step-num">Step 01</div>
+      <h3>CAPCUT<br>Q/W/E</h3>
+      <p>Hotkey engine. Pancake timeline. Cut 50 clips before coffee gets cold.</p>
+      <span class="workflow-arrow">→</span>
+    </div>
+    <div class="workflow-step">
+      <span class="workflow-icon">🔬</span>
+      <div class="workflow-step-num">Step 02</div>
+      <h3>TOPAZ<br>AI 4K</h3>
+      <p>Aggressive crop, pixel reconstruction. Unusable footage becomes pristine 4K.</p>
+      <span class="workflow-arrow">→</span>
+    </div>
+    <div class="workflow-step">
+      <span class="workflow-icon">🖤</span>
+      <div class="workflow-step-num">Step 03</div>
+      <h3>BRUTALIST<br>GRADE</h3>
+      <p>Shadows crushed. Contrast pushed. Signature aesthetic locked.</p>
+      <span class="workflow-arrow">→</span>
+    </div>
+    <div class="workflow-step">
+      <span class="workflow-icon">🤖</span>
+      <div class="workflow-step-num">Step 04</div>
+      <h3>MAKE.COM<br>AUTO-PUSH</h3>
+      <p>Watched folder catches export. Serverless pipeline delivers to Shopify + social.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MAKE.COM PIPELINE -->
+<section class="make-section" id="make-pipeline">
+  <div class="pipeline-header reveal">
+    <div>
+      <div class="section-eyebrow">The Automation Engine</div>
+      <div class="section-title">THE 3-STEP<br>MAKE.COM PIPELINE.</div>
+    </div>
+    <p>Once a paid order lands in Shopify, this scenario fires automatically — no clicks, no waiting, no manual handoff. The Blueprint tier ships with the pre-built Make.com template. Import it, connect your accounts, and the infrastructure is live in under ten minutes. No code. No maintenance. Just execution at scale.</p>
+  </div>
+
+  <!-- 3 Nodes -->
+  <div class="pipeline-track reveal">
+
+    <!-- Step 1: Shopify Watch Orders -->
+    <div class="pipeline-node">
+      <div class="pipeline-node-num">Step 01 · Trigger</div>
+      <div class="pipeline-node-app">Shopify</div>
+      <div class="pipeline-node-action">WATCH<br>ORDERS</div>
+      <div class="pipeline-node-detail">
+        Monitor incoming orders in real-time. Status filter set to <code>Paid</code>. The instant a purchase confirms, the sequence fires and data begins flowing downstream.
+      </div>
+      <div class="pipeline-filter">
+        <div class="pipeline-filter-label">Precision Filter</div>
+        <div class="pipeline-filter-rule">
+          Line Items: Name<br>
+          <code>contains</code>&nbsp;<code>"The Brutalist Workflow"</code><br>
+          <span style="color:rgba(240,237,232,0.25);font-size:9px;">Prevents misfires on other SKUs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connector -->
+    <div class="pipeline-connector">
+      <svg class="pipeline-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+
+    <!-- Step 2: Google Drive Share Link -->
+    <div class="pipeline-node">
+      <div class="pipeline-node-num">Step 02 · Asset</div>
+      <div class="pipeline-node-app">Google Drive</div>
+      <div class="pipeline-node-action">GET SHARE<br>LINK</div>
+      <div class="pipeline-node-detail">
+        Points directly at the secure pre-sale PDF folder. Returns a dynamic share URL — no file attachment, no email payload weight, no spam filter risk. The link is live immediately.
+      </div>
+      <div class="pipeline-filter">
+        <div class="pipeline-filter-label">Architecture Advantage</div>
+        <div class="pipeline-filter-rule">
+          Update the PDF in Drive anytime.<br>The share link stays constant.<br>
+          <span style="color:rgba(240,237,232,0.25);font-size:9px;">Zero re-configuration required</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connector -->
+    <div class="pipeline-connector">
+      <svg class="pipeline-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </div>
+
+    <!-- Step 3: Gmail Delivery -->
+    <div class="pipeline-node">
+      <div class="pipeline-node-num">Step 03 · Delivery</div>
+      <div class="pipeline-node-app">Gmail</div>
+      <div class="pipeline-node-action">SEND<br>EMAIL</div>
+      <div class="pipeline-node-detail">
+        Maps <code>Customer Email</code> and <code>Customer Name</code> directly from the Step 01 Shopify payload. Fires a branded, brutalist-copy delivery email with the Drive URL embedded as the CTA.
+      </div>
+      <div class="pipeline-filter">
+        <div class="pipeline-filter-label">Data Map</div>
+        <div class="pipeline-filter-rule">
+          To:&nbsp;&nbsp;<code>&#123;&#123;shopify.customer_email&#125;&#125;</code><br>
+          Name:&nbsp;<code>&#123;&#123;shopify.first_name&#125;&#125;</code><br>
+          Link:&nbsp;<code>&#123;&#123;drive.share_url&#125;&#125;</code>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Email Payload Preview -->
+  <div class="email-preview-block reveal">
+    <div class="email-preview-label">The Payload — Email Deployed on Every Paid Order</div>
+    <div class="email-preview-meta">
+      <span class="email-meta-key">Subject</span>
+      <span class="email-meta-val subject-val">Access Granted: THE BRUTALIST WORKFLOW</span>
+      <span class="email-meta-key">To</span>
+      <span class="email-meta-val">&#123;&#123;Customer Email&#125;&#125;</span>
+      <span class="email-meta-key">Sender</span>
+      <span class="email-meta-val">HANDFILM</span>
+      <span class="email-meta-key">Fires</span>
+      <span class="email-meta-val">Instantly on order status: Paid</span>
+    </div>
+    <div class="email-preview-body">
+      <p>You are in.</p>
+      <p>Your pre-sale order for <strong>The Brutalist Workflow</strong> is confirmed. The full video modules will drop directly into this inbox next Friday.</p>
+      <p>Until then, here is your immediate access to the architectural blueprint.</p>
+      <p><span class="email-cta-link">[ Blueprint PDF — Hotkey Map + Visually Lossless Export Settings ]</span></p>
+      <p>Download the PDF. Map your Q/W/E hotkeys today. Dial in your export settings.</p>
+      <p>When the modules drop, we are moving at hyper-speed. <strong>Be ready.</strong></p>
+      <div class="email-sig">— HANDFILM</div>
+    </div>
+  </div>
+
+  <!-- Activation Strip -->
+  <div class="activation-strip reveal">
+    <div class="activation-step">
+      <div class="activation-num">01</div>
+      <div class="activation-text">
+        <strong>Import Template</strong>
+        <span>Drop the Make.com blueprint into your account. Connect Shopify, Drive, and Gmail in two clicks each.</span>
+      </div>
+    </div>
+    <div class="activation-arrow">→</div>
+    <div class="activation-step">
+      <div class="activation-num">02</div>
+      <div class="activation-text">
+        <strong>Test With $0.00 Order</strong>
+        <span>Hit Run Once. Place a zero-dollar test on your storefront. Watch the full data flow execute live.</span>
+      </div>
+    </div>
+    <div class="activation-arrow">→</div>
+    <div class="activation-step">
+      <div class="activation-num">03</div>
+      <div class="activation-text">
+        <strong>Flip to ON</strong>
+        <span>Email confirmed in inbox. Scenario active. Infinitely scalable from this exact moment forward.</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- HOTKEYS -->
+<section class="hotkey-section">
+  <div class="reveal">
+    <div class="section-eyebrow">The Q/W/E Engine</div>
+    <div class="section-title">HANDS NEVER<br>LEAVE HOME.</div>
+  </div>
+  <div class="hotkey-layout">
+    <div class="hotkey-desc reveal">
+      <p>The entire cut architecture rests on three adjacent keys. Q marks the in-point. W marks the out-point. E executes the extraction. Your right hand controls playback. Your left hand never moves.</p>
+      <p>This isn't a preference — it's a production philosophy. When the mechanical friction of editing drops to zero, the only thing left is rhythm. That's where the content lives.</p>
+      <p>The PDF hotkey sheet included in every tier is the cheat code. Print it, tape it to your desk, internalize it inside a single session.</p>
+    </div>
+    <div class="keyboard-visual reveal">
+      <div class="key-row">
+        <div class="key" title="Mark In-Point">Q</div>
+        <span class="key-label">→ <span>Mark In-Point (Top)</span></span>
+      </div>
+      <div class="key-row">
+        <div class="key active" title="Mark Out-Point">W</div>
+        <span class="key-label">→ <span>Mark Out-Point (Tail)</span></span>
+      </div>
+      <div class="key-row">
+        <div class="key" title="Extract / Ripple Delete">E</div>
+        <span class="key-label">→ <span>Extract & Ripple Delete</span></span>
+      </div>
+      <div class="key-row" style="margin-top: 20px;">
+        <div class="key" style="min-width: 80px; font-size: 14px;">SPACE</div>
+        <span class="key-label">→ <span>Play / Pause</span></span>
+      </div>
+      <div class="key-row">
+        <div class="key">J</div>
+        <span class="key-label">→ <span>Rewind</span></span>
+      </div>
+      <div class="key-row">
+        <div class="key">L</div>
+        <span class="key-label">→ <span>Fast Forward</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-header reveal">
+    <div class="section-eyebrow">Investment</div>
+    <div class="section-title">PRICE YOUR<br>EXPERTISE.</div>
+    <p>Cheap pricing signals low value. These tiers are priced to respect both your time and the depth of what's being transferred. Every tier includes lifetime access and future updates.</p>
+  </div>
+
+  <div class="pricing-grid">
+    <!-- Core Pack -->
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">Tier 01</div>
+      <div class="pricing-name">CORE PACK</div>
+      <div class="pricing-price">
+        <div>
+          <span class="currency">$</span><span class="amount">47</span>
+          <div class="range">— $97 / one-time</div>
+        </div>
+      </div>
+      <ul class="pricing-features">
+        <li>All 4 video modules (60 min total)</li>
+        <li>PDF hotkey cheat sheet</li>
+        <li>CapCut export settings reference</li>
+        <li>Brutalist grading parameters</li>
+        <li>Lifetime access + updates</li>
+      </ul>
+      <div class="pricing-strategy">The entry-level friction killer. Gets you inside the HANDFILM ecosystem and establishes immediate authority in your workflow.</div>
+      <a href="https://handfilm.myshopify.com/cart/VARIANT_ID_CORE:1" target="_blank" class="btn-card btn-card-outline">
+        <!-- ★ PASTE YOUR CORE PACK VARIANT ID ABOVE e.g. /cart/44123456789012:1 -->
+        Get Core Pack →
+      </a>
+    </div>
+
+    <!-- Blueprint -->
+    <div class="pricing-card featured reveal">
+      <div class="pricing-tier">Tier 02</div>
+      <div class="pricing-name">THE BLUEPRINT</div>
+      <div class="pricing-price">
+        <div>
+          <span class="currency">$</span><span class="amount">149</span>
+          <div class="range">— $197 / one-time</div>
+        </div>
+      </div>
+      <ul class="pricing-features">
+        <li>Everything in Core Pack</li>
+        <li>Make.com automation template (plug-and-play)</li>
+        <li>Serverless pipeline duplication guide</li>
+        <li>Shopify watched-folder integration walkthrough</li>
+        <li>Priority email support</li>
+        <li>Lifetime access + updates</li>
+      </ul>
+      <div class="pricing-strategy">You're selling a business system. Creators pay this to not build the automation themselves — the ROI is immediate and obvious.</div>
+      <a href="https://handfilm.myshopify.com/cart/VARIANT_ID_BLUEPRINT:1" target="_blank" class="btn-card btn-card-red">
+        <!-- ★ PASTE YOUR BLUEPRINT VARIANT ID ABOVE e.g. /cart/44123456789013:1 -->
+        Get The Blueprint →
+      </a>
+    </div>
+
+    <!-- Mastery -->
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">Tier 03</div>
+      <div class="pricing-name">THE MASTERY</div>
+      <div class="pricing-price">
+        <div>
+          <span class="currency">$</span><span class="amount">497</span>
+          <div class="range">+ / one-time</div>
+        </div>
+      </div>
+      <ul class="pricing-features">
+        <li>Everything in The Blueprint</li>
+        <li>60-min 1-on-1 with Rakib Himon</li>
+        <li>Personal workflow audit</li>
+        <li>Aesthetic critique + bottleneck removal</li>
+        <li>Custom automation recommendations</li>
+        <li>Lifetime access + updates</li>
+      </ul>
+      <div class="pricing-strategy">The high-ticket anchor. Rakib's Super Admin background troubleshoots the exact bottlenecks that cost creators the most time.</div>
+      <a href="https://handfilm.myshopify.com/cart/VARIANT_ID_MASTERY:1" target="_blank" class="btn-card btn-card-outline">
+        <!-- ★ PASTE YOUR MASTERY VARIANT ID ABOVE e.g. /cart/44123456789014:1 (or use a contact/application form URL instead) -->
+        Apply for Mastery →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- UPSELL: ONGOING PIPELINE (Patreon) -->
+<section class="upsell-section" id="pipeline">
+  <div class="upsell-inner reveal">
+    <div>
+      <div class="upsell-tag">Ongoing Pipeline</div>
+      <div class="upsell-title">STAY IN THE<br><span>SYSTEM.</span></div>
+      <p class="upsell-desc">
+        The pack gets you operational. The pipeline keeps you ahead. Every month: new custom AI prompts engineered for the HANDFILM aesthetic, raw B-roll packs from live productions, and live workflow teardowns where you watch the decisions happen in real time.
+      </p>
+      <p class="upsell-desc" style="color:rgba(240,237,232,0.35); font-size:13px; margin-bottom:0;">
+        This is also the only ongoing resource addressing the <strong style="color:rgba(240,237,232,0.55);">runway wide-shot problem</strong> — how to retain full 4K resolution while executing kinetic crops on wide-angle footage, without the pixel destruction that every other reformat workflow produces. Solved, documented, and updated monthly.
+      </p>
+    </div>
+    <div class="upsell-price-block">
+      <div class="upsell-price-label">Monthly</div>
+      <span class="upsell-amount">$15</span>
+      <span class="upsell-cadence">/ month</span>
+      <!-- ★ REPLACE href WITH YOUR PATREON URL -->
+      <a href="https://patreon.com/YOUR_PATREON_HANDLE" target="_blank" class="btn-upsell">Join the Pipeline →</a>
+    </div>
+  </div>
+  <div class="reveal" style="max-width:760px; margin: 40px auto 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 40px;">
+    <ul class="upsell-perks" style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px 40px;">
+      <li>Monthly custom AI prompt drops</li>
+      <li>Raw B-roll packs from live shoots</li>
+      <li>Live workflow teardown sessions</li>
+      <li>4K kinetic crop technique updates</li>
+      <li>Runway wide-shot resolution fixes</li>
+      <li>Priority access to new pack releases</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="faq-header reveal">
+    <div class="section-eyebrow">Questions</div>
+    <div class="section-title">NO AMBIGUITY.</div>
+  </div>
+  <div class="faq-list reveal">
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        What software do I need before starting?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">CapCut (free) for the editing engine, Topaz Video AI for the upscaling workflow, and Make.com for the automation pipeline. The Blueprint and Mastery tiers include the Make.com template — you don't need to build it from scratch.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Is this for beginners or advanced editors?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">Intermediate to advanced. You should already understand basic video editing concepts. This pack is about speed, system architecture, and aesthetic — not "how to drag a clip onto a timeline." If you've been editing for 6+ months, you'll get full value immediately.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Will this work for my niche (not concerts / events)?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">The Q/W/E engine and the pancake timeline are universal — they work on any footage type. The 75/25 vertical rule and the brutalist grading are aesthetic choices that apply anywhere you're shooting for vertical social formats. The pipeline automation is entirely content-agnostic.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        What's the Make.com template in the Blueprint tier?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">It's Rakib's actual automation scenario — a watched folder connected to social publishing queues and a Shopify webhook. When your export lands in the folder, the pipeline handles the rest. You import the template, connect your accounts, and the infrastructure is live. No coding required.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Is there a refund policy?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-answer">Because this is a digital product with immediate access to the full system, all sales are final. However, if you have a genuine issue with the content not delivering what was described, reach out directly through the Shopify order page.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER CTA -->
+<div class="footer-cta">
+  <h2>STOP WASTING<br>TIME IN TIMELINE.</h2>
+  <p>Build the system once. Run it forever.</p>
+  <!-- ★ REPLACE VARIANT_ID_BLUEPRINT below with your actual Shopify Blueprint variant ID -->
+  <a href="https://handfilm.myshopify.com/cart/VARIANT_ID_BLUEPRINT:1" target="_blank" class="btn-white">Get Instant Access →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="brand">HAND<span>FILM</span></div>
+  <p>© 2024 Rakib Himon · handfilm.myshopify.com</p>
+  <a href="https://handfilm.myshopify.com" target="_blank">Shop →</a>
+</footer>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="videoModal" onclick="closeModal(event)">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModalBtn()">✕ Close</button>
+    <iframe id="modalIframe" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+  // ── GLITCH TRIGGER (every 5s) ──
+  const heroTitle = document.querySelector('.hero-title');
+  setInterval(() => {
+    heroTitle.classList.add('glitch-active');
+    setTimeout(() => heroTitle.classList.remove('glitch-active'), 400);
+  }, 5000);
+
+  // ── CURSOR ──
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx - 4 + 'px';
+    dot.style.top = my - 4 + 'px';
+  });
+
+  function animateCursor() {
+    rx += (mx - rx) * 0.15;
+    ry += (my - ry) * 0.15;
+    ring.style.left = rx - 16 + 'px';
+    ring.style.top = ry - 16 + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // ── SCROLL PROGRESS ──
+  const progress = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    progress.style.width = pct + '%';
+  });
+
+  // ── REVEAL ON SCROLL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // ── FAQ ──
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // ── VIDEO MODAL ──
+  function openModal(url) {
+    document.getElementById('modalIframe').src = url + '?autoplay=1';
+    document.getElementById('videoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModalBtn() {
+    document.getElementById('videoModal').classList.remove('open');
+    document.getElementById('modalIframe').src = '';
+    document.body.style.overflow = '';
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('videoModal')) closeModalBtn();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModalBtn();
+  });
+
+  // ── HOTKEY DEMO (cycle animation) ──
+  const keys = document.querySelectorAll('.key');
+  const activeKeys = ['Q', 'W', 'E'];
+  let ki = 0;
+  setInterval(() => {
+    keys.forEach(k => {
+      if (activeKeys.includes(k.textContent.trim())) k.classList.remove('active');
+    });
+    keys.forEach(k => {
+      if (k.textContent.trim() === activeKeys[ki]) k.classList.add('active');
+    });
+    ki = (ki + 1) % activeKeys.length;
+  }, 800);
+</script>
+</body>
+</html>
+  

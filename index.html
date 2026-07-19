@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWx — Second-Skin Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style-shared.css">
+<link rel="stylesheet" href="style-main.css">
+<link rel="stylesheet" href="style-hub.css">
+</head>
+<body>
+
+<!-- ================= SHARED CROSS-PAGE NAV STRIP (TABS) ================= -->
+<nav class="rawx-nav-strip" id="rawxNavStrip">
+  <a href="index.html" class="active" data-tab="d2c"><span class="dot"></span>D2C Storefront</a>
+  <a href="index-b2b.html" data-tab="b2b">Wholesale Terminal</a>
+  <a href="index-about.html" data-tab="about">Archive / About</a>
+  <a href="rawx-catalogue-dual-mode.html" data-tab="catalogue">Drop Catalogue</a>
+</nav>
+
+<div id="calibration-line"></div>
+<div id="reticle"><div class="crosshair"></div><span class="coord">X000 Y000</span></div>
+<div id="grain"></div>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="logo">RAW<span class="x">x</span></div>
+  <div class="header-right">
+    <div class="lang-select" id="langSelect">
+      <button class="lang-current" id="langCurrent">EN <span class="caret">▾</span></button>
+      <div class="lang-menu">
+        <button data-lang="EN">EN</button>
+        <button data-lang="BD">BD</button>
+        <button data-lang="JP">JP</button>
+        <button data-lang="NL">NL</button>
+        <button data-lang="FR">FR</button>
+        <button data-lang="DE">DE</button>
+      </div>
+    </div>
+    <a href="#" class="cart-indicator">[ 0 ]</a>
+  </div>
+</header>
+
+<!-- ================= B2B REDIRECT STRIP ================= -->
+<a href="index-b2b.html" class="b2b-strip" id="b2bStrip">
+  <span class="b2b-strip-dot"></span>
+  <span class="b2b-strip-text">Sourcing 500+ units? Skip the storefront — enter the Wholesale Terminal</span>
+  <span class="b2b-strip-arrow">→</span>
+</a>
+
+<!-- ================= HERO SLIDER ================= -->
+<section id="hero">
+  <div class="slide active" data-index="01">
+    <div class="slide-media" data-kind="twoset"></div>
+    <div class="slide-content">
+      <div class="slide-index">FILE_01 — ORIGIN</div>
+      <h1 class="slide-headline">No Markup<br>For A Name</h1>
+      <a href="#edit" class="slide-cta">Shop The Edit <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="slide" data-index="02">
+    <div class="slide-media" data-kind="bodysuit"></div>
+    <div class="slide-content">
+      <div class="slide-index">FILE_02 — CONSTRUCTION</div>
+      <h1 class="slide-headline">Second-Skin<br>Architecture</h1>
+      <a href="#fabric" class="slide-cta">Inspect The Build <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="slide" data-index="03">
+    <div class="slide-media" data-kind="activewear"></div>
+    <div class="slide-content">
+      <div class="slide-index">FILE_03 — SUPPLY CHAIN</div>
+      <h1 class="slide-headline">Built Where<br>It's Actually Built</h1>
+      <a href="#footer" class="slide-cta">Trace The Factory <span class="arrow">→</span></a>
+    </div>
+  </div>
+
+  <div class="hero-scroll-cue"><div class="stem"></div><span>Scroll</span></div>
+
+  <div class="hero-nav">
+    <div class="hero-count"><span id="slideNow">01</span> / 03</div>
+    <div class="hero-progress" id="heroProgress">
+      <div class="bar active"><span></span></div>
+      <div class="bar"><span></span></div>
+      <div class="bar"><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CATEGORY STRIP ================= -->
+<section id="categories">
+  <div class="category-grid">
+    <a href="#" class="cat-tile reveal" data-kind="bodysuit">
+      <img alt="Bodysuits">
+      <div class="cat-label"><span class="cat-num">01</span><span class="cat-name">Bodysuits</span></div>
+    </a>
+    <a href="#" class="cat-tile reveal" data-kind="twoset">
+      <img alt="Sets">
+      <div class="cat-label"><span class="cat-num">02</span><span class="cat-name">Sets</span></div>
+    </a>
+    <a href="#" class="cat-tile reveal" data-kind="essential">
+      <img alt="Essentials">
+      <div class="cat-label"><span class="cat-num">03</span><span class="cat-name">Essentials</span></div>
+    </a>
+    <a href="#" class="cat-tile reveal" data-kind="activewear">
+      <img alt="Activewear">
+      <div class="cat-label"><span class="cat-num">04</span><span class="cat-name">Activewear</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- ================= THE EDIT ================= -->
+<section id="edit">
+  <div class="edit-module">
+    <div class="edit-image reveal" data-kind="lingerie">
+      <img alt="The Edit capsule">
+    </div>
+    <div class="edit-copy reveal">
+      <span class="eyebrow">Capsule <em>004</em> — Limited Run</span>
+      <h3>The Tension Line</h3>
+      <p>Eleven pieces, one spec sheet, zero compromise. <strong>The Tension Line</strong> was engineered on the same cutting floor as our wholesale accounts — the ones who audit every gram of fabric before they'll sign an order.</p>
+      <p>What's different here isn't the machinery. It's that nothing stands between you and it. No showroom markup, no seasonal filler, no name tax. Just the construction, priced at what construction costs.</p>
+      <a href="#" class="edit-cta">Enter The Capsule</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BESTSELLERS ================= -->
+<section id="bestsellers">
+  <div class="section-head reveal">
+    <h2>Bestsellers</h2>
+    <p class="section-tag">Ranked by reorder rate, not by algorithm. What sells is what survives the wash.</p>
+  </div>
+  <div class="carousel-wrap">
+    <div class="carousel-track" id="carouselTrack">
+      <!-- cards injected by JS -->
+    </div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="carPrev">←</button>
+      <button class="carousel-btn" id="carNext">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FIT & FABRIC ================= -->
+<section id="fabric">
+  <div class="section-head reveal">
+    <h2>Fit &amp; Fabric</h2>
+    <p class="section-tag">Everything you feel against skin, explained in plain terms.</p>
+  </div>
+  <div class="fabric-grid">
+    <div class="fabric-item reveal">
+      <span class="fabric-mark">01</span>
+      <div>
+        <h4>Second-Skin Stretch</h4>
+        <p>4-way engineered stretch that moves with you and returns to form — not fabric that eventually gives up and stays stretched.</p>
+      </div>
+    </div>
+    <div class="fabric-item reveal">
+      <span class="fabric-mark">02</span>
+      <div>
+        <h4>Zero-Chafe Seaming</h4>
+        <p>Bonded seams laid flat against the body. No tags, no ridges, nothing you'll notice by hour six.</p>
+      </div>
+    </div>
+    <div class="fabric-item reveal">
+      <span class="fabric-mark">03</span>
+      <div>
+        <h4>Matte Recovery Weight</h4>
+        <p>A weight that holds shape under motion but never reads heavy — matte-finished so it photographs like it feels.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CAMPAIGN FILM STRIP ================= -->
+<section id="campaign">
+  <div class="film-strip" data-kind="bodysuit">
+    <img alt="Campaign film">
+    <button class="play-btn" aria-label="Play campaign film"><span class="tri"></span></button>
+    <div class="film-caption">Campaign <em>FW26</em> — Cut On Site, Dhaka</div>
+    <div class="film-runtime">01:12</div>
+  </div>
+</section>
+
+<!-- ================= ARCHIVE / SOCIAL PROOF ================= -->
+<section id="archive">
+  <div class="section-head reveal">
+    <h2>The Archive</h2>
+    <p class="section-tag">Unedited. Contact-sheet grain, buyer words, no retouching.</p>
+  </div>
+  <div class="archive-grid">
+    <div class="archive-cell tall reveal" data-kind="thong"><img alt=""></div>
+    <div class="archive-cell reveal" data-kind="panty"><img alt=""></div>
+    <div class="archive-cell wide reveal archive-quote"><p>Fit like it was cut for me, not for a size chart</p><span>— K. Ahn, Verified</span></div>
+    <div class="archive-cell reveal" data-kind="essential"><img alt=""></div>
+    <div class="archive-cell reveal" data-kind="twoset"><img alt=""></div>
+    <div class="archive-cell tall reveal" data-kind="lingerie"><img alt=""></div>
+    <div class="archive-cell wide reveal archive-quote"><p>Stopped buying anywhere else the day I saw the seams up close</p><span>— R. Dutta, Verified</span></div>
+    <div class="archive-cell reveal" data-kind="activewear"><img alt=""></div>
+    <div class="archive-cell reveal" data-kind="bodysuit"><img alt=""></div>
+    <div class="archive-cell reveal" data-kind="twoset"><img alt=""></div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="section-head reveal">
+    <h2>The Structure</h2>
+    <p class="section-tag">Not a mood board. A supply chain with a design language.</p>
+  </div>
+  <div class="about-grid">
+    <div class="about-copy reveal">
+      <p class="about-lede">RAWx is cut where it's built — Dhaka origin, factory-direct, zero middle markup. Every seam you see on this site is a seam we can trace back to a machine and a name.</p>
+      <p>The aesthetic is industrial by intention: void black, hazard red, raw calibration lines — the visual language of a spec sheet, not a mood board. We design second-skin architecture first and photograph it second, which is why the archive above is unedited contact-sheet grain rather than retouched campaign work.</p>
+      <p>RAWx sits inside a wider system — Handfilm builds the content methodology, Hands&amp;Head runs the B2B sourcing engine. If you're a buyer rather than a customer, that engine is one click away.</p>
+      <a href="index-b2b.html" class="about-cta">Talk To The Factory <span class="arrow">→</span></a>
+    </div>
+    <div class="about-stats reveal">
+      <div class="about-stat"><b>Dhaka</b><span>Factory Origin</span></div>
+      <div class="about-stat"><b>0%</b><span>Middleman Markup</span></div>
+      <div class="about-stat"><b>500+</b><span>Unit Minimum, Wholesale</span></div>
+      <div class="about-stat"><b>FW26</b><span>Current Season</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHOLESALE CTA BLOCK ================= -->
+<section id="wholesale-cta">
+  <div class="wholesale-cta-inner reveal">
+    <div class="wholesale-cta-eyebrow">For Buyers, Not Browsers</div>
+    <h2>This Is The Storefront.<br>The Factory Is Through Here.</h2>
+    <p>Tech packs, MOQ, landed cost, production timelines — the Wholesale Terminal is where sourcing teams actually work.</p>
+    <a href="index-b2b.html" class="wholesale-cta-btn">Enter Wholesale Terminal <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- ================= B2B PROTOCOL MODULES (expanded from wholesale-cta) ================= -->
+<section id="wholesale-modules">
+  <div class="pm-grid">
+
+    <div class="pm-card pm-accent">
+      <div class="pm-index">01</div>
+      <h3>Protocol Overview</h3>
+      <p>The Wholesale Terminal replaces the sales call. Browse the live production registry, pin references to a board, and submit a structured inquiry — no back-and-forth on email threads.</p>
+      <ul class="pm-list">
+        <li>Live photography registry, tagged by construction</li>
+        <li>Boards persist per session for buying teams</li>
+        <li>Inquiry form routes straight to production</li>
+      </ul>
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-index">02</div>
+      <h3>Technical Blueprint</h3>
+      <p>Every asset carries its own spec sheet — material, MOQ, sizing, colorway count — pulled at the point of inquiry, not negotiated after.</p>
+      <div class="pm-spec-row"><span>Material Specs</span><b>Attached / Frame</b></div>
+      <div class="pm-spec-row"><span>MOQ</span><b>Per Style</b></div>
+      <div class="pm-spec-row"><span>Lead Time</span><b>25–35 Days</b></div>
+      <div class="pm-spec-row"><span>Origin</span><b>Dhaka, BD</b></div>
+    </div>
+
+    <div class="pm-card">
+      <div class="pm-index">03</div>
+      <h3>Workflow Automation</h3>
+      <p>Inquiries submitted in the Terminal route directly into production scheduling — no manual re-entry, no lost leads sitting in an inbox.</p>
+      <div class="pm-flow">
+        <span>Board Pinned</span><i>→</i>
+        <span>Inquiry Sent</span><i>→</i>
+        <span>Quote Routed</span><i>→</i>
+        <span>Production Queue</span>
+      </div>
+    </div>
+
+    <div class="pm-card pm-cta-card">
+      <div class="pm-index">04</div>
+      <h3>Start A Request</h3>
+      <p>Already know what you're sourcing? Skip the browse — pin a reference and open the inquiry form directly from any asset.</p>
+      <a href="index-b2b.html#grid" class="pm-cta-btn">Enter Wholesale Terminal <span class="arrow">→</span></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= SPLIT WINDOW — LIVE EMBEDDED TERMINALS ================= -->
+<section id="split-window">
+  <div class="section-head reveal">
+    <h2>Live Terminals</h2>
+    <p class="section-tag">Two live surfaces of the same system, side by side. Pop either one full screen any time.</p>
+  </div>
+  <div class="split-window-grid">
+
+    <div class="embed-section reveal" id="archive-embed">
+      <div class="embed-label">
+        <span class="embed-dots"><i></i><i></i><i></i></span>
+        <span class="eyebrow">Full <em>Archive</em> — Live</span>
+        <a href="index-about.html" class="embed-expand">Open Full Screen <span class="arrow">→</span></a>
+      </div>
+      <div class="embed-frame-wrap">
+        <iframe src="index-about.html" title="RAWx Archive — full photo registry, filters, and lightbox" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <div class="embed-divider" aria-hidden="true"></div>
+
+    <div class="embed-section reveal" id="catalogue-embed">
+      <div class="embed-label">
+        <span class="embed-dots"><i></i><i></i><i></i></span>
+        <span class="eyebrow">Drop <em>Catalogue</em> — Dual Mode</span>
+        <a href="rawx-catalogue-dual-mode.html" class="embed-expand">Open Full Screen <span class="arrow">→</span></a>
+      </div>
+      <div class="embed-frame-wrap">
+        <iframe src="rawx-catalogue-dual-mode.html" title="RAWx Drop Catalogue — Structural / Candy mode toggle, full collection download" loading="lazy"></iframe>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footer">
+  <div class="footer-capture reveal">
+    <span class="eyebrow">Access <em>List</em></span>
+    <h3>Get Restock Alerts Before The Terminal Sees Them</h3>
+    <form class="capture-form" id="captureForm">
+      <input type="email" placeholder="your@email.com" required id="captureEmail">
+      <button type="submit">Submit</button>
+    </form>
+    <p class="capture-note" id="captureNote">No spam. Restocks, drops, and factory notes only.</p>
+  </div>
+
+  <div class="footer-nav">
+    <div class="footer-col">
+      <span class="eyebrow">Support</span>
+      <ul>
+        <li><a href="#">Sizing Guide</a></li>
+        <li><a href="#">Shipping &amp; Returns</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Categories</span>
+      <ul>
+        <li><a href="#">Bodysuits</a></li>
+        <li><a href="#">Sets</a></li>
+        <li><a href="#">Essentials</a></li>
+        <li><a href="#">Activewear</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Corporate</span>
+      <ul>
+        <li><a href="#about">About RAWx</a></li>
+        <li><a href="index-b2b.html">Wholesale Terminal</a></li>
+        <li><a href="rawx-catalogue-dual-mode.html">Full Catalogue (Download)</a></li>
+        <li><a href="rawx-landing-embedded.html">Campaign Landing — FW26</a></li>
+        <li><a href="#">Factory Standards</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Connect</span>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">Pinterest</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="trust-item"><span class="dot"></span>Global Fulfillment</div>
+    <div class="trust-item"><span class="dot"></span>Secure Checkout</div>
+    <div class="trust-item"><span class="dot"></span>Factory Direct — Dhaka Origin</div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="logo">RAW<span class="x" style="color:var(--red);">x</span></div>
+    <div>© 2026 RAWx Industries. All specifications final.</div>
+  </div>
+</footer>
+
+<script src="core-assets.js"></script>
+<script src="app-main.js"></script>
+<script src="app-b2b.js"></script>
+<script src="page-transition.js"></script>
+</body>
+</html>

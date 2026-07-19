@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexOS Central Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- STATUS STRIP -->
+<div class="status-strip mono">
+  <div class="live"><span class="dot"></span>ARCHIVE ONLINE</div>
+  <div id="itemCount">— ITEMS INDEXED</div>
+  <div id="clock">--:--</div>
+</div>
+
+<!-- NAV / HEADER -->
+<header class="nav">
+  <div class="nav-brand">
+    <div class="mark"><span>N</span></div>
+    <div class="brand-text">
+      <h1>NEXOS<span class="accent">_</span>CENTRAL<span class="accent">_</span>ARCHIVE</h1>
+      <small class="mono">LOCAL ASSET INDEX — READ ONLY</small>
+    </div>
+  </div>
+  <div class="nav-meta mono">
+    <span id="filterState">FILTER: ALL</span>
+  </div>
+</header>
+
+<!-- TAG / FILTER BAR -->
+<nav class="tag-bar mono" id="tagBar" aria-label="Category filters">
+  <!-- populated dynamically by app.js -->
+</nav>
+
+<!-- GRID -->
+<main class="grid-wrap">
+  <div class="grid" id="grid">
+    <!-- populated dynamically by app.js -->
+  </div>
+  <div class="empty-state mono" id="emptyState" hidden>
+    NO ASSETS MATCH THIS FILTER
+  </div>
+</main>
+
+<footer class="mono">
+  NEXOS_CENTRAL_ARCHIVE — NODE LOCAL — NOT FOR PUBLIC INDEX
+</footer>
+
+<script src="hub-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

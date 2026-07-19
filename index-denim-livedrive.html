@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAWx — Engineered Indigo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --black:#0a0a0a;
+    --void:#050505;
+    --paper:#ececE6;
+    --paper-dim:#c9c7c0;
+    --red:#ff2b00;
+    --red-dim:#8a1800;
+    --line:rgba(236,236,230,0.14);
+    --line-strong:rgba(236,236,230,0.32);
+    --mono:'JetBrains Mono', monospace;
+    --gap:1px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--paper);
+    font-family:var(--mono);
+    font-weight:300;
+    letter-spacing:.01em;
+    overflow-x:hidden;
+    cursor:crosshair;
+  }
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  img{width:100%;height:100%;object-fit:cover;display:block;}
+  ::selection{background:var(--red);color:var(--black);}
+
+  /* ============ STRUCTURAL OVERLAYS ============ */
+  #calibration-line{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:40;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.35;
+    mix-blend-mode:screen;
+  }
+  #reticle{
+    position:fixed;top:0;left:0;width:0;height:0;
+    pointer-events:none;z-index:60;
+  }
+  #reticle .crosshair{
+    position:absolute;width:22px;height:22px;
+    border:1px solid var(--red);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    transition:width .15s,height .15s;
+  }
+  #reticle .crosshair::before,#reticle .crosshair::after{
+    content:'';position:absolute;background:var(--red);
+  }
+  #reticle .crosshair::before{width:1px;height:8px;left:50%;top:-11px;transform:translateX(-50%);}
+  #reticle .crosshair::after{width:8px;height:1px;top:50%;left:-11px;transform:translateY(-50%);}
+  #reticle .coord{
+    position:absolute;top:14px;left:14px;
+    font-size:9px;letter-spacing:.12em;color:var(--red);
+    white-space:nowrap;
+  }
+  #grain{
+    position:fixed;inset:0;z-index:50;pointer-events:none;
+    opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ============ NAV STRIP ============ */
+  .rawx-nav-strip{
+    position:relative;z-index:30;
+    display:flex;justify-content:center;gap:36px;
+    padding:8px 24px;
+    background:var(--void);
+    border-bottom:1px solid var(--line);
+    font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--paper-dim);
+  }
+  .rawx-nav-strip a{display:flex;align-items:center;gap:6px;transition:color .2s;}
+  .rawx-nav-strip a:hover{color:var(--paper);}
+  .rawx-nav-strip a.active{color:var(--red);}
+  .rawx-nav-strip .dot{width:5px;height:5px;background:var(--red);border-radius:50%;display:inline-block;}
+
+  /* ============ HEADER ============ */
+  header{
+    position:relative;z-index:30;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 32px;
+    border-bottom:1px solid var(--line);
+  }
+  .logo{font-size:20px;font-weight:700;letter-spacing:.04em;}
+  .logo .x{color:var(--red);}
+  .header-right{display:flex;align-items:center;gap:24px;}
+  .lang-select{position:relative;}
+  .lang-current{
+    background:none;border:1px solid var(--line-strong);color:var(--paper);
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    padding:6px 12px;cursor:pointer;
+  }
+  .lang-menu{
+    position:absolute;top:calc(100% + 6px);right:0;
+    background:var(--void);border:1px solid var(--line-strong);
+    display:none;flex-direction:column;min-width:100%;
+  }
+  .lang-select.open .lang-menu{display:flex;}
+  .lang-menu button{
+    background:none;border:none;color:var(--paper-dim);font-family:var(--mono);
+    font-size:11px;letter-spacing:.1em;padding:8px 12px;text-align:left;cursor:pointer;
+  }
+  .lang-menu button:hover{color:var(--red);}
+  .cart-indicator{font-size:12px;border:1px solid var(--line-strong);padding:6px 10px;}
+
+  /* ============ B2B STRIP ============ */
+  .b2b-strip{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    padding:10px 16px;background:var(--red);color:var(--black);
+    font-size:11px;letter-spacing:.08em;font-weight:600;
+    text-transform:uppercase;position:relative;z-index:30;
+  }
+  .b2b-strip-dot{width:6px;height:6px;background:var(--black);border-radius:50%;}
+  .b2b-strip-arrow{transition:transform .2s;}
+  .b2b-strip:hover .b2b-strip-arrow{transform:translateX(4px);}
+
+  /* ============ HERO ============ */
+  #hero{position:relative;height:92vh;min-height:560px;overflow:hidden;}
+  .slide{
+    position:absolute;inset:0;opacity:0;visibility:hidden;
+    transition:opacity .8s ease;
+  }
+  .slide.active{opacity:1;visibility:visible;}
+  .slide-media{
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(5,5,5,.15), rgba(5,5,5,.85)), var(--black);
+    background-size:cover;background-position:center;
+    transition:background-image .4s ease;
+  }
+  .slide-media[data-kind="skinbind"]{background-color:#141414;background-image:linear-gradient(180deg, rgba(5,5,5,.1), rgba(5,5,5,.9)), repeating-linear-gradient(115deg, #1c1c22 0 2px, #101014 2px 4px);}
+  .slide-media[data-kind="rawhem"]{background-color:#171512;background-image:linear-gradient(180deg, rgba(5,5,5,.1), rgba(5,5,5,.9)), repeating-linear-gradient(20deg, #201c17 0 3px, #14110d 3px 6px);}
+  .slide-media[data-kind="relaxed"]{background-color:#12161c;background-image:linear-gradient(180deg, rgba(5,5,5,.1), rgba(5,5,5,.9)), repeating-linear-gradient(160deg, #171d26 0 2px, #0e1116 2px 5px);}
+  .slide-content{
+    position:relative;z-index:2;height:100%;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding:0 40px 80px;max-width:900px;
+  }
+  .slide-index{font-size:11px;letter-spacing:.18em;color:var(--red);margin-bottom:18px;text-transform:uppercase;}
+  .slide-headline{
+    font-size:clamp(38px, 7vw, 86px);
+    font-weight:700;line-height:.98;letter-spacing:-.01em;
+    text-transform:uppercase;margin-bottom:28px;
+  }
+  .slide-tag{font-size:13px;color:var(--paper-dim);max-width:480px;margin-bottom:28px;line-height:1.6;}
+  .slide-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    border:1px solid var(--paper);padding:14px 24px;
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    width:fit-content;transition:background .2s,color .2s;
+  }
+  .slide-cta:hover{background:var(--red);border-color:var(--red);color:var(--black);}
+  .hero-scroll-cue{
+    position:absolute;bottom:24px;left:40px;z-index:3;
+    display:flex;align-items:center;gap:10px;font-size:10px;
+    letter-spacing:.14em;color:var(--paper-dim);text-transform:uppercase;
+  }
+  .hero-scroll-cue .stem{width:1px;height:36px;background:var(--line-strong);}
+  .hero-nav{position:absolute;bottom:24px;right:40px;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+  .hero-count{font-size:11px;color:var(--paper-dim);letter-spacing:.1em;}
+  .hero-progress{display:flex;gap:6px;}
+  .bar{width:36px;height:2px;background:var(--line-strong);position:relative;overflow:hidden;cursor:pointer;}
+  .bar span{position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:left;}
+  .bar.active span{transform:scaleX(1);transition:transform 6s linear;}
+
+  /* ============ CATEGORY STRIP ============ */
+  #categories{padding:2px;background:var(--void);}
+  .category-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap);background:var(--line);}
+  .cat-tile{position:relative;aspect-ratio:3/4;background:#151515;overflow:hidden;display:block;}
+  .cat-tile img{opacity:.82;filter:grayscale(15%) contrast(1.05);transition:opacity .3s,transform .5s ease;}
+  .cat-tile:hover img{opacity:1;}
+  .cat-tile[data-kind="skinbind"]{background:linear-gradient(160deg,#1a1a1f,#0c0c0e);}
+  .cat-tile[data-kind="rawhem"]{background:linear-gradient(160deg,#1e1a15,#0d0b09);}
+  .cat-tile[data-kind="relaxedfit"]{background:linear-gradient(160deg,#151a20,#0a0c0f);}
+  .cat-tile[data-kind="blackout"]{background:linear-gradient(160deg,#0e0e0e,#000);}
+  .cat-label{
+    position:absolute;left:0;bottom:0;width:100%;padding:18px;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    background:linear-gradient(0deg, rgba(0,0,0,.75), transparent);
+  }
+  .cat-num{font-size:10px;color:var(--red);letter-spacing:.1em;}
+  .cat-name{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;}
+  .cat-tile{transition:transform .5s ease;}
+  .cat-tile:hover{transform:translateY(-4px);}
+
+  /* ============ SECTION HEAD (shared) ============ */
+  .section-head{padding:90px 40px 36px;max-width:760px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,40px);text-transform:uppercase;font-weight:700;letter-spacing:-.01em;margin-bottom:12px;}
+  .section-tag{font-size:12px;color:var(--paper-dim);line-height:1.7;max-width:480px;}
+
+  /* ============ PREVIEW SLIDERS (Lookbook / Catalogue) ============ */
+  .preview-section{padding:0 40px 60px;}
+  .preview-slider{
+    position:relative;height:64vh;min-height:420px;overflow:hidden;
+    border:1px solid var(--line);
+    background-color:#101010;
+  }
+  .pv-slide{
+    position:absolute;inset:0;opacity:0;visibility:hidden;
+    background-size:cover;background-position:center;
+    transition:opacity 1s ease, background-image .4s ease;
+  }
+  .pv-slide.active{opacity:1;visibility:visible;}
+  .pv-content{
+    position:relative;z-index:2;height:100%;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:0 48px;max-width:560px;
+  }
+  .pv-content .eyebrow{margin-bottom:14px;}
+  .pv-content h3{font-size:clamp(24px,3vw,36px);text-transform:uppercase;font-weight:700;margin-bottom:18px;letter-spacing:-.01em;}
+  .pv-content p{font-size:13px;line-height:1.8;color:var(--paper-dim);margin-bottom:24px;max-width:480px;}
+  .pv-dots{position:absolute;bottom:24px;right:32px;z-index:3;display:flex;gap:8px;}
+  .pv-dots span{width:8px;height:8px;border-radius:50%;border:1px solid var(--line-strong);cursor:pointer;transition:background .2s,border-color .2s;}
+  .pv-dots span.active{background:var(--red);border-color:var(--red);}
+
+  /* ============ THE EDIT / CAPSULE ============ */
+  #edit{padding:0 40px 90px;}
+  .edit-module{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);background:var(--line);border:1px solid var(--line);}
+  .edit-image{position:relative;min-height:520px;background:linear-gradient(155deg,#1b1b1b,#0a0a0a);overflow:hidden;}
+  .edit-image::after{
+    content:'005';position:absolute;bottom:24px;right:28px;
+    font-size:80px;font-weight:800;color:rgba(236,236,230,.06);
+    letter-spacing:-.02em;
+  }
+  .edit-image img{opacity:.85;filter:grayscale(10%) contrast(1.05);}
+  .edit-copy{background:var(--void);padding:56px 48px;display:flex;flex-direction:column;justify-content:center;}
+  .eyebrow{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:18px;}
+  .eyebrow em{font-style:normal;color:var(--paper);}
+  .edit-copy h3{font-size:clamp(24px,2.6vw,32px);text-transform:uppercase;font-weight:700;margin-bottom:22px;letter-spacing:-.01em;}
+  .edit-copy p{font-size:13px;line-height:1.85;color:var(--paper-dim);margin-bottom:18px;}
+  .edit-copy strong{color:var(--paper);font-weight:600;}
+  .edit-cta{
+    margin-top:12px;display:inline-flex;align-items:center;gap:10px;
+    border-bottom:1px solid var(--red);padding-bottom:6px;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);
+    width:fit-content;
+  }
+
+  /* ============ FIT & FABRIC ============ */
+  #fabric{padding-bottom:90px;}
+  .fabric-grid{padding:0 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .fabric-item{background:var(--black);padding:40px 32px;display:flex;gap:20px;}
+  .fabric-mark{font-size:12px;color:var(--red);letter-spacing:.1em;flex-shrink:0;}
+  .fabric-item h4{font-size:15px;text-transform:uppercase;font-weight:700;margin-bottom:12px;letter-spacing:.01em;}
+  .fabric-item p{font-size:12.5px;line-height:1.75;color:var(--paper-dim);}
+
+  /* ============ ARCHIVE ============ */
+  #archive{padding-bottom:110px;}
+  .archive-grid{
+    padding:0 40px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:190px;
+    gap:1px;background:var(--line);
+  }
+  .archive-cell{position:relative;background:#111;overflow:hidden;}
+  .archive-cell img{opacity:.85;filter:grayscale(15%) contrast(1.05);transition:transform .5s ease,opacity .3s;}
+  .archive-cell:hover img{opacity:1;transform:scale(1.04);}
+  .archive-cell.tall{grid-row:span 2;}
+  .archive-cell.wide{grid-column:span 2;}
+  .archive-cell[data-kind="tight"]{background:linear-gradient(150deg,#191920,#0b0b0d);}
+  .archive-cell[data-kind="distressed"]{background:linear-gradient(150deg,#201b14,#0d0a07);}
+  .archive-cell[data-kind="raw-hem"]{background:linear-gradient(150deg,#1d1a15,#0c0a08);}
+  .archive-cell[data-kind="relaxed"]{background:linear-gradient(150deg,#141a1f,#090c0e);}
+  .archive-cell[data-kind="blackout"]{background:linear-gradient(150deg,#0d0d0d,#000);}
+  .archive-cell[data-kind="mom-fit"]{background:linear-gradient(150deg,#171b21,#0a0c0f);}
+  .archive-quote{
+    background:var(--void);display:flex;flex-direction:column;justify-content:center;
+    padding:26px 30px;
+  }
+  .archive-quote p{font-size:14px;line-height:1.6;font-style:normal;color:var(--paper);margin-bottom:14px;}
+  .archive-quote span{font-size:10px;letter-spacing:.1em;color:var(--red);text-transform:uppercase;}
+
+  /* ============ REVEAL ANIM ============ */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ============ FOOTER ============ */
+  footer{border-top:1px solid var(--line);}
+  .footer-capture{padding:80px 40px;text-align:center;max-width:640px;margin:0 auto;}
+  .footer-capture h3{font-size:clamp(22px,3vw,32px);text-transform:uppercase;font-weight:700;margin:16px 0 28px;letter-spacing:-.01em;}
+  .capture-form{display:flex;gap:0;border:1px solid var(--line-strong);max-width:420px;margin:0 auto;}
+  .capture-form input{
+    flex:1;background:none;border:none;color:var(--paper);font-family:var(--mono);
+    font-size:12px;padding:14px 16px;outline:none;
+  }
+  .capture-form button{
+    background:var(--red);border:none;color:var(--black);font-family:var(--mono);
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:14px 22px;cursor:pointer;
+  }
+  .capture-note{margin-top:14px;font-size:10.5px;color:var(--paper-dim);letter-spacing:.04em;}
+
+  .footer-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;padding:0 40px 60px;max-width:1200px;margin:0 auto;}
+  .footer-col ul{margin-top:16px;display:flex;flex-direction:column;gap:10px;}
+  .footer-col a{font-size:12.5px;color:var(--paper-dim);transition:color .2s;}
+  .footer-col a:hover{color:var(--red);}
+
+  .trust-bar{
+    display:flex;justify-content:center;gap:36px;padding:20px;
+    border-top:1px solid var(--line);font-size:10.5px;color:var(--paper-dim);
+    letter-spacing:.06em;text-transform:uppercase;
+  }
+  .trust-item{display:flex;align-items:center;gap:8px;}
+  .trust-item .dot{width:5px;height:5px;background:var(--red);border-radius:50%;}
+
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 40px;border-top:1px solid var(--line);
+    font-size:11px;color:var(--paper-dim);
+  }
+
+  /* ============ DRIVE SYNC STATUS BADGE (new) ============ */
+  .drive-status{
+    position:fixed;left:14px;bottom:14px;z-index:45;
+    font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--paper-dim);background:rgba(5,5,5,.82);
+    border:1px solid var(--line-strong);padding:7px 11px;
+    display:flex;align-items:center;gap:7px;pointer-events:none;
+  }
+  .drive-status .sdot{width:5px;height:5px;border-radius:50%;background:var(--paper-dim);}
+  .drive-status.live .sdot{background:var(--red);box-shadow:0 0 6px var(--red);animation:sdotpulse 2s infinite;}
+  .drive-status.live{color:var(--red);}
+  .drive-status.offline .sdot{background:#555;}
+  @keyframes sdotpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:900px){
+    .category-grid{grid-template-columns:repeat(2,1fr);}
+    .edit-module{grid-template-columns:1fr;}
+    .fabric-grid{grid-template-columns:1fr;}
+    .archive-grid{grid-template-columns:repeat(2,1fr);}
+    .archive-cell.wide{grid-column:span 2;}
+    .footer-nav{grid-template-columns:repeat(2,1fr);}
+    .slide-content{padding:0 20px 60px;}
+    .preview-section{padding:0 20px 40px;}
+    .pv-content{padding:0 24px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= SHARED CROSS-PAGE NAV STRIP ================= -->
+<nav class="rawx-nav-strip">
+  <a href="index.html" class="active"><span class="dot"></span>Home</a>
+  <a href="rawx-b2b-lookbook.html">B2B Lookbook →</a>
+  <a href="rawx-catalogue-dual-mode.html">Catalogue / Dual Mode →</a>
+</nav>
+
+<div id="calibration-line"></div>
+<div id="reticle"><div class="crosshair"></div><span class="coord">X000 Y000</span></div>
+<div id="grain"></div>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="logo">RAW<span class="x">x</span></div>
+  <div class="header-right">
+    <div class="lang-select" id="langSelect">
+      <button class="lang-current" id="langCurrent">EN <span class="caret">▾</span></button>
+      <div class="lang-menu">
+        <button data-lang="EN">EN</button>
+        <button data-lang="BD">BD</button>
+        <button data-lang="JP">JP</button>
+        <button data-lang="NL">NL</button>
+        <button data-lang="FR">FR</button>
+        <button data-lang="DE">DE</button>
+      </div>
+    </div>
+    <a href="#" class="cart-indicator">[ 0 ]</a>
+  </div>
+</header>
+
+<!-- ================= B2B REDIRECT STRIP ================= -->
+<a href="rawx-b2b-lookbook.html" class="b2b-strip" id="b2bStrip">
+  <span class="b2b-strip-dot"></span>
+  <span class="b2b-strip-text">Sourcing 500+ units of denim? Skip the storefront — enter the B2B Lookbook</span>
+  <span class="b2b-strip-arrow">→</span>
+</a>
+
+<!-- ================= HERO SLIDER ================= -->
+<section id="hero">
+  <div class="slide active" data-index="01">
+    <div class="slide-media" data-kind="skinbind" data-drive-slot="hero-1" data-gradient="linear-gradient(180deg, rgba(5,5,5,.15), rgba(5,5,5,.88))"></div>
+    <div class="slide-content">
+      <div class="slide-index">FILE_01 — TENSION SPEC</div>
+      <h1 class="slide-headline">High-Tension<br>Indigo</h1>
+      <p class="slide-tag">Hip-hugging, engineered for a fit closer to skin than fabric. No slack, no bagging out by noon.</p>
+      <a href="rawx-catalogue-dual-mode.html" class="slide-cta">Shop Skin-Bind <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="slide" data-index="02">
+    <div class="slide-media" data-kind="rawhem" data-drive-slot="hero-2" data-gradient="linear-gradient(180deg, rgba(5,5,5,.15), rgba(5,5,5,.88))"></div>
+    <div class="slide-content">
+      <div class="slide-index">FILE_02 — DISTRESS PROTOCOL</div>
+      <h1 class="slide-headline">Distressed<br>Utility</h1>
+      <p class="slide-tag">Torn and raw-hem cutoffs, damage applied with intent, not accident. Industrial fraying, factory-controlled.</p>
+      <a href="rawx-catalogue-dual-mode.html" class="slide-cta">Shop Raw-Hem <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="slide" data-index="03">
+    <div class="slide-media" data-kind="relaxed" data-drive-slot="hero-3" data-gradient="linear-gradient(180deg, rgba(5,5,5,.15), rgba(5,5,5,.88))"></div>
+    <div class="slide-content">
+      <div class="slide-index">FILE_03 — LOAD TOLERANCE</div>
+      <h1 class="slide-headline">Relaxed<br>Architecture</h1>
+      <p class="slide-tag">Mom and boyfriend silhouettes, cut wide but never sloppy. Utilitarian slack with a structured hand.</p>
+      <a href="rawx-catalogue-dual-mode.html" class="slide-cta">Shop Relaxed-Fit <span class="arrow">→</span></a>
+    </div>
+  </div>
+
+  <div class="hero-scroll-cue"><div class="stem"></div><span>Scroll</span></div>
+
+  <div class="hero-nav">
+    <div class="hero-count"><span id="slideNow">01</span> / 03</div>
+    <div class="hero-progress" id="heroProgress">
+      <div class="bar active"><span></span></div>
+      <div class="bar"><span></span></div>
+      <div class="bar"><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CATEGORY STRIP ================= -->
+<section id="categories">
+  <div class="category-grid">
+    <a href="rawx-catalogue-dual-mode.html" class="cat-tile reveal" data-kind="skinbind">
+      <img data-drive-slot="cat-1" alt="Skin-Bind">
+      <div class="cat-label"><span class="cat-num">01</span><span class="cat-name">Skin-Bind</span></div>
+    </a>
+    <a href="rawx-catalogue-dual-mode.html" class="cat-tile reveal" data-kind="rawhem">
+      <img data-drive-slot="cat-2" alt="Raw-Hem">
+      <div class="cat-label"><span class="cat-num">02</span><span class="cat-name">Raw-Hem</span></div>
+    </a>
+    <a href="rawx-catalogue-dual-mode.html" class="cat-tile reveal" data-kind="relaxedfit">
+      <img data-drive-slot="cat-3" alt="Relaxed-Fit">
+      <div class="cat-label"><span class="cat-num">03</span><span class="cat-name">Relaxed-Fit</span></div>
+    </a>
+    <a href="rawx-catalogue-dual-mode.html" class="cat-tile reveal" data-kind="blackout">
+      <img data-drive-slot="cat-4" alt="Blackout">
+      <div class="cat-label"><span class="cat-num">04</span><span class="cat-name">Blackout</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- ================= B2B LOOKBOOK PREVIEW SLIDER ================= -->
+<section id="lookbook-preview" class="preview-section">
+  <div class="preview-slider reveal" data-autoplay="4500">
+    <div class="pv-slide active" data-drive-slot="lookbook-1" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-slide" data-drive-slot="lookbook-2" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-slide" data-drive-slot="lookbook-3" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-slide" data-drive-slot="lookbook-4" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-content">
+      <span class="eyebrow">Wholesale <em>Terminal</em></span>
+      <h3>B2B Denim Lookbook</h3>
+      <p>Fourteen reference frames from the Engineered Indigo capsule — factory-direct Dhaka origin, 1/3 EU cost basis, MOQ 500+/SKU. Built for buying teams sourcing at scale.</p>
+      <a href="rawx-b2b-lookbook.html" class="edit-cta">Enter The Lookbook →</a>
+    </div>
+    <div class="pv-dots"></div>
+  </div>
+</section>
+
+<!-- ================= CATALOGUE DUAL MODE PREVIEW SLIDER ================= -->
+<section id="catalogue-preview" class="preview-section">
+  <div class="preview-slider reveal" data-autoplay="5200">
+    <div class="pv-slide active" data-drive-slot="catalogue-1" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-slide" data-drive-slot="catalogue-2" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-slide" data-drive-slot="catalogue-3" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-slide" data-drive-slot="catalogue-4" data-gradient="linear-gradient(90deg, rgba(5,5,5,.92) 0%, rgba(5,5,5,.3) 55%, rgba(5,5,5,.05) 100%)"></div>
+    <div class="pv-content">
+      <span class="eyebrow">Full <em>SKU Sheet</em></span>
+      <h3>Drop Catalogue — Dual Mode</h3>
+      <p>Every SKU, two price sheets. Toggle between Retail (single-unit, EU/US shipping) and Wholesale (factory-direct FOB Dhaka, 500+ MOQ) on one catalogue page.</p>
+      <a href="rawx-catalogue-dual-mode.html" class="edit-cta">Enter The Catalogue →</a>
+    </div>
+    <div class="pv-dots"></div>
+  </div>
+</section>
+
+<!-- ================= THE EDIT ================= -->
+<section id="edit">
+  <div class="edit-module">
+    <div class="edit-image reveal" data-kind="denim-capsule">
+      <img data-drive-slot="edit-1" alt="Capsule 005 — Engineered Indigo">
+    </div>
+    <div class="edit-copy reveal">
+      <span class="eyebrow">Capsule <em>005</em> — Engineered Indigo</span>
+      <h3>Built For Mechanical Stretch</h3>
+      <p><strong>Engineered Indigo</strong> is denim run through the same tension tests as our activewear line. Warp and weft are selected for mechanical stretch, not just comfort stretch — the difference is a fabric that pulls back into spec after every wear, not one that quietly gives up by week three.</p>
+      <p>Zero-sag recovery is built into the yarn, not patched in with a lining. Every wash is raw factory wash — no chemical shortcuts, no synthetic fade sprayed on after the fact. What fades, fades because it was actually worn.</p>
+      <a href="#" class="edit-cta">Enter The Capsule</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FIT & FABRIC ================= -->
+<section id="fabric">
+  <div class="section-head reveal">
+    <h2>Fit &amp; Fabric</h2>
+    <p class="section-tag">The spec behind the indigo, explained in plain terms.</p>
+  </div>
+  <div class="fabric-grid">
+    <div class="fabric-item reveal">
+      <span class="fabric-mark">01</span>
+      <div>
+        <h4>Heavyweight Recovery</h4>
+        <p>A denim weight dense enough to hold its shape through a full day of wear — engineered so the knee and seat never bag out, regardless of fit.</p>
+      </div>
+    </div>
+    <div class="fabric-item reveal">
+      <span class="fabric-mark">02</span>
+      <div>
+        <h4>Industrial Wash</h4>
+        <p>Raw fading achieved through mechanical abrasion and rope-dye process, not chemical bleaching. Every crease reads true because it was earned, not printed.</p>
+      </div>
+    </div>
+    <div class="fabric-item reveal">
+      <span class="fabric-mark">03</span>
+      <div>
+        <h4>Reinforced Seaming</h4>
+        <p>Bar-tacked stress points and double-needle construction at every load-bearing seam — built to take tension at the hip and thigh without blowing out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ARCHIVE / SOCIAL PROOF ================= -->
+<section id="archive">
+  <div class="section-head reveal">
+    <h2>The Archive</h2>
+    <p class="section-tag">Unedited. Contact-sheet grain, buyer words, no retouching.</p>
+  </div>
+  <div class="archive-grid">
+    <div class="archive-cell tall reveal" data-kind="tight"><img data-drive-slot="archive-1" alt="Leather repair patch detail"></div>
+    <div class="archive-cell reveal" data-kind="distressed"><img data-drive-slot="archive-2" alt="Belt loop denim-leather seam"></div>
+    <div class="archive-cell wide reveal archive-quote"><p>Finally, rigid denim that actually moves.</p><span>— Verified Buyer</span></div>
+    <div class="archive-cell reveal" data-kind="raw-hem"><img data-drive-slot="archive-3" alt="Waistband roll factory table"></div>
+    <div class="archive-cell reveal" data-kind="relaxed"><img data-drive-slot="archive-4" alt="Calf crop raw-hem detail"></div>
+    <div class="archive-cell tall reveal" data-kind="blackout"><img data-drive-slot="archive-5" alt="Spec tag BD origin"></div>
+    <div class="archive-cell wide reveal archive-quote"><p>The fade looks earned, not sprayed on. Big difference.</p><span>— T. Reyes, Verified</span></div>
+    <div class="archive-cell reveal" data-kind="mom-fit"><img data-drive-slot="archive-6" alt="Factory floor folded SKU"></div>
+    <div class="archive-cell reveal" data-kind="tight"><img data-drive-slot="archive-7" alt="Rear pocket leather loop"></div>
+    <div class="archive-cell reveal" data-kind="distressed"><img data-drive-slot="archive-8" alt="Back pocket RAWx leather patch"></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footer">
+  <div class="footer-capture reveal">
+    <span class="eyebrow">Access <em>List</em></span>
+    <h3>Get Restock Alerts Before The Terminal Sees Them</h3>
+    <form class="capture-form" id="captureForm">
+      <input type="email" placeholder="your@email.com" required id="captureEmail">
+      <button type="submit">Submit</button>
+    </form>
+    <p class="capture-note" id="captureNote">No spam. Restocks, drops, and factory notes only.</p>
+  </div>
+
+  <div class="footer-nav">
+    <div class="footer-col">
+      <span class="eyebrow">Support</span>
+      <ul>
+        <li><a href="#">Sizing Guide</a></li>
+        <li><a href="#">Shipping &amp; Returns</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Denim Dept</span>
+      <ul>
+        <li><a href="rawx-catalogue-dual-mode.html">Skin-Bind</a></li>
+        <li><a href="rawx-catalogue-dual-mode.html">Raw-Hem</a></li>
+        <li><a href="rawx-catalogue-dual-mode.html">Relaxed-Fit</a></li>
+        <li><a href="rawx-catalogue-dual-mode.html">Blackout</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Corporate</span>
+      <ul>
+        <li><a href="index.html">D2C Storefront</a></li>
+        <li><a href="rawx-b2b-lookbook.html">B2B Lookbook</a></li>
+        <li><a href="rawx-catalogue-dual-mode.html">Catalogue / Dual Mode</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Connect</span>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">Pinterest</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="trust-item"><span class="dot"></span>Global Fulfillment</div>
+    <div class="trust-item"><span class="dot"></span>Secure Checkout</div>
+    <div class="trust-item"><span class="dot"></span>Factory Direct — Dhaka Origin</div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="logo">RAW<span class="x" style="color:var(--red);">x</span></div>
+    <div>© 2026 RAWx Industries. All specifications final.</div>
+  </div>
+</footer>
+
+<!-- ================= DRIVE SYNC STATUS BADGE ================= -->
+<div class="drive-status mono" id="driveStatus"><span class="sdot"></span><span id="driveStatusText">DRIVE SYNC: CONNECTING…</span></div>
+
+<script>
+  // ---- Lang dropdown ----
+  const langSelect = document.getElementById('langSelect');
+  const langCurrent = document.getElementById('langCurrent');
+  langCurrent.addEventListener('click', () => langSelect.classList.toggle('open'));
+  document.querySelectorAll('.lang-menu button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      langCurrent.firstChild.textContent = btn.dataset.lang + ' ';
+      langSelect.classList.remove('open');
+    });
+  });
+  document.addEventListener('click', (e)=>{
+    if(!langSelect.contains(e.target)) langSelect.classList.remove('open');
+  });
+
+  // ---- Hero slider ----
+  const slides = document.querySelectorAll('.slide');
+  const bars = document.querySelectorAll('.bar');
+  const slideNow = document.getElementById('slideNow');
+  let current = 0;
+  let heroTimer;
+
+  function goToSlide(i){
+    slides[current].classList.remove('active');
+    bars[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    bars[current].classList.add('active');
+    slideNow.textContent = String(current+1).padStart(2,'0');
+  }
+  function nextSlide(){ goToSlide((current+1) % slides.length); }
+  function startHero(){
+    clearInterval(heroTimer);
+    heroTimer = setInterval(nextSlide, 6000);
+  }
+  bars.forEach((bar,i)=>{
+    bar.addEventListener('click', ()=>{ goToSlide(i); startHero(); });
+  });
+  startHero();
+
+  // ---- Preview sliders (Lookbook / Catalogue) ----
+  document.querySelectorAll('.preview-slider').forEach(slider=>{
+    const pvSlides = slider.querySelectorAll('.pv-slide');
+    const dotsWrap = slider.querySelector('.pv-dots');
+    let pvCurrent = 0;
+    pvSlides.forEach((_,i)=>{
+      const dot = document.createElement('span');
+      if(i===0) dot.classList.add('active');
+      dot.addEventListener('click', ()=>{ goToPv(i); restartPv(); });
+      dotsWrap.appendChild(dot);
+    });
+    const dots = dotsWrap.querySelectorAll('span');
+    function goToPv(i){
+      pvSlides[pvCurrent].classList.remove('active');
+      dots[pvCurrent].classList.remove('active');
+      pvCurrent = i;
+      pvSlides[pvCurrent].classList.add('active');
+      dots[pvCurrent].classList.add('active');
+    }
+    let pvTimer;
+    function restartPv(){
+      clearInterval(pvTimer);
+      const interval = parseInt(slider.dataset.autoplay, 10) || 5000;
+      pvTimer = setInterval(()=> goToPv((pvCurrent+1) % pvSlides.length), interval);
+    }
+    restartPv();
+  });
+
+  // ---- Reticle follow ----
+  const reticle = document.getElementById('reticle');
+  const crosshair = reticle.querySelector('.crosshair');
+  const coord = reticle.querySelector('.coord');
+  window.addEventListener('mousemove', (e)=>{
+    crosshair.style.left = e.clientX + 'px';
+    crosshair.style.top = e.clientY + 'px';
+    coord.style.left = (e.clientX + 14) + 'px';
+    coord.style.top = (e.clientY + 14) + 'px';
+    coord.textContent = `X${String(e.clientX).padStart(3,'0')} Y${String(e.clientY).padStart(3,'0')}`;
+  });
+
+  // ---- Reveal on scroll ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el=>io.observe(el));
+
+  // ---- Capture form ----
+  const captureForm = document.getElementById('captureForm');
+  const captureNote = document.getElementById('captureNote');
+  captureForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    captureNote.textContent = 'Logged. Denim drops route to this address first.';
+  });
+</script>
+
+<!-- ================= GOOGLE DRIVE LIVE-SYNC ENGINE (new) ================= -->
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------------------------
+     CONFIG — fill in your own Drive API key below.
+     Folder ID is already parsed from the link you gave:
+     https://drive.google.com/drive/folders/1hLVSgmpIdFs8Mn4hYXdYFIZpy30-BfrM
+     The folder (and every file in it) must be shared as
+     "Anyone with the link — Viewer" for this to work with just an API key.
+     API key: Google Cloud Console → APIs & Services → Credentials →
+     Create API Key → restrict it to "Drive API" + your domain's HTTP referrer.
+  ----------------------------------------------------------------*/
+  const DRIVE_CONFIG = {
+    FOLDER_ID: '1hLVSgmpIdFs8Mn4hYXdYFIZpy30-BfrM',
+    API_KEY: 'PASTE_YOUR_GOOGLE_DRIVE_API_KEY_HERE',
+    CACHE_KEY: 'rawxDenimDriveCache_v1',
+    CACHE_MINUTES: 10
+  };
+
+  // DOM order defines which photo goes in which slot — sequential fill.
+  // Rename/reorder files in the Drive folder (e.g. 01-hero.jpg, 02-hero.jpg...)
+  // to control exactly what lands where.
+  const SLOT_ORDER = [
+    'hero-1','hero-2','hero-3',
+    'cat-1','cat-2','cat-3','cat-4',
+    'lookbook-1','lookbook-2','lookbook-3','lookbook-4',
+    'catalogue-1','catalogue-2','catalogue-3','catalogue-4',
+    'edit-1',
+    'archive-1','archive-2','archive-3','archive-4','archive-5',
+    'archive-6','archive-7','archive-8'
+  ];
+
+  const statusBadge = document.getElementById('driveStatus');
+  const statusText  = document.getElementById('driveStatusText');
+
+  function setStatus(mode, text){
+    statusBadge.classList.remove('live','offline');
+    if(mode) statusBadge.classList.add(mode);
+    statusText.textContent = text;
+  }
+
+  function driveImageUrl(fileId){
+    // Public, no-API-key-needed image endpoint for files shared "Anyone with the link".
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+  }
+
+  function getCache(){
+    try{
+      const raw = sessionStorage.getItem(DRIVE_CONFIG.CACHE_KEY);
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      const ageMinutes = (Date.now() - parsed.ts) / 60000;
+      if(ageMinutes > DRIVE_CONFIG.CACHE_MINUTES) return null;
+      return parsed.files;
+    }catch(e){ return null; }
+  }
+
+  function setCache(files){
+    try{
+      sessionStorage.setItem(DRIVE_CONFIG.CACHE_KEY, JSON.stringify({ ts: Date.now(), files }));
+    }catch(e){ /* sessionStorage unavailable — non-fatal */ }
+  }
+
+  async function fetchDriveFiles(){
+    const cached = getCache();
+    if(cached) return cached;
+
+    if(!DRIVE_CONFIG.API_KEY || DRIVE_CONFIG.API_KEY === 'PASTE_YOUR_GOOGLE_DRIVE_API_KEY_HERE'){
+      throw new Error('No Drive API key configured yet.');
+    }
+
+    const q = encodeURIComponent(`'${DRIVE_CONFIG.FOLDER_ID}' in parents and trashed = false and mimeType contains 'image/'`);
+    const fields = encodeURIComponent('files(id,name)');
+    const url = `https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=name&pageSize=100&key=${DRIVE_CONFIG.API_KEY}`;
+
+    const res = await fetch(url);
+    if(!res.ok) throw new Error(`Drive API responded ${res.status}`);
+    const data = await res.json();
+    const files = Array.isArray(data.files) ? data.files : [];
+    setCache(files);
+    return files;
+  }
+
+  function applyToSlot(slotName, fileId){
+    const el = document.querySelector(`[data-drive-slot="${slotName}"]`);
+    if(!el) return;
+    const url = driveImageUrl(fileId);
+
+    if(el.tagName === 'IMG'){
+      el.addEventListener('load', ()=> el.classList.add('loaded'), { once:true });
+      el.src = url;
+    } else {
+      // background-image slot (hero / preview sliders) — preserve its overlay gradient
+      const gradient = el.getAttribute('data-gradient') || '';
+      el.style.backgroundImage = gradient ? `${gradient}, url('${url}')` : `url('${url}')`;
+    }
+  }
+
+  async function syncDrive(){
+    setStatus(null, 'DRIVE SYNC: CONNECTING…');
+    try{
+      const files = await fetchDriveFiles();
+      if(files.length === 0){
+        setStatus('offline', 'DRIVE SYNC: FOLDER EMPTY — PLACEHOLDER MODE');
+        return;
+      }
+      const slotsToFill = Math.min(files.length, SLOT_ORDER.length);
+      for(let i = 0; i < slotsToFill; i++){
+        applyToSlot(SLOT_ORDER[i], files[i].id);
+      }
+      setStatus('live', `DRIVE SYNC: LIVE — ${files.length} IMAGE${files.length===1?'':'S'} INDEXED`);
+    }catch(err){
+      console.warn('[RAWx Drive Sync]', err.message);
+      setStatus('offline', 'DRIVE SYNC: OFFLINE — SHOWING PLACEHOLDER SWATCHES');
+    }
+  }
+
+  syncDrive();
+})();
+</script>
+</body>
+</html>

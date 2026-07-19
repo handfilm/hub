@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>RAWx — Engineered Indigo · Hide Ledger · Branded House</title>
+<meta name="theme-color" content="#080808">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@500;600;700;800;900&family=Noto+Sans+JP:wght@700;900&family=Noto+Sans+Bengali:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: { void:'#080808', ink:'#0e0e0e', panel:'#141414', line:'#292929', signal:'#e6231e', bone:'#ece8dd', dim:'#8f8f89' },
+        fontFamily: { mono:['"Space Mono"','monospace'], cond:['"Barlow Condensed"','sans-serif'], jp:['"Noto Sans JP"','sans-serif'], bn:['"Noto Sans Bengali"','sans-serif'] }
+      }
+    }
+  }
+</script>
+<style>
+  body{background:#080808;}
+  .hard{box-shadow:6px 6px 0 0 #e6231e;}
+  .hard-line{box-shadow:5px 5px 0 0 #292929;}
+  .crosshatch{background-image:linear-gradient(#1a1a1a 1px,transparent 1px),linear-gradient(90deg,#1a1a1a 1px,transparent 1px);background-size:40px 40px;}
+  .ticker{animation:tick 30s linear infinite;}
+  @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  ::selection{background:#e6231e;color:#080808;}
+  [lang-bn]{font-family:'Noto Sans Bengali',sans-serif;}
+  [lang-ja]{font-family:'Noto Sans JP',sans-serif;}
+  .lang-hidden{display:none !important;}
+  .stamp{border:2px solid #e6231e;transform:rotate(-3deg);}
+</style>
+</head>
+<body class="bg-void text-bone font-mono antialiased">
+
+<!-- TICKER -->
+<div class="w-full overflow-hidden bg-signal text-void border-b border-void py-1.5 whitespace-nowrap">
+  <div class="ticker inline-flex text-[11px] font-bold tracking-widest uppercase">
+    <span class="px-4" data-i18n="tick1">EST. 2000 · FAMILY EXPORT LINEAGE</span>
+    <span class="px-4" data-i18n="tick2">RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES</span>
+    <span class="px-4" data-i18n="tick3">MADE TO ORDER · 3-DAY TURNAROUND</span>
+    <span class="px-4" data-i18n="tick4">BRANDED HOUSE · SINGLE MASTER BRAND</span>
+    <span class="px-4" data-i18n="tick1">EST. 2000 · FAMILY EXPORT LINEAGE</span>
+    <span class="px-4" data-i18n="tick2">RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES</span>
+    <span class="px-4" data-i18n="tick3">MADE TO ORDER · 3-DAY TURNAROUND</span>
+    <span class="px-4" data-i18n="tick4">BRANDED HOUSE · SINGLE MASTER BRAND</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="border-b border-line sticky top-0 z-50 bg-void/95 backdrop-blur">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+    <div class="font-cond font-900 text-2xl tracking-tighter uppercase">RAW<span class="text-signal">x</span></div>
+    <div class="hidden md:flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-dim">
+      <a href="#denim" class="hover:text-signal" data-i18n="nav1">Denim</a>
+      <a href="#lab" class="hover:text-signal" data-i18n="nav2">Lab</a>
+      <a href="#home" class="hover:text-signal" data-i18n="nav3">Home Textiles</a>
+      <a href="#lineage" class="hover:text-signal" data-i18n="nav4">Lineage</a>
+    </div>
+    <select id="langSwitch" class="bg-panel border border-line text-bone text-[11px] font-bold uppercase tracking-widest px-3 py-2 outline-none focus:border-signal cursor-pointer">
+      <option value="en">EN — English</option>
+      <option value="nl">NL — Nederlands</option>
+      <option value="de">DE — Deutsch</option>
+      <option value="bn">বাং — বাংলা</option>
+      <option value="ja">日本 — 日本語</option>
+      <option value="fr">FR — Français</option>
+      <option value="es">ES — Español</option>
+    </select>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="border-b border-line crosshatch">
+  <div class="max-w-7xl mx-auto px-6 pt-16 pb-14 grid md:grid-cols-2 gap-10 items-center">
+    <div>
+      <div class="inline-flex items-center gap-2 border border-line px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-dim mb-6">
+        <span class="w-1.5 h-1.5 bg-signal"></span>
+        <span data-i18n="heroTag">Branded House · Single Master Brand</span>
+      </div>
+      <h1 class="font-cond font-900 uppercase tracking-tighter leading-[0.88] text-5xl sm:text-6xl lg:text-7xl">
+        <span data-i18n="heroTitle1">RAW MATERIAL.</span><br>
+        <span class="text-signal" data-i18n="heroTitle2">ENGINEERED</span><br>
+        <span data-i18n="heroTitle3">DISCIPLINE.</span>
+      </h1>
+      <p class="font-mono text-sm text-dim mt-6 max-w-md leading-relaxed" data-i18n="heroBody">
+        Three lines, one ledger: Engineered Indigo denim, hand-finished leather goods, and precision-loomed home textiles — all under a 25-year export lineage.
+      </p>
+      <div class="flex flex-wrap gap-4 mt-8">
+        <a href="#denim" class="hard bg-signal text-void font-cond font-800 uppercase tracking-wide text-lg px-7 py-3.5 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" data-i18n="heroCta1">View The Ledger →</a>
+        <a href="#lineage" class="border border-line text-bone font-cond font-700 uppercase tracking-wide text-lg px-7 py-3.5 hover:border-bone transition-colors" data-i18n="heroCta2">Our Lineage</a>
+      </div>
+    </div>
+    <div class="relative">
+      <img src="img/denim-street.jpg" alt="RAWx Denim — Engineered Indigo" class="w-full max-h-[560px] object-cover border border-line hard-line">
+      <div class="absolute -bottom-4 -left-4 stamp bg-void px-4 py-2 hidden sm:block">
+        <span class="font-cond font-800 uppercase text-sm text-signal" data-i18n="heroStamp">Engineered Indigo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-line grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-line">
+    <div class="px-6 py-6">
+      <div class="font-cond font-900 text-3xl text-signal">2000</div>
+      <div class="text-[11px] uppercase tracking-widest text-dim mt-1" data-i18n="stat1">Export Lineage Since</div>
+    </div>
+    <div class="px-6 py-6">
+      <div class="font-cond font-900 text-3xl text-signal">3<span class="text-sm">DAYS</span></div>
+      <div class="text-[11px] uppercase tracking-widest text-dim mt-1" data-i18n="stat2">Made-to-Order Turnaround</div>
+    </div>
+    <div class="px-6 py-6">
+      <div class="font-cond font-900 text-3xl text-signal">4</div>
+      <div class="text-[11px] uppercase tracking-widest text-dim mt-1" data-i18n="stat3">Sub-Lines, One Master Brand</div>
+    </div>
+    <div class="px-6 py-6">
+      <div class="font-cond font-900 text-3xl text-signal">7</div>
+      <div class="text-[11px] uppercase tracking-widest text-dim mt-1" data-i18n="stat4">Languages, One Ledger</div>
+    </div>
+  </div>
+</section>
+
+<!-- DENIM -->
+<section id="denim" class="border-b border-line">
+  <div class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-signal text-[11px] font-bold uppercase tracking-widest mb-3" data-i18n="denimTag">01 — RAWx Denim</div>
+    <h2 class="font-cond font-900 uppercase tracking-tighter text-4xl sm:text-5xl mb-10" data-i18n="denimTitle">ENGINEERED INDIGO.</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      <img src="img/denim-patch.jpg" alt="RAWx Denim leather patch detail" class="w-full h-[420px] object-cover border border-line hard-line">
+      <div class="flex flex-col justify-center">
+        <p class="text-sm text-dim leading-relaxed max-w-md" data-i18n="denimBody">
+          Raw selvedge and heavyweight indigo, cut for boxy fits and built for daily wear. Every pair carries a hand-stamped leather patch — a registry mark, not a logo.
+        </p>
+        <div class="grid grid-cols-2 gap-4 mt-8 max-w-md">
+          <div class="border border-line p-4">
+            <div class="text-[11px] uppercase tracking-widest text-dim mb-1" data-i18n="denimSpec1L">Fabric</div>
+            <div class="font-cond font-700 text-lg" data-i18n="denimSpec1V">14oz Raw Selvedge</div>
+          </div>
+          <div class="border border-line p-4">
+            <div class="text-[11px] uppercase tracking-widest text-dim mb-1" data-i18n="denimSpec2L">Fit</div>
+            <div class="font-cond font-700 text-lg" data-i18n="denimSpec2V">Boxy · Cropped</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LAB -->
+<section id="lab" class="border-b border-line crosshatch">
+  <div class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-signal text-[11px] font-bold uppercase tracking-widest mb-3" data-i18n="labTag">02 — RAWx Lab</div>
+    <h2 class="font-cond font-900 uppercase tracking-tighter text-4xl sm:text-5xl mb-10" data-i18n="labTitle">HAND-FINISHED LEATHER.</h2>
+    <div class="grid sm:grid-cols-3 gap-6">
+      <div class="border border-line hard-line">
+        <img src="img/belt.jpg" alt="RAWx Lab leather belt" class="w-full h-64 object-cover border-b border-line">
+        <div class="p-5">
+          <div class="font-cond font-800 uppercase text-lg" data-i18n="labItem1">Full-Grain Belt</div>
+          <div class="text-xs text-dim mt-1" data-i18n="labItem1d">Vegetable-tanned, brass hardware</div>
+        </div>
+      </div>
+      <div class="border border-line hard-line">
+        <img src="img/backpack.jpg" alt="RAWx x Trekon leather backpack" class="w-full h-64 object-cover border-b border-line">
+        <div class="p-5">
+          <div class="font-cond font-800 uppercase text-lg" data-i18n="labItem2">Field Backpack</div>
+          <div class="text-xs text-dim mt-1" data-i18n="labItem2d">RAWx × Trekon collaboration</div>
+        </div>
+      </div>
+      <div class="border border-line hard-line">
+        <img src="img/tote.jpg" alt="RAWx Lab leather tote" class="w-full h-64 object-cover border-b border-line">
+        <div class="p-5">
+          <div class="font-cond font-800 uppercase text-lg" data-i18n="labItem3">Structured Tote</div>
+          <div class="text-xs text-dim mt-1" data-i18n="labItem3d">Zip closure, interior pocket</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOME TEXTILES -->
+<section id="home" class="border-b border-line">
+  <div class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-signal text-[11px] font-bold uppercase tracking-widest mb-3" data-i18n="homeTag">03 — RAWx Home Textiles</div>
+    <h2 class="font-cond font-900 uppercase tracking-tighter text-4xl sm:text-5xl mb-10" data-i18n="homeTitle">PRECISION-LOOMED.</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <img src="img/loom.jpg" alt="Traditional weaving loom" class="w-full h-72 object-cover border border-line hard-line">
+      <img src="img/rope-coil.jpg" alt="Natural fibre coil" class="w-full h-72 object-cover border border-line hard-line">
+      <img src="img/home-textile.jpg" alt="Home textile lifestyle" class="w-full h-72 object-cover border border-line hard-line">
+    </div>
+    <p class="text-sm text-dim leading-relaxed max-w-2xl mt-8" data-i18n="homeBody">
+      Bedding and linen woven with the same discipline as our apparel lines — natural fibre, heavyweight construction, finished by hand.
+    </p>
+  </div>
+</section>
+
+<!-- LINEAGE -->
+<section id="lineage" class="border-b border-line crosshatch">
+  <div class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-signal text-[11px] font-bold uppercase tracking-widest mb-3" data-i18n="lineageTag">The Ledger</div>
+    <h2 class="font-cond font-900 uppercase tracking-tighter text-4xl sm:text-5xl mb-8" data-i18n="lineageTitle">25 YEARS. ONE FAMILY.</h2>
+    <div class="grid md:grid-cols-2 gap-10 items-center">
+      <img src="img/rope-closeup.jpg" alt="Raw fibre detail" class="w-full h-[380px] object-cover border border-line hard-line">
+      <p class="text-sm text-dim leading-relaxed max-w-md" data-i18n="lineageBody">
+        Before RAWx, this family exported leather goods to Japan starting in 2000 — building 25 years of quality standards, compliance discipline, and buyer trust. RAWx carries that same manufacturing discipline into apparel, leather goods, and home textiles.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="max-w-7xl mx-auto px-6 py-10 flex flex-col sm:flex-row justify-between gap-4 text-[11px] uppercase tracking-widest text-dim">
+  <div>RAW<span class="text-signal">x</span> <span data-i18n="footer1">· Branded House</span></div>
+  <div data-i18n="footer2">Part of HANDS & HEAD Group</div>
+</footer>
+
+<script>
+const i18n = {
+  en: { tick1:"EST. 2000 · FAMILY EXPORT LINEAGE", tick2:"RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES", tick3:"MADE TO ORDER · 3-DAY TURNAROUND", tick4:"BRANDED HOUSE · SINGLE MASTER BRAND",
+    nav1:"Denim", nav2:"Lab", nav3:"Home Textiles", nav4:"Lineage",
+    heroTag:"Branded House · Single Master Brand", heroTitle1:"RAW MATERIAL.", heroTitle2:"ENGINEERED", heroTitle3:"DISCIPLINE.",
+    heroBody:"Three lines, one ledger: Engineered Indigo denim, hand-finished leather goods, and precision-loomed home textiles — all under a 25-year export lineage.",
+    heroCta1:"View The Ledger →", heroCta2:"Our Lineage", heroStamp:"Engineered Indigo",
+    stat1:"Export Lineage Since", stat2:"Made-to-Order Turnaround", stat3:"Sub-Lines, One Master Brand", stat4:"Languages, One Ledger",
+    denimTag:"01 — RAWx Denim", denimTitle:"ENGINEERED INDIGO.",
+    denimBody:"Raw selvedge and heavyweight indigo, cut for boxy fits and built for daily wear. Every pair carries a hand-stamped leather patch — a registry mark, not a logo.",
+    denimSpec1L:"Fabric", denimSpec1V:"14oz Raw Selvedge", denimSpec2L:"Fit", denimSpec2V:"Boxy · Cropped",
+    labTag:"02 — RAWx Lab", labTitle:"HAND-FINISHED LEATHER.",
+    labItem1:"Full-Grain Belt", labItem1d:"Vegetable-tanned, brass hardware",
+    labItem2:"Field Backpack", labItem2d:"RAWx × Trekon collaboration",
+    labItem3:"Structured Tote", labItem3d:"Zip closure, interior pocket",
+    homeTag:"03 — RAWx Home Textiles", homeTitle:"PRECISION-LOOMED.",
+    homeBody:"Bedding and linen woven with the same discipline as our apparel lines — natural fibre, heavyweight construction, finished by hand.",
+    lineageTag:"The Ledger", lineageTitle:"25 YEARS. ONE FAMILY.",
+    lineageBody:"Before RAWx, this family exported leather goods to Japan starting in 2000 — building 25 years of quality standards, compliance discipline, and buyer trust. RAWx carries that same manufacturing discipline into apparel, leather goods, and home textiles.",
+    footer1:"· Branded House", footer2:"Part of HANDS & HEAD Group" },
+
+  nl: { tick1:"SINDS 2000 · FAMILIE EXPORTGESCHIEDENIS", tick2:"RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES", tick3:"OP MAAT GEMAAKT · 3-DAAGSE DOORLOOPTIJD", tick4:"BRANDED HOUSE · ÉÉN MERK",
+    nav1:"Denim", nav2:"Lab", nav3:"Huistextiel", nav4:"Geschiedenis",
+    heroTag:"Branded House · Eén Hoofdmerk", heroTitle1:"RUW MATERIAAL.", heroTitle2:"GETECHNISCHE", heroTitle3:"DISCIPLINE.",
+    heroBody:"Drie lijnen, één register: Engineered Indigo denim, handafgewerkte lederwaren en precisiegeweven huistextiel — onder één 25-jarige exportgeschiedenis.",
+    heroCta1:"Bekijk Het Register →", heroCta2:"Onze Geschiedenis", heroStamp:"Engineered Indigo",
+    stat1:"Exportgeschiedenis Sinds", stat2:"Op-Maat Doorlooptijd", stat3:"Sublijnen, Eén Merk", stat4:"Talen, Eén Register",
+    denimTag:"01 — RAWx Denim", denimTitle:"ENGINEERED INDIGO.",
+    denimBody:"Ruwe selvedge en zware indigo, gesneden voor boxy fits en gemaakt voor dagelijks gebruik. Elk model heeft een handgestempeld leren label — een registratiemerk, geen logo.",
+    denimSpec1L:"Stof", denimSpec1V:"14oz Raw Selvedge", denimSpec2L:"Pasvorm", denimSpec2V:"Boxy · Cropped",
+    labTag:"02 — RAWx Lab", labTitle:"HANDAFGEWERKT LEDER.",
+    labItem1:"Volnerf Riem", labItem1d:"Plantaardig gelooid, messing hardware",
+    labItem2:"Veldrugzak", labItem2d:"RAWx × Trekon samenwerking",
+    labItem3:"Gestructureerde Tote", labItem3d:"Ritssluiting, binnenzak",
+    homeTag:"03 — RAWx Home Textiles", homeTitle:"PRECISIE GEWEVEN.",
+    homeBody:"Beddengoed en linnen geweven met dezelfde discipline als onze kledinglijnen — natuurlijke vezel, zware constructie, met de hand afgewerkt.",
+    lineageTag:"Het Register", lineageTitle:"25 JAAR. ÉÉN FAMILIE.",
+    lineageBody:"Vóór RAWx exporteerde deze familie sinds 2000 lederwaren naar Japan — 25 jaar aan kwaliteitsnormen, compliance-discipline en vertrouwen opgebouwd. RAWx zet die discipline voort in kleding, lederwaren en huistextiel.",
+    footer1:"· Branded House", footer2:"Onderdeel van HANDS & HEAD Group" },
+
+  de: { tick1:"SEIT 2000 · FAMILIÄRE EXPORTGESCHICHTE", tick2:"RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES", tick3:"MADE TO ORDER · 3-TAGE-LIEFERZEIT", tick4:"BRANDED HOUSE · EINE MARKE",
+    nav1:"Denim", nav2:"Lab", nav3:"Heimtextilien", nav4:"Geschichte",
+    heroTag:"Branded House · Eine Hauptmarke", heroTitle1:"ROHMATERIAL.", heroTitle2:"TECHNISCHE", heroTitle3:"DISZIPLIN.",
+    heroBody:"Drei Linien, ein Register: Engineered-Indigo-Denim, handgefertigte Lederwaren und präzisionsgewebte Heimtextilien — unter einer 25-jährigen Exportgeschichte.",
+    heroCta1:"Register Ansehen →", heroCta2:"Unsere Geschichte", heroStamp:"Engineered Indigo",
+    stat1:"Exportgeschichte Seit", stat2:"Made-to-Order Lieferzeit", stat3:"Sublinien, Eine Marke", stat4:"Sprachen, Ein Register",
+    denimTag:"01 — RAWx Denim", denimTitle:"ENGINEERED INDIGO.",
+    denimBody:"Rohe Selvedge-Kante und schweres Indigo, geschnitten für Boxy Fits und den Alltag gemacht. Jedes Paar trägt ein handgestempeltes Lederlabel — ein Registriermerkmal, kein Logo.",
+    denimSpec1L:"Stoff", denimSpec1V:"14oz Raw Selvedge", denimSpec2L:"Passform", denimSpec2V:"Boxy · Cropped",
+    labTag:"02 — RAWx Lab", labTitle:"HANDGEFERTIGTES LEDER.",
+    labItem1:"Vollnarben-Gürtel", labItem1d:"Pflanzlich gegerbt, Messingbeschläge",
+    labItem2:"Feldrucksack", labItem2d:"RAWx × Trekon Kollaboration",
+    labItem3:"Strukturierte Tote", labItem3d:"Reißverschluss, Innentasche",
+    homeTag:"03 — RAWx Home Textiles", homeTitle:"PRÄZISIONSGEWEBT.",
+    homeBody:"Bettwäsche und Leinen mit derselben Disziplin gewebt wie unsere Bekleidungslinien — Naturfaser, robuste Konstruktion, handgefertigt.",
+    lineageTag:"Das Register", lineageTitle:"25 JAHRE. EINE FAMILIE.",
+    lineageBody:"Vor RAWx exportierte diese Familie seit 2000 Lederwaren nach Japan — 25 Jahre Qualitätsstandards, Compliance-Disziplin und Käufervertrauen. RAWx führt diese Fertigungsdisziplin in Bekleidung, Lederwaren und Heimtextilien fort.",
+    footer1:"· Branded House", footer2:"Teil der HANDS & HEAD Gruppe" },
+
+  bn: { tick1:"২০০০ সাল থেকে · পারিবারিক রপ্তানি ঐতিহ্য", tick2:"RAWx ডেনিম · RAWx ল্যাব · RAWx হোম টেক্সটাইল", tick3:"মেড-টু-অর্ডার · ৩-দিনের টার্নঅ্যারাউন্ড", tick4:"ব্র্যান্ডেড হাউজ · একক মাস্টার ব্র্যান্ড",
+    nav1:"ডেনিম", nav2:"ল্যাব", nav3:"হোম টেক্সটাইল", nav4:"ঐতিহ্য",
+    heroTag:"ব্র্যান্ডেড হাউজ · একক মাস্টার ব্র্যান্ড", heroTitle1:"কাঁচা উপাদান।", heroTitle2:"ইঞ্জিনিয়ার্ড", heroTitle3:"নিয়মশৃঙ্খলা।",
+    heroBody:"তিনটি লাইন, একটি লেজার: ইঞ্জিনিয়ার্ড ইন্ডিগো ডেনিম, হাতে তৈরি চামড়াজাত পণ্য, এবং নিখুঁতভাবে বোনা হোম টেক্সটাইল — ২৫ বছরের রপ্তানি ঐতিহ্যের অধীনে।",
+    heroCta1:"লেজার দেখুন →", heroCta2:"আমাদের ঐতিহ্য", heroStamp:"ইঞ্জিনিয়ার্ড ইন্ডিগো",
+    stat1:"রপ্তানি ঐতিহ্য শুরু", stat2:"মেড-টু-অর্ডার সময়", stat3:"সাব-লাইন, একটি মাস্টার ব্র্যান্ড", stat4:"ভাষা, একটি লেজার",
+    denimTag:"০১ — RAWx ডেনিম", denimTitle:"ইঞ্জিনিয়ার্ড ইন্ডিগো।",
+    denimBody:"কাঁচা সেলভেজ এবং ভারী ইন্ডিগো, বক্সি ফিটের জন্য কাটা এবং প্রতিদিনের ব্যবহারের জন্য তৈরি। প্রতিটি প্যান্টে হাতে-স্ট্যাম্প করা চামড়ার প্যাচ থাকে — এটি একটি লোগো নয়, রেজিস্ট্রি চিহ্ন।",
+    denimSpec1L:"ফ্যাব্রিক", denimSpec1V:"১৪oz র র সেলভেজ", denimSpec2L:"ফিট", denimSpec2V:"বক্সি · ক্রপড",
+    labTag:"০২ — RAWx ল্যাব", labTitle:"হাতে তৈরি চামড়া।",
+    labItem1:"ফুল-গ্রেইন বেল্ট", labItem1d:"উদ্ভিজ্জ ট্যানড, ব্রাস হার্ডওয়্যার",
+    labItem2:"ফিল্ড ব্যাকপ্যাক", labItem2d:"RAWx × Trekon সহযোগিতা",
+    labItem3:"স্ট্রাকচার্ড টোট", labItem3d:"জিপ ক্লোজার, ভেতরের পকেট",
+    homeTag:"০৩ — RAWx হোম টেক্সটাইল", homeTitle:"নিখুঁতভাবে বোনা।",
+    homeBody:"আমাদের পোশাক লাইনের মতোই একই নিয়মশৃঙ্খলায় বোনা বিছানার চাদর ও লিনেন — প্রাকৃতিক ফাইবার, ভারী নির্মাণ, হাতে তৈরি।",
+    lineageTag:"লেজার", lineageTitle:"২৫ বছর। এক পরিবার।",
+    lineageBody:"RAWx-এর আগে, এই পরিবার ২০০০ সাল থেকে জাপানে চামড়াজাত পণ্য রপ্তানি করে আসছে — ২৫ বছরের মান, কমপ্লায়েন্স নিয়মশৃঙ্খলা এবং ক্রেতার আস্থা গড়ে তুলেছে। RAWx সেই একই উৎপাদন নিয়মশৃঙ্খলা পোশাক, চামড়াজাত পণ্য এবং হোম টেক্সটাইলে নিয়ে এসেছে।",
+    footer1:"· ব্র্যান্ডেড হাউজ", footer2:"HANDS & HEAD গ্রুপের অংশ" },
+
+  ja: { tick1:"2000年創業 · 家族輸出の系譜", tick2:"RAWx デニム · RAWx ラボ · RAWx ホームテキスタイル", tick3:"受注生産 · 3日間ターンアラウンド", tick4:"ブランデッドハウス · シングルマスターブランド",
+    nav1:"デニム", nav2:"ラボ", nav3:"ホームテキスタイル", nav4:"系譜",
+    heroTag:"ブランデッドハウス · シングルマスターブランド", heroTitle1:"生素材。", heroTitle2:"エンジニアード", heroTitle3:"規律。",
+    heroBody:"3つのライン、1つの台帳：エンジニアードインディゴデニム、手仕上げのレザーグッズ、精密に織られたホームテキスタイル — 25年の輸出の系譜のもとに。",
+    heroCta1:"台帳を見る →", heroCta2:"私たちの系譜", heroStamp:"エンジニアードインディゴ",
+    stat1:"輸出の系譜開始", stat2:"受注生産ターンアラウンド", stat3:"サブライン、1つのマスターブランド", stat4:"言語、1つの台帳",
+    denimTag:"01 — RAWx デニム", denimTitle:"エンジニアードインディゴ。",
+    denimBody:"生セルビッジと重厚なインディゴ、ボクシーフィットにカットされ、日常使いのために作られています。すべてのペアには手押しのレザーパッチが付いています — ロゴではなく登録マークです。",
+    denimSpec1L:"生地", denimSpec1V:"14oz 生セルビッジ", denimSpec2L:"フィット", denimSpec2V:"ボクシー · クロップド",
+    labTag:"02 — RAWx ラボ", labTitle:"手仕上げのレザー。",
+    labItem1:"フルグレインベルト", labItem1d:"植物タンニンなめし、真鍮金具",
+    labItem2:"フィールドバックパック", labItem2d:"RAWx × Trekon コラボレーション",
+    labItem3:"ストラクチャードトート", labItem3d:"ジップ開閉、内側ポケット",
+    homeTag:"03 — RAWx ホームテキスタイル", homeTitle:"精密に織られた。",
+    homeBody:"アパレルラインと同じ規律で織られたベッドリネン — 天然繊維、重厚な構造、手仕上げ。",
+    lineageTag:"台帳", lineageTitle:"25年。ひとつの家族。",
+    lineageBody:"RAWxの前、この家族は2000年から日本にレザーグッズを輸出していました — 25年間の品質基準、コンプライアンスの規律、バイヤーの信頼を築いてきました。RAWxはその同じ製造規律をアパレル、レザーグッズ、ホームテキスタイルに引き継いでいます。",
+    footer1:"· ブランデッドハウス", footer2:"HANDS & HEAD グループの一部" },
+
+  fr: { tick1:"DEPUIS 2000 · HÉRITAGE FAMILIAL D'EXPORTATION", tick2:"RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES", tick3:"SUR-MESURE · DÉLAI DE 3 JOURS", tick4:"BRANDED HOUSE · UNE SEULE MARQUE",
+    nav1:"Denim", nav2:"Lab", nav3:"Linge de Maison", nav4:"Héritage",
+    heroTag:"Branded House · Marque Unique", heroTitle1:"MATIÈRE BRUTE.", heroTitle2:"DISCIPLINE", heroTitle3:"TECHNIQUE.",
+    heroBody:"Trois lignes, un seul registre : denim Engineered Indigo, maroquinerie finie à la main et linge de maison tissé avec précision — sous 25 ans d'héritage d'exportation.",
+    heroCta1:"Voir Le Registre →", heroCta2:"Notre Héritage", heroStamp:"Engineered Indigo",
+    stat1:"Héritage d'Export Depuis", stat2:"Délai Sur-Mesure", stat3:"Sous-Lignes, Une Marque", stat4:"Langues, Un Registre",
+    denimTag:"01 — RAWx Denim", denimTitle:"ENGINEERED INDIGO.",
+    denimBody:"Lisière brute et indigo lourd, coupé pour des coupes boxy et conçu pour un usage quotidien. Chaque pièce porte un écusson en cuir estampé à la main — une marque de registre, pas un logo.",
+    denimSpec1L:"Tissu", denimSpec1V:"14oz Lisière Brute", denimSpec2L:"Coupe", denimSpec2V:"Boxy · Cropped",
+    labTag:"02 — RAWx Lab", labTitle:"CUIR FINI À LA MAIN.",
+    labItem1:"Ceinture Pleine Fleur", labItem1d:"Tannage végétal, quincaillerie laiton",
+    labItem2:"Sac à Dos de Terrain", labItem2d:"Collaboration RAWx × Trekon",
+    labItem3:"Tote Structuré", labItem3d:"Fermeture zippée, poche intérieure",
+    homeTag:"03 — RAWx Home Textiles", homeTitle:"TISSÉ AVEC PRÉCISION.",
+    homeBody:"Linge de lit tissé avec la même discipline que nos lignes de vêtements — fibre naturelle, construction robuste, finition à la main.",
+    lineageTag:"Le Registre", lineageTitle:"25 ANS. UNE FAMILLE.",
+    lineageBody:"Avant RAWx, cette famille exportait de la maroquinerie vers le Japon depuis 2000 — bâtissant 25 ans de normes de qualité, de rigueur de conformité et de confiance des acheteurs. RAWx porte cette même discipline de fabrication dans le vêtement, la maroquinerie et le linge de maison.",
+    footer1:"· Branded House", footer2:"Fait partie du groupe HANDS & HEAD" },
+
+  es: { tick1:"DESDE 2000 · LEGADO FAMILIAR DE EXPORTACIÓN", tick2:"RAWx DENIM · RAWx LAB · RAWx HOME TEXTILES", tick3:"BAJO PEDIDO · ENTREGA EN 3 DÍAS", tick4:"BRANDED HOUSE · UNA SOLA MARCA",
+    nav1:"Denim", nav2:"Lab", nav3:"Textiles de Hogar", nav4:"Legado",
+    heroTag:"Branded House · Marca Única", heroTitle1:"MATERIA PRIMA.", heroTitle2:"DISCIPLINA", heroTitle3:"TÉCNICA.",
+    heroBody:"Tres líneas, un solo registro: denim Engineered Indigo, marroquinería acabada a mano y textiles de hogar tejidos con precisión — bajo 25 años de legado exportador.",
+    heroCta1:"Ver El Registro →", heroCta2:"Nuestro Legado", heroStamp:"Engineered Indigo",
+    stat1:"Legado de Exportación Desde", stat2:"Entrega Bajo Pedido", stat3:"Sublíneas, Una Marca", stat4:"Idiomas, Un Registro",
+    denimTag:"01 — RAWx Denim", denimTitle:"ENGINEERED INDIGO.",
+    denimBody:"Orillo crudo e índigo de gran peso, cortado para siluetas boxy y hecho para el uso diario. Cada prenda lleva un parche de cuero estampado a mano — una marca de registro, no un logo.",
+    denimSpec1L:"Tejido", denimSpec1V:"14oz Orillo Crudo", denimSpec2L:"Corte", denimSpec2V:"Boxy · Cropped",
+    labTag:"02 — RAWx Lab", labTitle:"CUERO ACABADO A MANO.",
+    labItem1:"Cinturón Full-Grain", labItem1d:"Curtido vegetal, herrajes de latón",
+    labItem2:"Mochila de Campo", labItem2d:"Colaboración RAWx × Trekon",
+    labItem3:"Tote Estructurado", labItem3d:"Cierre de cremallera, bolsillo interior",
+    homeTag:"03 — RAWx Home Textiles", homeTitle:"TEJIDO CON PRECISIÓN.",
+    homeBody:"Ropa de cama y lino tejidos con la misma disciplina que nuestras líneas de ropa — fibra natural, construcción robusta, acabado a mano.",
+    lineageTag:"El Registro", lineageTitle:"25 AÑOS. UNA FAMILIA.",
+    lineageBody:"Antes de RAWx, esta familia exportaba marroquinería a Japón desde el año 2000 — construyendo 25 años de estándares de calidad, disciplina de cumplimiento y confianza de los compradores. RAWx lleva esa misma disciplina de fabricación a la ropa, la marroquinería y los textiles de hogar.",
+    footer1:"· Branded House", footer2:"Parte del grupo HANDS & HEAD" }
+};
+
+function applyLang(lang) {
+  const dict = i18n[lang] || i18n.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.documentElement.lang = lang;
+  document.body.classList.remove('font-jp','font-bn');
+  if (lang === 'ja') document.body.classList.add('font-jp');
+  if (lang === 'bn') document.body.classList.add('font-bn');
+  localStorage?.setItem?.('rawx_lang', lang);
+}
+
+const select = document.getElementById('langSwitch');
+select.addEventListener('change', e => applyLang(e.target.value));
+// default load
+applyLang('en');
+</script>
+
+</body>
+</html>
